@@ -22,7 +22,7 @@ module.exports = {
   		colors: {
   			apex: {
   				background: '#050509',
-  				accent: '#d946ef',
+  				accent: '#ef4444',
   				secondary: '#0ea5e9',
   				muted: '#1f1f2e'
   			},
@@ -68,7 +68,7 @@ module.exports = {
   			}
   		},
   		backgroundImage: {
-  			'gradient-glow': 'radial-gradient(circle at top left, rgba(217,70,239,0.35), transparent 55%), radial-gradient(circle at top right, rgba(14,165,233,0.25), transparent 50%), radial-gradient(circle at bottom, rgba(255,255,255,0.08), transparent 55%)'
+  			'gradient-glow': 'radial-gradient(circle at top left, rgba(239,68,68,0.35), transparent 55%), radial-gradient(circle at top right, rgba(14,165,233,0.25), transparent 50%), radial-gradient(circle at bottom, rgba(255,255,255,0.08), transparent 55%)'
   		},
 		keyframes: {
 			marquee: {

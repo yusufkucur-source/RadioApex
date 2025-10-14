@@ -279,6 +279,34 @@ export default function AdminPanel() {
     [djs]
   );
 
+  // Sort lineup by day (Monday -> Sunday) and time
+  const sortedLineup = useMemo(() => {
+    const dayOrder = {
+      'Monday': 1,
+      'Tuesday': 2,
+      'Wednesday': 3,
+      'Thursday': 4,
+      'Friday': 5,
+      'Saturday': 6,
+      'Sunday': 7
+    };
+
+    return [...lineup].sort((a, b) => {
+      // First, sort by day
+      const dayA = dayOrder[a.day as keyof typeof dayOrder] || 999;
+      const dayB = dayOrder[b.day as keyof typeof dayOrder] || 999;
+      
+      if (dayA !== dayB) {
+        return dayA - dayB;
+      }
+
+      // If same day, sort by start time
+      const timeA = a.startTime.replace(':', '');
+      const timeB = b.startTime.replace(':', '');
+      return timeA.localeCompare(timeB);
+    });
+  }, [lineup]);
+
   // Otomatik seed - sadece bir kere çalışır
   useEffect(() => {
     const autoSeed = async () => {
@@ -466,12 +494,12 @@ export default function AdminPanel() {
                   {djs.length}
                 </span>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-white/60">Shows</span>
-                <span className="text-lg font-semibold text-apex-secondary">
-                  {lineup.length}
-                </span>
-              </div>
+               <div className="flex items-center justify-between">
+                 <span className="text-xs text-white/60">Shows</span>
+                 <span className="text-lg font-semibold text-apex-secondary">
+                   {sortedLineup.length}
+                 </span>
+               </div>
             </div>
           </div>
         </div>
@@ -479,7 +507,7 @@ export default function AdminPanel() {
 
       {/* Main Content */}
       <main className="flex-1">
-        {error && (
+      {error && (
           <div className="mb-6 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">
             ❌ {error}
           </div>
@@ -532,12 +560,12 @@ export default function AdminPanel() {
                 <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-apex-secondary/10 to-apex-secondary/5 p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs uppercase tracking-[0.3em] text-white/50">
-                        Scheduled Shows
-                      </p>
-                      <p className="mt-2 text-4xl font-bold text-white">
-                        {lineup.length}
-                      </p>
+                       <p className="text-xs uppercase tracking-[0.3em] text-white/50">
+                         Scheduled Shows
+                       </p>
+                       <p className="mt-2 text-4xl font-bold text-white">
+                         {sortedLineup.length}
+                       </p>
                     </div>
                     <div className="text-5xl">📅</div>
                   </div>
@@ -902,15 +930,15 @@ export default function AdminPanel() {
 
             {/* Lineup List */}
             <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-8 backdrop-blur-2xl">
-              <h2 className="text-xl font-semibold text-white">
-                Current Schedule
-              </h2>
-              <p className="text-xs uppercase tracking-[0.3em] text-white/60">
-                {lineup.length} Shows
-              </p>
+               <h2 className="text-xl font-semibold text-white">
+                 Current Schedule
+               </h2>
+               <p className="text-xs uppercase tracking-[0.3em] text-white/60">
+                 {sortedLineup.length} Shows
+               </p>
 
-              <div className="mt-6 space-y-3">
-            {lineup.map(slot => (
+               <div className="mt-6 space-y-3">
+              {sortedLineup.map(slot => (
               <div
                 key={slot.id}
                     className={clsx(
@@ -963,11 +991,11 @@ export default function AdminPanel() {
                 </div>
               </div>
             ))}
-                {lineup.length === 0 && (
-                  <p className="py-12 text-center text-sm text-white/40">
-                    No shows scheduled yet. Add your first show using the form above.
-                  </p>
-                )}
+                 {sortedLineup.length === 0 && (
+                   <p className="py-12 text-center text-sm text-white/40">
+                     No shows scheduled yet. Add your first show using the form above.
+                   </p>
+                 )}
               </div>
             </div>
           </div>

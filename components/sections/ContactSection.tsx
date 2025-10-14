@@ -26,10 +26,10 @@ export default function ContactSection() {
     >
       {/* Title - İlk önce yukarı çıkar */}
       <motion.div
-        initial={{ opacity: 0, y: 80 }}
+        initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.3, margin: "-100px" }}
-        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+        viewport={{ once: true, amount: 0.3, margin: "0px" }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         <SectionHeading
           eyebrow="Contact"
@@ -42,10 +42,10 @@ export default function ContactSection() {
       {/* Form - Title'dan sonra gelir */}
       <motion.form
         onSubmit={handleSubmit}
-        initial={{ opacity: 0, y: 60, scale: 0.95 }}
-        whileInView={{ opacity: 1, y: 0, scale: 1 }}
-        viewport={{ once: false, margin: "-10%", amount: 0.3 }}
-        transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "0px", amount: 0.3 }}
+        transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
         className="mx-auto mt-16 grid w-full max-w-3xl gap-6 rounded-3xl border border-white/10 bg-white/[0.04] p-8 shadow-2xl backdrop-blur-2xl"
       >
         <div className="grid gap-3">
@@ -92,7 +92,7 @@ export default function ContactSection() {
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.98 }}
           disabled={state === "sending"}
-          className="flex h-12 items-center justify-center rounded-full border border-white/10 bg-gradient-to-r from-apex-accent via-apex-accent/80 to-apex-secondary/80 text-sm font-semibold uppercase tracking-[0.3em] text-white shadow-lg transition disabled:cursor-not-allowed disabled:opacity-80"
+          className="flex h-12 items-center justify-center rounded-full bg-gradient-to-r from-apex-accent via-apex-accent/80 to-apex-secondary/80 text-sm font-semibold uppercase tracking-[0.3em] text-white shadow-lg transition disabled:cursor-not-allowed disabled:opacity-80"
         >
           {state === "idle" && "Send"}
           {state === "sending" && "Sending..."}

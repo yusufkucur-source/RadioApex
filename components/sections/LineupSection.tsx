@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { useDJs, useLineup } from "@/lib/firebase/hooks";
@@ -10,6 +11,34 @@ export default function LineupSection() {
 
   const djMap = new Map(djs.map(dj => [dj.id, dj]));
 
+  // Sort lineup by day (Monday -> Sunday) and time
+  const sortedLineup = useMemo(() => {
+    const dayOrder = {
+      'Monday': 1,
+      'Tuesday': 2,
+      'Wednesday': 3,
+      'Thursday': 4,
+      'Friday': 5,
+      'Saturday': 6,
+      'Sunday': 7
+    };
+
+    return [...lineup].sort((a, b) => {
+      // First, sort by day
+      const dayA = dayOrder[a.day as keyof typeof dayOrder] || 999;
+      const dayB = dayOrder[b.day as keyof typeof dayOrder] || 999;
+      
+      if (dayA !== dayB) {
+        return dayA - dayB;
+      }
+
+      // If same day, sort by start time
+      const timeA = a.startTime.replace(':', '');
+      const timeB = b.startTime.replace(':', '');
+      return timeA.localeCompare(timeB);
+    });
+  }, [lineup]);
+
   return (
     <section
       id="line-up"
@@ -17,10 +46,10 @@ export default function LineupSection() {
     >
       {/* Title - İlk önce yukarı çıkar */}
       <motion.div
-        initial={{ opacity: 0, y: 80 }}
+        initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.3, margin: "-100px" }}
-        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+        viewport={{ once: true, amount: 0.3, margin: "0px" }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         <SectionHeading
           eyebrow="Weekly Stream"
@@ -33,17 +62,17 @@ export default function LineupSection() {
 
       {/* Lineup items - Stagger ile birer birer gelir */}
       <div className="mt-16 grid gap-6">
-        {lineup.map((slot, index) => {
+        {sortedLineup.map((slot, index) => {
           const dj = slot.djId ? djMap.get(slot.djId) : undefined;
           return (
             <motion.div
               key={slot.id}
-              initial={{ opacity: 0, y: 60, x: -20 }}
-              whileInView={{ opacity: 1, y: 0, x: 0 }}
-              viewport={{ once: false, margin: "-15%", amount: 0.3 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "0px", amount: 0.2 }}
               transition={{ 
-                delay: index * 0.08, 
-                duration: 0.7, 
+                delay: index * 0.05, 
+                duration: 0.5, 
                 ease: [0.22, 1, 0.36, 1] 
               }}
               className="group flex flex-col gap-6 rounded-3xl border border-white/10 bg-white/[0.04] p-6 shadow-2xl backdrop-blur-2xl transition duration-500 hover:-translate-y-1 hover:border-apex-secondary/70 hover:shadow-apex-secondary/20 sm:flex-row sm:items-center sm:justify-between sm:gap-10"

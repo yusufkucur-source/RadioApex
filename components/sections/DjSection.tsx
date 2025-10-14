@@ -19,13 +19,13 @@ const containerVariants: Variants = {
 };
 
 const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 60, scale: 0.92 },
+  hidden: { opacity: 0, y: 40, scale: 0.95 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
-      duration: 0.7,
+      duration: 0.5,
       ease: [0.22, 1, 0.36, 1] // Custom ease (easeOutExpo)
     }
   }
@@ -60,10 +60,10 @@ export default function DjSection() {
       <div className="relative z-10 mx-auto flex w-full max-w-[1399px] flex-col gap-16 px-4 py-24 sm:px-6 md:px-8">
         {/* Title - İlk önce yukarı çıkar (parallax) */}
         <motion.div
-          initial={{ opacity: 0, y: 80 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.3, margin: "-100px" }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+          viewport={{ once: true, amount: 0.3, margin: "0px" }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="mb-12"
         >
           <SectionHeading
@@ -79,8 +79,8 @@ export default function DjSection() {
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: false, amount: 0.15, margin: "-80px" }}
-            transition={{ staggerChildren: 0.1, delayChildren: 0.2 }}
+            viewport={{ once: true, amount: 0.05, margin: "0px" }}
+            transition={{ staggerChildren: 0.08, delayChildren: 0.15 }}
             className="grid gap-8 sm:grid-cols-2 xl:grid-cols-3"
           >
             {djs.map(dj => {
