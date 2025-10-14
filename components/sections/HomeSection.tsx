@@ -30,6 +30,20 @@ export default function HomeSection() {
       id="home"
       className="scroll-snap-start relative flex min-h-screen items-center overflow-hidden text-white"
     >
+      {/* Background Lines - Full screen, sabit aralıklarla grid çizgileri */}
+      <div className="pointer-events-none absolute inset-0 z-[1]">
+        {Array.from({ length: 24 }).map((_, index) => (
+          <div
+            key={index}
+            className="absolute top-0 h-screen w-px"
+            style={{
+              left: `${(index + 1) * 300}px`,
+              background: "rgba(255, 255, 255, 0.03)"
+            }}
+          />
+        ))}
+      </div>
+
       {/* Arka plan katmanları */}
       <div className="hero-bg-outer pointer-events-none absolute inset-0 -z-20" />
       <div className="hero-bg-gradient pointer-events-none absolute inset-0 -z-20" />
@@ -39,7 +53,7 @@ export default function HomeSection() {
       <div 
         className="pointer-events-none absolute inset-0 -z-5 bg-cover bg-center bg-no-repeat opacity-100"
         style={{
-          backgroundImage: "url('/images/home/index_background.png')",
+          backgroundImage: "url('/images/home/index_background_v2.png')",
           filter: "brightness(0.7) contrast(1.1)"
         }}
       />

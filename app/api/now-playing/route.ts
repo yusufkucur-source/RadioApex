@@ -1,47 +1,33 @@
 import { NextResponse } from "next/server";
 
-const STREAM_META_URL = "https://radio.cast.click/status-json.xsl";
-const STREAM_PATH = "/radio/8000/radio.mp3";
+// AzuraCast API endpoint - eski HTML'den
+const AZURACAST_API = "https://radio.cast.click/api/nowplaying/radioapex";
 
-type IcecastSource = {
-  listenurl?: string;
-  title?: string;
+type AzuraCastSong = {
+  text?: string;
   artist?: string;
-  server_name?: string;
-  server_description?: string;
-  stream_start_iso8601?: string;
-  song?: string;
+  title?: string;
+  art?: string;
 };
 
-type IcecastPayload = {
-  icestats?: {
-    source?: IcecastSource | IcecastSource[];
+type AzuraCastResponse = {
+  now_playing?: {
+    song?: AzuraCastSong;
+    elapsed?: number;
+    duration?: number;
   };
+  listeners?: number | { total?: number; current?: number };
+  live?: {
+    is_live?: boolean;
+  };
+  song_history?: Array<{
+    song?: AzuraCastSong;
+  }>;
 };
-
-function parseSource(data: IcecastPayload): IcecastSource | null {
-  if (!data.icestats || !data.icestats.source) {
-    return null;
-  }
-
-  const { source } = data.icestats;
-  if (Array.isArray(source)) {
-    return (
-      source.find(item =>
-        item.listenurl ? item.listenurl.includes(STREAM_PATH) : false
-      ) ?? source[0] ?? null
-    );
-  }
-
-  return source;
-}
 
 export async function GET() {
   try {
-    const response = await fetch(STREAM_META_URL, {
-      headers: {
-        "User-Agent": "RadioApex/1.0 (+https://radioapex.example.com)"
-      },
+    const response = await fetch(AZURACAST_API, {
       cache: "no-store"
     });
 
@@ -49,25 +35,39 @@ export async function GET() {
       throw new Error(`Failed to fetch metadata: ${response.status}`);
     }
 
-    const body = (await response.json()) as IcecastPayload;
-    const source = parseSource(body);
+    const data = (await response.json()) as AzuraCastResponse;
 
-    const song =
-      source?.song ??
-      (source?.title && source?.artist
-        ? `${source.artist} - ${source.title}`
-        : source?.title);
+    // Şarkı bilgilerini parse et (eski HTML mantığı)
+    const song = data?.now_playing?.song || {};
+    const text = song.text || [song.artist, song.title].filter(Boolean).join(' - ');
+    const title = song.title || (text && text.split(' - ')[1]) || text || 'Radio Apex Live';
+    const artist = song.artist || (text && text.split(' - ')[0]) || '';
 
-    const [artist, title] =
-      song && song.includes(" - ")
-        ? song.split(" - ", 2)
-        : [source?.artist ?? "", source?.title ?? song ?? ""];
+    // Dinleyici sayısı
+    const listeners = data?.listeners;
+    const listenerCount = typeof listeners === 'number' 
+      ? listeners 
+      : (listeners?.total ?? listeners?.current ?? 0);
+
+    // Canlı yayın durumu
+    const isLive = !!(data?.live?.is_live);
 
     const payload = {
-      title: title?.trim() || source?.title || "Radio Apex Live",
-      artist: artist?.trim() || source?.artist || "",
-      isLive: true,
-      startedAt: source?.stream_start_iso8601 ?? null
+      title: title.trim() || "Radio Apex Live",
+      artist: artist.trim() || "",
+      isLive,
+      coverArt: song.art || null,
+      elapsed: data?.now_playing?.elapsed || 0,
+      duration: data?.now_playing?.duration || 0,
+      listeners: listenerCount,
+      songHistory: (data?.song_history || []).slice(0, 5).map(item => {
+        const s = item?.song || {};
+        const t = s.text || [s.artist, s.title].filter(Boolean).join(' - ');
+        return {
+          title: s.title || t.split(' - ')[1] || t || 'Unknown',
+          artist: s.artist || t.split(' - ')[0] || '',
+        };
+      })
     };
 
     return NextResponse.json(payload, {
@@ -83,7 +83,11 @@ export async function GET() {
         title: "Radio Apex Live",
         artist: "",
         isLive: true,
-        startedAt: null
+        coverArt: null,
+        elapsed: 0,
+        duration: 0,
+        listeners: 0,
+        songHistory: []
       },
       {
         headers: {

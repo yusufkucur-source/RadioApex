@@ -9,11 +9,20 @@ import {
   useState
 } from "react";
 
+export type SongHistoryItem = {
+  title: string;
+  artist: string;
+};
+
 export type NowPlayingPayload = {
   title: string;
   artist: string;
   isLive: boolean;
-  startedAt: string | null;
+  coverArt: string | null;
+  elapsed: number;
+  duration: number;
+  listeners: number;
+  songHistory: SongHistoryItem[];
 };
 
 type NowPlayingContextValue = {
@@ -26,7 +35,11 @@ const defaultState: NowPlayingPayload = {
   title: "Radio Apex Stream",
   artist: "Live DJ Set",
   isLive: true,
-  startedAt: null
+  coverArt: null,
+  elapsed: 0,
+  duration: 0,
+  listeners: 0,
+  songHistory: []
 };
 
 const NowPlayingContext = createContext<NowPlayingContextValue | undefined>(
