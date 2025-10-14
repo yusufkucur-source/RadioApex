@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import RadioPlayer from "@/components/audio/RadioPlayer";
+import SimplePlayer from "@/components/audio/SimplePlayer";
 import TurntableVisualizer from "@/components/graphics/TurntableVisualizer";
 import { Button } from "@/components/ui/button";
 import { Instagram, Twitter, Music } from "lucide-react";
@@ -123,7 +123,7 @@ export default function HomeSection() {
             transition={{ delay: 0.1, duration: 0.8, ease: "easeOut" }}
             className="w-full max-w-md lg:max-w-none"
           >
-            <RadioPlayer />
+            <SimplePlayer />
           </motion.div>
         </div>
       </div>
