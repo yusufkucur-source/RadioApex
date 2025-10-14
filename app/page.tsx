@@ -6,6 +6,10 @@ import SimplePlayer from "@/components/audio/SimplePlayer";
 import { NowPlayingProvider } from "@/components/now-playing/NowPlayingProvider";
 import { Button } from "@/components/ui/button";
 import { Instagram, Twitter, Music } from "lucide-react";
+import DjSection from "@/components/sections/DjSection";
+import LineupSection from "@/components/sections/LineupSection";
+import AboutSection from "@/components/sections/AboutSection";
+import ContactSection from "@/components/sections/ContactSection";
 
 const socials = [
   { 
@@ -134,6 +138,13 @@ export default function Page() {
             })}
           </div>
         </section>
+        
+        {/* Diğer Bölümler */}
+        <DjSection />
+        <LineupSection />
+        <AboutSection />
+        <ContactSection />
+        
         <Footer />
       </main>
     </NowPlayingProvider>
