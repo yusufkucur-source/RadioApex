@@ -1,0 +1,130 @@
+"use client";
+
+import { motion } from "framer-motion";
+import RadioPlayer from "@/components/audio/RadioPlayer";
+import TurntableVisualizer from "@/components/graphics/TurntableVisualizer";
+import { Button } from "@/components/ui/button";
+import { Instagram, Twitter, Music } from "lucide-react";
+
+const socials = [
+  { 
+    label: "Instagram", 
+    href: "https://instagram.com/radioapex",
+    icon: Instagram
+  },
+  { 
+    label: "Twitter", 
+    href: "https://twitter.com/radioapex",
+    icon: Twitter
+  },
+  { 
+    label: "SoundCloud", 
+    href: "https://soundcloud.com/radioapex",
+    icon: Music
+  }
+];
+
+export default function HomeSection() {
+  return (
+    <section
+      id="home"
+      className="scroll-snap-start relative flex min-h-screen items-center overflow-hidden text-white"
+    >
+      {/* Arka plan katmanları */}
+      <div className="hero-bg-outer pointer-events-none absolute inset-0 -z-20" />
+      <div className="hero-bg-gradient pointer-events-none absolute inset-0 -z-20" />
+      <div className="hero-bg-lines pointer-events-none absolute inset-0 -z-10" />
+      
+      {/* TAM EKRAN BACKGROUND IMAGE - Figma tasarımındaki gibi */}
+      <div 
+        className="pointer-events-none absolute inset-0 -z-5 bg-cover bg-center bg-no-repeat opacity-100"
+        style={{
+          backgroundImage: "url('/images/home/index_background.png')",
+          filter: "brightness(0.7) contrast(1.1)"
+        }}
+      />
+      
+      {/* TAM EKRAN TURNTABLE SVG - Figma tasarımındaki gibi */}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <TurntableVisualizer isFullScreen>
+          <div /> {/* Boş div - play butonu üstte olacak */}
+        </TurntableVisualizer>
+      </div>
+
+      {/* İçerik katmanı - Sol tarafta + Merkezi play butonu */}
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between px-6 sm:px-10 lg:px-24">
+        {/* Sol taraf - İçerik */}
+        <div className="max-w-xl space-y-8">
+          <motion.span
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="text-sm uppercase tracking-[0.6em] text-white/70"
+          >
+            Online Radio
+          </motion.span>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 26 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05, duration: 0.8, ease: "easeOut" }}
+            className="text-balance text-5xl font-semibold uppercase leading-tight tracking-[0.08em] text-[#f04868] sm:text-6xl lg:text-[72px]"
+          >
+            Feel Good Sound.
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 26 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.12, duration: 0.8, ease: "easeOut" }}
+            className="text-base leading-relaxed text-white/70 sm:text-lg"
+          >
+            Radio Apex is an experimental space broadcasting electronic,
+            ambient, avant-garde, and boundary-pushing sounds 24/7. Sit back and
+            drift away — or turn up the volume and dive in.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.7 }}
+            className="flex flex-wrap items-center gap-4"
+          >
+            {socials.map((social) => {
+              const Icon = social.icon;
+              return (
+                <Button
+                  key={social.label}
+                  variant="ghost"
+                  size="icon"
+                  asChild
+                  className="h-11 w-11 rounded-full border border-white/10 bg-white/5 text-white/60 backdrop-blur-sm transition-all hover:border-[#f04868]/50 hover:bg-[#f04868]/10 hover:text-[#f04868] hover:scale-110"
+                >
+                  <a
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.label}
+                  >
+                    <Icon className="h-5 w-5" />
+                  </a>
+                </Button>
+              );
+            })}
+          </motion.div>
+        </div>
+
+        {/* Sağ taraf - Merkezi Radio Player (üst katmanda) */}
+        <div className="flex-1 flex items-center justify-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.92, y: 40 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.8, ease: "easeOut" }}
+          >
+            <RadioPlayer />
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
