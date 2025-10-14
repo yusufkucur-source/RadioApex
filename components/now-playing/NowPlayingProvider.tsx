@@ -46,6 +46,20 @@ const NowPlayingContext = createContext<NowPlayingContextValue | undefined>(
   undefined
 );
 
+// Türkçe karakterleri İngilizce karakterlere dönüştür
+function removeTurkishCharacters(text: string): string {
+  const charMap: { [key: string]: string } = {
+    'ç': 'c', 'Ç': 'C',
+    'ğ': 'g', 'Ğ': 'G',
+    'ı': 'i', 'İ': 'I',
+    'ö': 'o', 'Ö': 'O',
+    'ş': 's', 'Ş': 'S',
+    'ü': 'u', 'Ü': 'U'
+  };
+  
+  return text.replace(/[çÇğĞıİöÖşŞüÜ]/g, (char) => charMap[char] || char);
+}
+
 async function fetchNowPlaying(): Promise<NowPlayingPayload> {
   try {
     const response = await fetch("/api/now-playing");
@@ -53,9 +67,21 @@ async function fetchNowPlaying(): Promise<NowPlayingPayload> {
       throw new Error(`Request failed: ${response.status}`);
     }
     const data = (await response.json()) as Partial<NowPlayingPayload>;
+    
+    // Türkçe karakterleri kaldır
+    const normalizedData = {
+      ...data,
+      title: data.title ? removeTurkishCharacters(data.title) : defaultState.title,
+      artist: data.artist ? removeTurkishCharacters(data.artist) : defaultState.artist,
+      songHistory: data.songHistory?.map(song => ({
+        title: removeTurkishCharacters(song.title),
+        artist: removeTurkishCharacters(song.artist)
+      })) || []
+    };
+    
     return {
       ...defaultState,
-      ...data
+      ...normalizedData
     };
   } catch (error) {
     console.error("Failed to load now playing metadata", error);

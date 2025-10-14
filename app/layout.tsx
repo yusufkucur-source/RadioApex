@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Manrope, Antonio, Anton, Space_Grotesk } from "next/font/google";
+import { Manrope, Antonio, Anton, Space_Grotesk, Roboto } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
 
@@ -22,6 +22,12 @@ const anton = Anton({
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-space-grotesk"
+});
+
+const roboto = Roboto({
+  subsets: ["latin"],
+  variable: "--font-roboto",
+  weight: ["400", "500", "700"]
 });
 
 export const metadata: Metadata = {
@@ -56,7 +62,7 @@ export default function RootLayout({
   return (
     <html
       lang="tr"
-      className={`${manrope.variable} ${antonio.variable} ${anton.variable} ${spaceGrotesk.variable} bg-apex-background text-white`}
+      className={`${manrope.variable} ${antonio.variable} ${anton.variable} ${spaceGrotesk.variable} ${roboto.variable} bg-apex-background text-white`}
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-apex-background text-white antialiased">

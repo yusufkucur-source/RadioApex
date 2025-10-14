@@ -104,29 +104,55 @@ export default function SimplePlayer() {
             className="relative z-10 cursor-pointer"
             style={{
               width: "211px",
-              height: "211px"
+              height: "211px",
+              filter: "drop-shadow(0 0 30px rgba(253, 29, 53, 0.6)) drop-shadow(0 0 60px rgba(253, 29, 53, 0.4))"
             }}
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
             exit={{ scale: 0, rotate: 180 }}
             transition={{ duration: 0.5, type: "spring" }}
-            whileHover={{ scale: 1.08 }}
+            whileHover={{ 
+              scale: 1.08,
+              filter: "drop-shadow(0 0 40px rgba(253, 29, 53, 0.8)) drop-shadow(0 0 80px rgba(253, 29, 53, 0.5))"
+            }}
             whileTap={{ scale: 0.95 }}
           >
+            {/* Glow Background Layer */}
+            <div 
+              className="absolute inset-0 rounded-full pointer-events-none animate-pulse"
+              style={{
+                background: "radial-gradient(circle, rgba(253, 29, 53, 0.3) 0%, rgba(253, 29, 53, 0) 70%)",
+                filter: "blur(20px)",
+                transform: "scale(1.2)"
+              }}
+            />
+            
             <Image
               src="/images/home/Play_circle.svg"
               alt="Play"
               width={211}
               height={211}
-              className="w-full h-full"
+              className="w-full h-full relative z-10"
               priority
             />
             
-            {/* Icon Border - kırmızı border */}
+            {/* Icon Border - kırmızı border with glow */}
             <div
               className="absolute inset-0 rounded-full pointer-events-none"
               style={{
                 border: "4px solid #FD1D35",
+                left: "8.33%",
+                right: "8.33%",
+                top: "8.33%",
+                bottom: "8.33%",
+                boxShadow: "0 0 20px rgba(253, 29, 53, 0.8), inset 0 0 20px rgba(253, 29, 53, 0.3)"
+              }}
+            />
+            
+            {/* Pulse Effect */}
+            <span 
+              className="absolute rounded-full pointer-events-none border-4 border-[#FD1D35] animate-pulse-ring"
+              style={{
                 left: "8.33%",
                 right: "8.33%",
                 top: "8.33%",
@@ -173,9 +199,9 @@ export default function SimplePlayer() {
 
       {/* Song Title - THE MESSAGE (Play butonunun hemen altında) */}
       <motion.div
-        className="absolute z-20 font-spaceGrotesk text-lg sm:text-xl md:text-[22px] font-medium uppercase tracking-[0.05em] text-[#FD1D35] text-center whitespace-nowrap"
+        className="absolute z-20 font-spaceGrotesk text-2xl sm:text-3xl md:text-[32px] font-medium uppercase tracking-[0.05em] text-[#FD1D35] text-center whitespace-nowrap"
         style={{
-          top: "calc(50% + 105px)"
+          top: "calc(50% + 85px)"
         }}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -186,9 +212,9 @@ export default function SimplePlayer() {
 
       {/* Artist Name - JOB DE JONG (Şarkı isminin altında) */}
       <motion.div
-        className="absolute z-20 font-spaceGrotesk text-xs font-medium uppercase tracking-[0.05em] text-white text-center whitespace-nowrap"
+        className="absolute z-20 font-spaceGrotesk text-base sm:text-lg md:text-xl font-medium uppercase tracking-[0.05em] text-white text-center whitespace-nowrap"
         style={{
-          top: "calc(50% + 135px)"
+          top: "calc(50% + 125px)"
         }}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}

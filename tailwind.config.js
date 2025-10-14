@@ -16,7 +16,8 @@ module.exports = {
   			],
   			antonio: ['var(--font-antonio)', 'sans-serif'],
   			anton: ['var(--font-anton)', 'sans-serif'],
-  			spaceGrotesk: ['var(--font-space-grotesk)', 'sans-serif']
+  			spaceGrotesk: ['var(--font-space-grotesk)', 'sans-serif'],
+  			roboto: ['var(--font-roboto)', 'sans-serif']
   		},
   		colors: {
   			apex: {
