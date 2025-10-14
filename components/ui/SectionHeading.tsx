@@ -33,7 +33,7 @@ export default function SectionHeading({
         transition={{ duration: 0.6 }}
         className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] uppercase tracking-[0.45em] text-white/60"
       >
-        <span className="h-1 w-1 rounded-full bg-apex-accent" />
+        <span className="h-1 w-1 rounded-full bg-[#FD1D35]" />
         {eyebrow}
       </motion.span>
 

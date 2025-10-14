@@ -119,7 +119,7 @@ export default function DjSection() {
       <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-48 bg-gradient-to-b from-black via-black/40 to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-t from-black via-black/30 to-transparent" />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-16 px-6 py-24 sm:px-10 lg:px-16">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1399px] flex-col gap-16 px-4 py-24 sm:px-6 md:px-8">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,320px)_1fr] lg:items-start">
           <motion.div
             initial={{ opacity: 0, x: -30 }}

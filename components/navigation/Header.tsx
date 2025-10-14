@@ -113,7 +113,7 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed left-4 right-4 top-4 sm:top-6 md:top-[27px] z-50 mx-auto flex h-[60px] max-w-[1399px] items-center justify-between rounded-[50px] border border-[rgba(154,154,154,0.2)] bg-black/40 px-4 sm:px-6 md:px-8 backdrop-blur-3xl transition-all duration-500 supports-[backdrop-filter]:bg-black/25">
+    <header className="fixed left-4 right-4 top-4 sm:top-6 md:top-[27px] z-50 mx-auto flex h-[60px] max-w-[1399px] items-center justify-between rounded-[50px] border border-[rgba(154,154,154,0.2)] bg-black/20 px-4 sm:px-6 md:px-8 backdrop-blur-3xl transition-all duration-500 supports-[backdrop-filter]:bg-black/10">
       <button
         onClick={() => handleNavClick("home")}
         className="font-anton text-[16px] sm:text-[20px] md:text-[22px] uppercase leading-tight sm:leading-[33px] tracking-[0.3em] sm:tracking-[0.5em] text-white transition hover:text-[#FD1D35]"
@@ -183,7 +183,7 @@ export default function Header() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.25 }}
-            className="absolute left-0 right-0 top-full mt-4 rounded-3xl border border-white/10 bg-black/80 p-4 backdrop-blur-2xl lg:hidden"
+            className="absolute left-0 right-0 top-full mt-4 rounded-3xl border border-white/10 bg-black/30 p-4 backdrop-blur-2xl lg:hidden"
           >
             <ul className="grid gap-2 text-center">
               {navItems.map(item => (

@@ -52,23 +52,24 @@ export default function HomeSection() {
       </div>
 
       {/* İçerik katmanı - Sol tarafta + Merkezi play butonu */}
-      <div className="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between px-6 sm:px-10 lg:px-24">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1399px] flex-col items-center justify-center gap-12 px-4 sm:px-6 md:px-8 lg:flex-row lg:justify-between lg:gap-0">
         {/* Sol taraf - İçerik */}
-        <div className="max-w-xl space-y-8">
+        <div className="w-full max-w-xl space-y-8 text-center lg:w-auto lg:text-left">
           <motion.span
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="text-sm uppercase tracking-[0.6em] text-white/70"
+            className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] uppercase tracking-[0.45em] text-white/60"
           >
-            Online Radio
+            <span className="h-1 w-1 rounded-full bg-[#FD1D35]" />
+            LIVE RADIO
           </motion.span>
 
           <motion.h1
             initial={{ opacity: 0, y: 26 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05, duration: 0.8, ease: "easeOut" }}
-            className="text-balance text-5xl font-semibold uppercase leading-tight tracking-[0.08em] text-[#f04868] sm:text-6xl lg:text-[72px]"
+            className="text-balance text-4xl font-bold uppercase leading-tight tracking-[0.08em] text-[#FD1D35] sm:text-5xl md:text-6xl lg:text-[72px]"
           >
             Feel Good Sound.
           </motion.h1>
@@ -77,7 +78,7 @@ export default function HomeSection() {
             initial={{ opacity: 0, y: 26 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.12, duration: 0.8, ease: "easeOut" }}
-            className="text-base leading-relaxed text-white/70 sm:text-lg"
+            className="text-base leading-relaxed text-white sm:text-lg"
           >
             Radio Apex is an experimental space broadcasting electronic,
             ambient, avant-garde, and boundary-pushing sounds 24/7. Sit back and
@@ -88,7 +89,7 @@ export default function HomeSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.7 }}
-            className="flex flex-wrap items-center gap-4"
+            className="flex flex-wrap items-center justify-center gap-4 lg:justify-start"
           >
             {socials.map((social) => {
               const Icon = social.icon;
@@ -98,7 +99,7 @@ export default function HomeSection() {
                   variant="ghost"
                   size="icon"
                   asChild
-                  className="h-11 w-11 rounded-full border border-white/10 bg-white/5 text-white/60 backdrop-blur-sm transition-all hover:border-[#f04868]/50 hover:bg-[#f04868]/10 hover:text-[#f04868] hover:scale-110"
+                  className="h-11 w-11 rounded-full border border-white/10 bg-white/5 text-white/60 backdrop-blur-sm transition-all hover:border-[#FD1D35]/50 hover:bg-[#FD1D35]/10 hover:text-[#FD1D35] hover:scale-110"
                 >
                   <a
                     href={social.href}
@@ -115,11 +116,12 @@ export default function HomeSection() {
         </div>
 
         {/* Sağ taraf - Merkezi Radio Player (üst katmanda) */}
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex w-full items-center justify-center lg:flex-1">
           <motion.div
             initial={{ opacity: 0, scale: 0.92, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.8, ease: "easeOut" }}
+            className="w-full max-w-md lg:max-w-none"
           >
             <RadioPlayer />
           </motion.div>
