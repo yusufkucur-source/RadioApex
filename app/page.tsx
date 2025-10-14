@@ -123,18 +123,10 @@ export default function Page() {
           style={{ y: turntableY }}
         >
           <img 
-            src="/images/home/SVG/Turntable_V08_animated_CSS_ids_fixed_dots36s_v2.svg" 
+            src="/images/home/SVG/turntable_V03.svg" 
             alt="Turntable"
             className="w-full h-full"
             style={{ objectFit: "cover", objectPosition: "center", opacity: 0.1 }}
-          />
-          
-          {/* Turntable Big Text Overlay */}
-          <img 
-            src="/images/home/SVG/turntable_V02_Bigtext.svg" 
-            alt="Turntable Big Text"
-            className="absolute w-full h-full"
-            style={{ objectFit: "cover", objectPosition: "center", opacity: 0.15 }}
           />
           
           {/* Hareketli Kırmızı ve Beyaz Noktalar - Parallax */}
