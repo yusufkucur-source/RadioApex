@@ -116,12 +116,12 @@ export default function Header() {
     <header className="fixed left-4 right-4 top-4 sm:top-6 md:top-[27px] z-50 mx-auto flex h-[60px] max-w-[1399px] items-center justify-between rounded-[50px] border border-[rgba(154,154,154,0.2)] bg-black/20 px-4 sm:px-6 md:px-8 backdrop-blur-3xl transition-all duration-500 supports-[backdrop-filter]:bg-black/10">
       <button
         onClick={() => handleNavClick("home")}
-        className="font-anton text-[16px] sm:text-[20px] md:text-[22px] uppercase leading-tight sm:leading-[33px] tracking-[0.3em] sm:tracking-[0.5em] text-white transition hover:text-[#FD1D35]"
+        className="flex items-center font-anton text-[16px] sm:text-[20px] md:text-[22px] uppercase leading-none tracking-[0.3em] sm:tracking-[0.5em] text-white transition hover:text-[#FD1D35] ml-2 sm:ml-4 md:ml-6"
       >
         RADIO APEX
       </button>
 
-      <nav className="hidden items-center gap-10 lg:flex">
+      <nav className="hidden items-center gap-10 lg:flex mr-2 sm:mr-4 md:mr-6">
         {navItems.map(item => (
           <button
             key={item.id}
@@ -149,7 +149,7 @@ export default function Header() {
       <button
         onClick={() => setMenuOpen(prev => !prev)}
         className={clsx(
-          "relative flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-sm font-semibold text-white transition lg:hidden",
+          "relative flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-sm font-semibold text-white transition lg:hidden mr-2 sm:mr-4 md:mr-6",
           "hover:border-[#FD1D35] hover:text-[#FD1D35] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FD1D35]"
         )}
         aria-label="Menu"

@@ -64,13 +64,13 @@ export default function SimplePlayer() {
     <div className="relative flex items-center justify-center pb-20">
       {/* Outer Gradient Circle - Ellipse 5773 */}
       <div
-        className="absolute scale-100 sm:scale-110 md:scale-125"
+        className="absolute scale-75 sm:scale-85 md:scale-95"
         style={{
-          width: "450px",
-          height: "450px",
+          width: "380px",
+          height: "380px",
           background: "linear-gradient(180deg, rgba(37, 120, 130, 0.27) 0%, rgba(253, 29, 53, 0.4) 100%)",
           borderRadius: "50%",
-          opacity: 0.8
+          opacity: 0.7
         }}
       />
 
@@ -199,7 +199,7 @@ export default function SimplePlayer() {
 
       {/* Song Title - THE MESSAGE (Play butonunun hemen altında) */}
       <motion.div
-        className="absolute z-20 font-spaceGrotesk text-2xl sm:text-3xl md:text-[32px] font-medium uppercase tracking-[0.05em] text-[#FD1D35] text-center whitespace-nowrap"
+        className="absolute z-20 font-spaceGrotesk text-2xl sm:text-3xl md:text-[32px] font-medium tracking-[0.05em] text-[#FD1D35] text-center whitespace-nowrap"
         style={{
           top: "calc(50% + 85px)"
         }}
@@ -207,12 +207,12 @@ export default function SimplePlayer() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        {nowPlaying.title}
+        {nowPlaying.title?.toLocaleUpperCase('en-US') || ''}
       </motion.div>
 
       {/* Artist Name - JOB DE JONG (Şarkı isminin altında) */}
       <motion.div
-        className="absolute z-20 font-spaceGrotesk text-base sm:text-lg md:text-xl font-medium uppercase tracking-[0.05em] text-white text-center whitespace-nowrap"
+        className="absolute z-20 font-spaceGrotesk text-base sm:text-lg md:text-xl font-medium tracking-[0.05em] text-white text-center whitespace-nowrap"
         style={{
           top: "calc(50% + 125px)"
         }}
@@ -220,7 +220,7 @@ export default function SimplePlayer() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
-        {nowPlaying.artist}
+        {nowPlaying.artist?.toLocaleUpperCase('en-US') || ''}
       </motion.div>
 
       {/* Hidden Audio Element */}

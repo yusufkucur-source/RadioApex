@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { motion } from "framer-motion";
 import Header from "@/components/navigation/Header";
 import Footer from "@/components/layout/Footer";
 import SimplePlayer from "@/components/audio/SimplePlayer";
@@ -30,9 +32,36 @@ const socials = [
 ];
 
 export default function Page() {
+  const redDots = useMemo(() => 
+    Array.from({ length: 20 }).map(() => ({
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      moveX: [0, Math.random() * 60 - 30, Math.random() * 60 - 30, 0],
+      moveY: [0, Math.random() * 60 - 30, Math.random() * 60 - 30, 0],
+      duration: 10 + Math.random() * 8
+    }))
+  , []);
+
+  const whiteDots = useMemo(() => 
+    Array.from({ length: 15 }).map(() => ({
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      moveX: [0, Math.random() * 50 - 25, Math.random() * 50 - 25, 0],
+      moveY: [0, Math.random() * 50 - 25, Math.random() * 50 - 25, 0],
+      duration: 12 + Math.random() * 10
+    }))
+  , []);
+
   return (
     <NowPlayingProvider>
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="relative z-50"
+      >
       <Header />
+      </motion.div>
       <main className="relative w-full overflow-hidden bg-apex-background">
         <section
           id="home"
@@ -72,12 +101,65 @@ export default function Page() {
               src="/images/home/SVG/Turntable_V08_animated_CSS_ids_fixed_dots36s_v2.svg" 
               alt="Turntable"
               className="w-full h-full"
-              style={{ objectFit: "cover", objectPosition: "center", opacity: 0.2 }}
+              style={{ objectFit: "cover", objectPosition: "center", opacity: 0.1 }}
             />
+            
+            {/* Hareketli Kırmızı ve Beyaz Noktalar */}
+            <div className="absolute inset-0 overflow-hidden">
+              {/* Kırmızı Noktalar */}
+              {redDots.map((dot, i) => (
+                <motion.div
+                  key={`red-${i}`}
+                  className="absolute w-1 h-1 rounded-full bg-[#FD1D35]"
+                  style={{
+                    left: `${dot.x}%`,
+                    top: `${dot.y}%`,
+                    boxShadow: '0 0 8px rgba(253, 29, 53, 0.8)'
+                  }}
+                  animate={{
+                    x: dot.moveX,
+                    y: dot.moveY,
+                    scale: [1, 1.8, 1, 1.5, 1],
+                    opacity: [0.4, 0.9, 0.5, 0.8, 0.4]
+                  }}
+                  transition={{
+                    duration: dot.duration,
+                    repeat: Infinity,
+                    delay: i * 0.3,
+                    ease: "easeInOut"
+                  }}
+                />
+              ))}
+              
+              {/* Beyaz Noktalar */}
+              {whiteDots.map((dot, i) => (
+                <motion.div
+                  key={`white-${i}`}
+                  className="absolute w-1 h-1 rounded-full bg-white"
+                  style={{
+                    left: `${dot.x}%`,
+                    top: `${dot.y}%`,
+                    boxShadow: '0 0 6px rgba(255, 255, 255, 0.6)'
+                  }}
+                  animate={{
+                    x: dot.moveX,
+                    y: dot.moveY,
+                    scale: [1, 1.3, 1, 1.6, 1],
+                    opacity: [0.2, 0.6, 0.3, 0.7, 0.2]
+                  }}
+                  transition={{
+                    duration: dot.duration,
+                    repeat: Infinity,
+                    delay: i * 0.4,
+                    ease: "easeInOut"
+                  }}
+                />
+              ))}
+            </div>
           </div>
           
           {/* FEEL GOOD SOUND. - Başlık */}
-          <div 
+          <motion.div 
             className="absolute z-10 left-1/2 -translate-x-1/2 whitespace-nowrap font-roboto text-[32px] sm:text-[42px] md:text-[57px]"
             style={{
               top: "calc(50% - 359.5px)",
@@ -87,12 +169,15 @@ export default function Page() {
               letterSpacing: "-0.25px",
               color: "#FD1D35"
             }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
           >
             FEEL GOOD SOUND.
-          </div>
+          </motion.div>
 
           {/* Açıklama Metni */}
-          <div 
+          <motion.div 
             className="absolute z-10 left-1/2 -translate-x-1/2 font-spaceGrotesk text-sm sm:text-base px-4 max-w-[791px]"
             style={{
               top: "calc(50% - 280px)",
@@ -102,41 +187,60 @@ export default function Page() {
               textAlign: "center",
               color: "#FFFFFF"
             }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
           >
             Radio Apex is an experimental space broadcasting electronic, ambient, avant-garde, and boundary-pushing sounds 24/7. Sit back and drift away — or turn up the volume and dive in.
-          </div>
+          </motion.div>
 
           {/* Simple Player - Play butonu background center'a tam hizalı */}
-          <div className="relative z-10 flex h-full w-full items-center justify-center">
+          <motion.div 
+            className="relative z-10 flex h-full w-full items-center justify-center"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
+          >
             <div className="translate-y-10">
               <SimplePlayer />
             </div>
-          </div>
+          </motion.div>
 
           {/* Sosyal Medya İkonları - Footer üstünde */}
-          <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-10 flex items-center justify-center gap-4">
-            {socials.map((social) => {
+          <motion.div 
+            className="absolute bottom-20 sm:bottom-24 left-0 right-0 z-10 flex items-center justify-center gap-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
+          >
+            {socials.map((social, index) => {
               const Icon = social.icon;
               return (
-                <Button
+                <motion.div
                   key={social.label}
-                  variant="ghost"
-                  size="icon"
-                  asChild
-                  className="h-11 w-11 rounded-full border border-white/10 bg-white/5 text-white/60 backdrop-blur-sm transition-all hover:border-[#FD1D35]/50 hover:bg-[#FD1D35]/10 hover:text-[#FD1D35] hover:scale-110"
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.4, delay: 0.9 + index * 0.1, ease: "easeOut" }}
                 >
-                  <a
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={social.label}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    asChild
+                    className="h-11 w-11 rounded-full border border-white/10 bg-white/5 text-white/60 backdrop-blur-sm transition-all hover:border-[#FD1D35]/50 hover:bg-[#FD1D35]/10 hover:text-[#FD1D35] hover:scale-110"
                   >
-                    <Icon className="h-5 w-5" />
-                  </a>
-                </Button>
+                    <a
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={social.label}
+                    >
+                      <Icon className="h-5 w-5" />
+                    </a>
+                  </Button>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         </section>
         
         {/* Diğer Bölümler */}

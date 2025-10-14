@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useNowPlaying } from "@/components/now-playing/NowPlayingProvider";
 
 export default function Footer() {
@@ -7,11 +8,16 @@ export default function Footer() {
 
   const displayText = isLoading
     ? "RADIO APEX - YAYIN YUKLENIYOR"
-    : `${(nowPlaying.artist?.trim() || "RADIO APEX").toUpperCase()} · ${(nowPlaying.title?.trim() || "LIVE STREAM").toUpperCase()}`;
+    : `${(nowPlaying.artist?.trim() || "RADIO APEX").toLocaleUpperCase('en-US')} · ${(nowPlaying.title?.trim() || "LIVE STREAM").toLocaleUpperCase('en-US')}`;
 
   return (
-    <footer className="fixed bottom-4 sm:bottom-6 md:bottom-8 left-4 right-4 sm:left-6 sm:right-6 md:left-8 md:right-8 z-50 flex justify-center">
-      <div className="relative w-full max-w-[90vw] sm:max-w-[85vw] md:max-w-[80vw] lg:max-w-[1335px] h-[32px] sm:h-[35px] md:h-[37px] rounded-[50px] border border-[rgba(154,154,154,0.2)] bg-black/20 backdrop-blur-3xl overflow-hidden">
+    <motion.footer 
+      className="fixed bottom-4 sm:bottom-6 md:bottom-8 left-4 right-4 z-50 mx-auto flex h-[32px] sm:h-[35px] md:h-[37px] max-w-[1399px] justify-center"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay: 1.2, ease: "easeOut" }}
+    >
+      <div className="relative w-full rounded-[50px] border border-[rgba(154,154,154,0.2)] bg-black/20 backdrop-blur-3xl overflow-hidden">
         {/* Scrolling text container with feathered edges */}
         <div 
           className="flex h-full items-center whitespace-nowrap font-spaceGrotesk text-[10px] sm:text-[11px] md:text-xs font-normal uppercase tracking-[0.05em] leading-[15px]"
@@ -40,6 +46,6 @@ export default function Footer() {
           </div>
         </div>
       </div>
-    </footer>
+    </motion.footer>
   );
 }
