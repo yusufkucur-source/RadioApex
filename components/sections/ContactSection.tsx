@@ -24,39 +24,46 @@ export default function ContactSection() {
       id="contact"
       className="section-padding scroll-snap-start relative flex min-h-screen flex-col justify-center"
     >
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(217,70,239,0.18),transparent_65%)]" />
+      {/* Title - İlk önce yukarı çıkar */}
+      <motion.div
+        initial={{ opacity: 0, y: 80 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, amount: 0.3, margin: "-100px" }}
+        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+      >
+        <SectionHeading
+          eyebrow="Contact"
+          title="Join the frequency"
+          description="Get in touch for event announcements, live broadcast support, or collaborations."
+          align="center"
+        />
+      </motion.div>
 
-      <SectionHeading
-        eyebrow="İletişim"
-        title="Frekansa katıl"
-        description="Etkinlik duyuruları, canlı yayın desteği veya iş birlikleri için bizimle iletişime geçin."
-        align="center"
-      />
-
+      {/* Form - Title'dan sonra gelir */}
       <motion.form
         onSubmit={handleSubmit}
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-10%" }}
-        transition={{ duration: 0.6 }}
+        initial={{ opacity: 0, y: 60, scale: 0.95 }}
+        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+        viewport={{ once: false, margin: "-10%", amount: 0.3 }}
+        transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
         className="mx-auto mt-16 grid w-full max-w-3xl gap-6 rounded-3xl border border-white/10 bg-white/[0.04] p-8 shadow-2xl backdrop-blur-2xl"
       >
         <div className="grid gap-3">
           <label className="text-xs uppercase tracking-[0.3em] text-white/60">
-            İsim
+            Name
           </label>
           <input
             required
             type="text"
             name="name"
-            placeholder="Adınız"
+            placeholder="Your name"
             className="h-12 rounded-2xl border border-white/10 bg-white/5 px-4 text-sm text-white outline-none transition focus:border-apex-accent focus:bg-black/60"
           />
         </div>
 
         <div className="grid gap-3">
           <label className="text-xs uppercase tracking-[0.3em] text-white/60">
-            E-posta
+            Email
           </label>
           <input
             required
@@ -69,13 +76,13 @@ export default function ContactSection() {
 
         <div className="grid gap-3">
           <label className="text-xs uppercase tracking-[0.3em] text-white/60">
-            Mesaj
+            Message
           </label>
           <textarea
             required
             name="message"
             rows={5}
-            placeholder="Mesajınızı paylaşın..."
+            placeholder="Share your message..."
             className="rounded-3xl border border-white/10 bg-white/5 px-4 py-4 text-sm text-white outline-none transition focus:border-apex-accent focus:bg-black/60"
           />
         </div>
@@ -87,10 +94,10 @@ export default function ContactSection() {
           disabled={state === "sending"}
           className="flex h-12 items-center justify-center rounded-full border border-white/10 bg-gradient-to-r from-apex-accent via-apex-accent/80 to-apex-secondary/80 text-sm font-semibold uppercase tracking-[0.3em] text-white shadow-lg transition disabled:cursor-not-allowed disabled:opacity-80"
         >
-          {state === "idle" && "Gönder"}
-          {state === "sending" && "Gönderiliyor..."}
-          {state === "success" && "Mesaj gönderildi"}
-          {state === "error" && "Hata oluştu, tekrar deneyin"}
+          {state === "idle" && "Send"}
+          {state === "sending" && "Sending..."}
+          {state === "success" && "Message sent"}
+          {state === "error" && "Error occurred, try again"}
         </motion.button>
       </motion.form>
 
@@ -101,8 +108,7 @@ export default function ContactSection() {
         transition={{ delay: 0.2, duration: 0.5 }}
         className="mx-auto mt-10 max-w-2xl text-center text-sm text-white/50"
       >
-        Form gönderimleri şu anda demo modunda. Admin paneli entegre edildiğinde
-        Firestore veya tercih edilen e-posta servisi ile bağlayabilirsiniz.
+        Form submissions are currently in demo mode. You can integrate Firestore or your preferred email service when the admin panel is ready.
       </motion.p>
     </section>
   );

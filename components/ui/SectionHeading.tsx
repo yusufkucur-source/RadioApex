@@ -8,6 +8,7 @@ type SectionHeadingProps = {
   title: string;
   description?: string;
   className?: string;
+  titleClassName?: string;
   align?: "left" | "center";
 };
 
@@ -16,6 +17,7 @@ export default function SectionHeading({
   title,
   description,
   className,
+  titleClassName,
   align = "left"
 }: SectionHeadingProps) {
   return (
@@ -42,7 +44,10 @@ export default function SectionHeading({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-15%" }}
         transition={{ delay: 0.05, duration: 0.7 }}
-        className="mt-8 text-balance text-3xl font-semibold text-white sm:text-4xl"
+        className={clsx(
+          "mt-8 text-balance text-3xl font-semibold sm:text-4xl",
+          titleClassName || "text-white"
+        )}
       >
         {title}
       </motion.h2>

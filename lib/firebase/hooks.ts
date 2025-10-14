@@ -53,13 +53,40 @@ const sampleDjs: DJProfile[] = [
     photoUrl: "",
     description:
       "Karanlık disco ritimleri ve synth wave dokunuşlarıyla Lumen, gecenin atmosferine yeni bir boyut ekliyor."
+  },
+  {
+    id: "sample-vertex",
+    nickname: "Vertex",
+    fullName: "Can D.",
+    city: "Amsterdam",
+    photoUrl: "",
+    description:
+      "Progressive house ve melodic techno'yu avangard soundscape'lerle harmanlayan Vertex, dinleyicileri derin bir sonic yolculuğa çıkarıyor."
+  },
+  {
+    id: "sample-nova",
+    nickname: "Nova",
+    fullName: "Elif M.",
+    city: "Ankara",
+    photoUrl: "",
+    description:
+      "Ambient textures ve downtempo ritimlerle gecenin sessiz anlarına dokunuş yapan Nova, elektronik müziğin meditatif yönünü keşfediyor."
+  },
+  {
+    id: "sample-pulse",
+    nickname: "Pulse",
+    fullName: "Serkan T.",
+    city: "London",
+    photoUrl: "",
+    description:
+      "Energetik techno ve industrial soundların ustası Pulse, yüksek BPM'lerle dolu setleriyle dansçıları zaman algısından koparıyor."
   }
 ];
 
 const sampleLineup: LineupSlot[] = [
   {
     id: "slot-01",
-    day: "Pazartesi",
+    day: "Monday",
     startTime: "20:00",
     endTime: "22:00",
     genre: "Organic House",
@@ -68,7 +95,7 @@ const sampleLineup: LineupSlot[] = [
   },
   {
     id: "slot-02",
-    day: "Çarşamba",
+    day: "Wednesday",
     startTime: "22:00",
     endTime: "00:00",
     genre: "Minimal Techno",
@@ -77,7 +104,7 @@ const sampleLineup: LineupSlot[] = [
   },
   {
     id: "slot-03",
-    day: "Cuma",
+    day: "Friday",
     startTime: "23:00",
     endTime: "01:00",
     genre: "Dark Disco",
@@ -112,6 +139,13 @@ function useFirestoreCollection<T extends { id: string }>(
     const unsubscribe = onSnapshot(
       collection(db, collectionName),
       snapshot => {
+        // Eğer Firestore collection'ı boşsa, fallback data kullan
+        if (snapshot.docs.length === 0) {
+          setData(fallback);
+          setLoading(false);
+          return;
+        }
+        
         const parsed = snapshot.docs.map(doc =>
           transformer ? transformer({ id: doc.id, ...doc.data() }) : ({ id: doc.id, ...doc.data() } as T)
         );
@@ -126,7 +160,8 @@ function useFirestoreCollection<T extends { id: string }>(
     );
 
     return () => unsubscribe();
-  }, [collectionName, transformer]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [collectionName]);
 
   return useMemo(
     () => ({

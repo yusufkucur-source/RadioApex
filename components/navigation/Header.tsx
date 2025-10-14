@@ -7,7 +7,7 @@ import clsx from "clsx";
 const SECTIONS = [
   { id: "home", label: "HOME" },
   { id: "dj-list", label: "DJ LIST" },
-  { id: "line-up", label: "LINE UP" },
+  { id: "line-up", label: "LINEUP" },
   { id: "about", label: "ABOUT" },
   { id: "contact", label: "CONTACT" }
 ] as const;

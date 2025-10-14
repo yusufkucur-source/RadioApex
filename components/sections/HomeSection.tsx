@@ -5,6 +5,7 @@ import SimplePlayer from "@/components/audio/SimplePlayer";
 import TurntableVisualizer from "@/components/graphics/TurntableVisualizer";
 import { Button } from "@/components/ui/button";
 import { Instagram, Twitter, Music } from "lucide-react";
+import FeelGoodTicker from "@/components/ui/FeelGoodTicker";
 
 const socials = [
   { 
@@ -58,6 +59,13 @@ export default function HomeSection() {
         }}
       />
       
+      {/* TEST TICKER - FEEL GOOD SOUND */}
+      <div className="absolute top-10 left-0 right-0 z-[9999] bg-red-500 p-4">
+        <div className="text-[120px] font-bold text-white">
+          FEEL GOOD SOUND. FEEL GOOD SOUND. FEEL GOOD SOUND.
+        </div>
+      </div>
+
       {/* TAM EKRAN TURNTABLE SVG - Figma tasarımındaki gibi */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <TurntableVisualizer isFullScreen>

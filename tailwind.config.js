@@ -70,43 +70,61 @@ module.exports = {
   		backgroundImage: {
   			'gradient-glow': 'radial-gradient(circle at top left, rgba(217,70,239,0.35), transparent 55%), radial-gradient(circle at top right, rgba(14,165,233,0.25), transparent 50%), radial-gradient(circle at bottom, rgba(255,255,255,0.08), transparent 55%)'
   		},
-  		keyframes: {
-  			marquee: {
-  				from: {
-  					transform: 'translateX(0%)'
-  				},
-  				to: {
-  					transform: 'translateX(-50%)'
-  				}
-  			},
-  			'slow-spin': {
-  				from: {
-  					transform: 'rotate(0deg)'
-  				},
-  				to: {
-  					transform: 'rotate(360deg)'
-  				}
-  			},
-  			'pulse-ring': {
-  				'0%': {
-  					transform: 'scale(0.95)',
-  					opacity: 0.5
-  				},
-  				'50%': {
-  					transform: 'scale(1.05)',
-  					opacity: 0.7
-  				},
-  				'100%': {
-  					transform: 'scale(0.95)',
-  					opacity: 0.5
-  				}
-  			}
-  		},
-  		animation: {
-  			marquee: 'marquee 35s linear infinite',
-  			'slow-spin': 'slow-spin 40s linear infinite',
-  			'pulse-ring': 'pulse-ring 6s ease-in-out infinite'
-  		},
+		keyframes: {
+			marquee: {
+				from: {
+					transform: 'translateX(0%)'
+				},
+				to: {
+					transform: 'translateX(-50%)'
+				}
+			},
+			'scroll-left': {
+				'0%': {
+					transform: 'translateX(100%)'
+				},
+				'100%': {
+					transform: 'translateX(-100%)'
+				}
+			},
+			'scroll-right': {
+				'0%': {
+					transform: 'translateX(-100%)'
+				},
+				'100%': {
+					transform: 'translateX(100%)'
+				}
+			},
+			'slow-spin': {
+				from: {
+					transform: 'rotate(0deg)'
+				},
+				to: {
+					transform: 'rotate(360deg)'
+				}
+			},
+			'pulse-ring': {
+				'0%': {
+					transform: 'scale(0.95)',
+					opacity: 0.5
+				},
+				'50%': {
+					transform: 'scale(1.05)',
+					opacity: 0.7
+				},
+				'100%': {
+					transform: 'scale(0.95)',
+					opacity: 0.5
+				}
+			}
+		},
+		animation: {
+			marquee: 'marquee 35s linear infinite',
+			'scroll-left': 'scroll-left 60s linear infinite',
+			'scroll-right': 'scroll-right 60s linear infinite',
+			'slow-spin': 'slow-spin 40s linear infinite',
+			'pulse-ring': 'pulse-ring 6s ease-in-out infinite'
+		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

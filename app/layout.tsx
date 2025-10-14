@@ -43,7 +43,7 @@ export const metadata: Metadata = {
       "Modern online radio experience with curated DJ sets and live lineup.",
     url: "https://radioapex.example.com",
     siteName: "Radio Apex",
-    locale: "tr_TR",
+    locale: "en_US",
     type: "website"
   },
   twitter: {
@@ -61,7 +61,7 @@ export default function RootLayout({
 }) {
   return (
     <html
-      lang="tr"
+      lang="en"
       className={`${manrope.variable} ${antonio.variable} ${anton.variable} ${spaceGrotesk.variable} ${roboto.variable} bg-apex-background text-white`}
       suppressHydrationWarning
     >

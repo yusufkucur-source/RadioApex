@@ -15,25 +15,37 @@ export default function LineupSection() {
       id="line-up"
       className="section-padding scroll-snap-start relative flex min-h-screen flex-col justify-center"
     >
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_bottom,rgba(14,165,233,0.12),transparent_60%)]" />
+      {/* Title - İlk önce yukarı çıkar */}
+      <motion.div
+        initial={{ opacity: 0, y: 80 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, amount: 0.3, margin: "-100px" }}
+        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+      >
+        <SectionHeading
+          eyebrow="Weekly Stream"
+          title="Apex weekly stream"
+          titleClassName="text-[#FD1D35]"
+          description="Radio Apex keeps the pulse of electronic music alive with a seamless flow of sound through every hour of the day. After 8 PM, the energy rises — from deep house to techno, from chill sets to late-night afterhours. Pure rhythm, atmosphere, and motion — on Apex, the night never ends."
+          align="center"
+        />
+      </motion.div>
 
-      <SectionHeading
-        eyebrow="Line Up"
-        title="Haftalık Apex yayın akışı"
-        description="Her yayın zaman dilimi için seçilen DJ performansları ve türler. Admin paneli ile anlık güncellemeler yapılabilir."
-        align="center"
-      />
-
+      {/* Lineup items - Stagger ile birer birer gelir */}
       <div className="mt-16 grid gap-6">
         {lineup.map((slot, index) => {
           const dj = slot.djId ? djMap.get(slot.djId) : undefined;
           return (
             <motion.div
               key={slot.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-12%" }}
-              transition={{ delay: index * 0.04, duration: 0.6 }}
+              initial={{ opacity: 0, y: 60, x: -20 }}
+              whileInView={{ opacity: 1, y: 0, x: 0 }}
+              viewport={{ once: false, margin: "-15%", amount: 0.3 }}
+              transition={{ 
+                delay: index * 0.08, 
+                duration: 0.7, 
+                ease: [0.22, 1, 0.36, 1] 
+              }}
               className="group flex flex-col gap-6 rounded-3xl border border-white/10 bg-white/[0.04] p-6 shadow-2xl backdrop-blur-2xl transition duration-500 hover:-translate-y-1 hover:border-apex-secondary/70 hover:shadow-apex-secondary/20 sm:flex-row sm:items-center sm:justify-between sm:gap-10"
             >
               <div>
@@ -65,7 +77,7 @@ export default function LineupSection() {
                   </div>
                 ) : (
                   <p className="text-xs uppercase tracking-[0.3em] text-white/40">
-                    DJ atanmadı
+                    No DJ assigned
                   </p>
                 )}
               </div>

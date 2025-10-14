@@ -7,40 +7,26 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import { useDJs } from "@/lib/firebase/hooks";
 
 const containerVariants: Variants = {
-  hidden: { opacity: 0, y: 40 },
+  hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    y: 0,
     transition: {
-      duration: 0.8,
-      ease: "easeOut",
-      delayChildren: 0.2,
-      staggerChildren: 0.08
+      duration: 0.4,
+      delayChildren: 0.3, // Title sonrası başla
+      staggerChildren: 0.12 // Her kart arasında delay
     }
   }
 };
 
 const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 32, scale: 0.94 },
+  hidden: { opacity: 0, y: 60, scale: 0.92 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
-      duration: 0.55,
-      ease: "easeOut"
-    }
-  }
-};
-
-const metricVariants: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-      ease: "easeOut"
+      duration: 0.7,
+      ease: [0.22, 1, 0.36, 1] // Custom ease (easeOutExpo)
     }
   }
 };
@@ -65,107 +51,36 @@ function toInitials(value?: string) {
 export default function DjSection() {
   const { data: djs } = useDJs();
 
-  const uniqueCities = useMemo(() => {
-    const cities = new Set<string>();
-    djs.forEach(dj => {
-      const city = dj.city?.trim().toLowerCase();
-      if (city) {
-        cities.add(city);
-      }
-    });
-    return cities.size;
-  }, [djs]);
-
-  const metrics = useMemo(
-    () => [
-      {
-        label: "Aktif DJ",
-        value:
-          djs.length > 0 ? djs.length.toString().padStart(2, "0") : "\u2014",
-        caption: "Radio Apex roster"
-      },
-      {
-        label: "Sehir",
-        value:
-          uniqueCities > 0
-            ? uniqueCities.toString().padStart(2, "0")
-            : "\u2014",
-        caption: "Global frekanslar"
-      },
-      {
-        label: "Yayin",
-        value: "24/7",
-        caption: "Elektronik yayin akisi"
-      }
-    ],
-    [djs.length, uniqueCities]
-  );
 
   return (
     <section
       id="dj-list"
       className="section-padding scroll-snap-start relative flex min-h-screen items-center justify-center overflow-hidden"
     >
-      <div className="pointer-events-none absolute inset-0 -z-30 bg-[radial-gradient(circle_at_top,rgba(253,29,53,0.16),transparent_58%)]" />
-      <div className="pointer-events-none absolute inset-0 -z-30 bg-[radial-gradient(circle_at_bottom_left,rgba(14,165,233,0.16),transparent_60%)]" />
-      <div
-        className="pointer-events-none absolute inset-0 -z-20 opacity-20"
-        style={{
-          backgroundImage:
-            "linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(0deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
-          backgroundSize: "140px 140px"
-        }}
-      />
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-48 bg-gradient-to-b from-black via-black/40 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-t from-black via-black/30 to-transparent" />
-
       <div className="relative z-10 mx-auto flex w-full max-w-[1399px] flex-col gap-16 px-4 py-24 sm:px-6 md:px-8">
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,320px)_1fr] lg:items-start">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            className="space-y-10"
-          >
-            <SectionHeading
-              eyebrow="DJ Line"
-              title="Radio Apex DJ kadrosu"
-              description="Sehrin farkli kose noktalarindan Apex frekansina baglanan DJ'ler, her seans icin ozel setler hazirliyor. Modern, minimal ve akiskan bir deneyim icin tasarlandi."
-            />
+        {/* Title - İlk önce yukarı çıkar (parallax) */}
+        <motion.div
+          initial={{ opacity: 0, y: 80 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.3, margin: "-100px" }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+          className="mb-12"
+        >
+          <SectionHeading
+            eyebrow="DJ LIST"
+            title="Meet the Artists Behind the Sound."
+            description="The Radio Apex DJ List showcases the creative minds shaping our nightly flow — from deep house dreamers to techno visionaries. Discover each artist's unique style, story, and sonic signature that define the Apex sound."
+            titleClassName="text-[#FD1D35]"
+          />
+        </motion.div>
 
-            <motion.ul
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ delayChildren: 0.2, staggerChildren: 0.1 }}
-              className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1"
-            >
-              {metrics.map(metric => (
-                <motion.li
-                  key={metric.label}
-                  variants={metricVariants}
-                  className="rounded-3xl border border-white/10 bg-white/[0.04] px-6 py-5 backdrop-blur-xl transition duration-500 hover:border-apex-secondary/60 hover:bg-white/[0.08]"
-                >
-                  <p className="text-xs uppercase tracking-[0.3em] text-white/50">
-                    {metric.label}
-                  </p>
-                  <p className="mt-2 text-3xl font-semibold text-white">
-                    {metric.value}
-                  </p>
-                  <p className="mt-2 text-xs uppercase tracking-[0.2em] text-white/40">
-                    {metric.caption}
-                  </p>
-                </motion.li>
-              ))}
-            </motion.ul>
-          </motion.div>
-
+          {/* Kartlar - Title'dan sonra gelir (parallax stagger) */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: false, amount: 0.15, margin: "-80px" }}
+            transition={{ staggerChildren: 0.1, delayChildren: 0.2 }}
             className="grid gap-8 sm:grid-cols-2 xl:grid-cols-3"
           >
             {djs.map(dj => {
@@ -253,8 +168,7 @@ export default function DjSection() {
                 </motion.article>
               );
             })}
-          </motion.div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -4,9 +4,9 @@ import { motion } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 
 const paragraphs = [
-  "Radio Apex, bağımsız elektronik müzik sahnesine ses veren dijital bir radyo platformu. İstanbul ve Avrupa’daki DJ kolektiflerini aynı frekansta buluşturarak gecenin ritmini izleyicilere taşıyoruz.",
-  "Her yayın, atmosfer tasarımı ve görsel-işitsel kurgu ile desteklenir; dinleyenlerin sadece müzik değil aynı zamanda bir deneyim yaşamasını hedefleriz.",
-  "Admin paneli üzerinden yayın akışını, DJ kadrosunu ve özel etkinlik anonslarını gerçek zamanlı yönetebilirsiniz."
+  "Radio Apex is an independent sonic platform exploring the outer edges of sound and emotion. Broadcasting 24/7, it blends electronic, ambient, and avant-garde textures into an ever-evolving experience — a living space for deep listeners, curious minds, and nocturnal dreamers.",
+  "More than a radio, Apex is a field of experimentation where boundaries blur between genres, moods, and frequencies. Each set, mix, and transmission is a journey — sometimes meditative, sometimes chaotic, always alive.",
+  "Whether you lean back and let the sound flow through you, or turn up the volume and dive in, Radio Apex invites you to listen beyond the ordinary."
 ];
 
 export default function AboutSection() {
@@ -15,22 +15,34 @@ export default function AboutSection() {
       id="about"
       className="section-padding scroll-snap-start relative flex min-h-screen flex-col justify-center"
     >
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.06),transparent_65%)]" />
+      {/* Title - İlk önce yukarı çıkar */}
+      <motion.div
+        initial={{ opacity: 0, y: 80 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, amount: 0.3, margin: "-100px" }}
+        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+      >
+        <SectionHeading
+          eyebrow="About Us"
+          title="Radio Apex"
+          description="An independent sonic platform for deep listeners, curious minds, and nocturnal dreamers."
+          titleClassName="text-[#FD1D35]"
+        />
+      </motion.div>
 
-      <SectionHeading
-        eyebrow="Hakkımızda"
-        title="Radio Apex kimdir?"
-        description="Modern, minimal ve immersive bir radyo deneyimi. Apex ekibi gecenin enerjisini şehre yaymak için içerik üretir."
-      />
-
+      {/* Paragraflar - Stagger ile birer birer gelir */}
       <div className="mt-16 grid gap-8 lg:grid-cols-3">
         {paragraphs.map((text, index) => (
           <motion.p
             key={index}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10%" }}
-            transition={{ delay: index * 0.08, duration: 0.6 }}
+            initial={{ opacity: 0, y: 60, scale: 0.95 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: false, margin: "-15%", amount: 0.5 }}
+            transition={{ 
+              delay: index * 0.15, 
+              duration: 0.8, 
+              ease: [0.22, 1, 0.36, 1] 
+            }}
             className="text-base leading-relaxed text-white/70"
           >
             {text}
