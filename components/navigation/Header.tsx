@@ -113,7 +113,8 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed left-4 right-4 top-4 sm:top-6 md:top-[27px] z-50 mx-auto flex h-[60px] max-w-[1399px] items-center justify-between rounded-[50px] border border-[rgba(154,154,154,0.2)] bg-black/20 px-4 sm:px-6 md:px-8 backdrop-blur-3xl transition-all duration-500 supports-[backdrop-filter]:bg-black/10">
+    <>
+      <header className="fixed left-4 right-4 top-4 sm:top-6 md:top-[27px] z-[100] mx-auto flex h-[60px] max-w-[1399px] items-center justify-between rounded-[50px] border border-[rgba(154,154,154,0.2)] bg-black/30 px-4 sm:px-6 md:px-8 backdrop-blur-3xl transition-all duration-500 overflow-hidden">
       <button
         onClick={() => handleNavClick("home")}
         className="flex items-center font-anton text-[16px] sm:text-[20px] md:text-[22px] uppercase leading-none tracking-[0.3em] sm:tracking-[0.5em] text-white transition hover:text-[#FD1D35] ml-2 sm:ml-4 md:ml-6"
@@ -147,10 +148,10 @@ export default function Header() {
       </nav>
 
       <button
-        onClick={() => setMenuOpen(prev => !prev)}
+        onClick={() => setMenuOpen(!isMenuOpen)}
         className={clsx(
-          "relative flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-sm font-semibold text-white transition lg:hidden mr-2 sm:mr-4 md:mr-6",
-          "hover:border-[#FD1D35] hover:text-[#FD1D35] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FD1D35]"
+          "relative flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-sm font-semibold text-white transition lg:hidden mr-2 sm:mr-4 md:mr-6",
+          "hover:border-white/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40"
         )}
         aria-label="Menu"
       >
@@ -176,35 +177,62 @@ export default function Header() {
         </div>
       </button>
 
+      </header>
+
+      {/* Menu - Header'ın dışında */}
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.nav
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.25 }}
-            className="absolute left-0 right-0 top-full mt-4 rounded-3xl border border-white/10 bg-black/30 p-4 backdrop-blur-2xl lg:hidden"
-          >
-            <ul className="grid gap-2 text-center">
-              {navItems.map(item => (
-                <li key={item.id}>
-                  <button
-                    onClick={() => handleNavClick(item.id as SectionId)}
-                    className={clsx(
-                      "w-full rounded-2xl px-4 py-3 text-base font-medium text-white transition",
-                      activeSection === item.id 
-                        ? "bg-[#FD1D35]" 
-                        : "hover:bg-[#FD1D35]/20 hover:text-[#FD1D35]"
+          <>
+            {/* Backdrop Overlay - Tüm ekranı kaplar */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="fixed inset-0 z-[90] bg-black/30 lg:hidden"
+              style={{
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)'
+              }}
+              onClick={() => setMenuOpen(false)}
+            />
+            
+            {/* Menu - Backdrop üzerinde */}
+            <motion.nav
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.25 }}
+              className="fixed left-4 right-4 top-20 rounded-3xl border border-white/15 bg-black/30 p-4 shadow-2xl lg:hidden z-[101]"
+              style={{
+                backdropFilter: 'blur(100px) saturate(200%)',
+                WebkitBackdropFilter: 'blur(100px) saturate(200%)'
+              }}
+            >
+              <ul className="grid gap-0 text-center">
+                {navItems.map((item, index) => (
+                  <li key={item.id}>
+                    <button
+                      onClick={() => handleNavClick(item.id as SectionId)}
+                      className={clsx(
+                        "w-full rounded-2xl px-4 py-3 text-base font-medium text-white transition",
+                        activeSection === item.id 
+                          ? "bg-[#FD1D35]" 
+                          : "hover:bg-[#FD1D35]/20 hover:text-[#FD1D35]"
+                      )}
+                    >
+                      {item.label}
+                    </button>
+                    {index < navItems.length - 1 && (
+                      <div className="mx-4 my-2 h-px bg-white/10" />
                     )}
-                  >
-                    {item.label}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </motion.nav>
+                  </li>
+                ))}
+              </ul>
+            </motion.nav>
+          </>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }

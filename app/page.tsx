@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Header from "@/components/navigation/Header";
 import Footer from "@/components/layout/Footer";
@@ -41,25 +41,30 @@ export default function Page() {
   const dotsY = useTransform(scrollY, [0, 1000], [0, -150]);
   const contentY = useTransform(scrollY, [0, 1000], [0, -100]);
 
-  const redDots = useMemo(() => 
-    Array.from({ length: 20 }).map(() => ({
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      moveX: [0, Math.random() * 60 - 30, Math.random() * 60 - 30, 0],
-      moveY: [0, Math.random() * 60 - 30, Math.random() * 60 - 30, 0],
-      duration: 10 + Math.random() * 8
-    }))
-  , []);
+  // Random dots - client-side only to avoid hydration mismatch
+  const [redDots, setRedDots] = useState<Array<{x: number; y: number; moveX: number[]; moveY: number[]; duration: number}>>([]);
+  const [whiteDots, setWhiteDots] = useState<Array<{x: number; y: number; moveX: number[]; moveY: number[]; duration: number}>>([]);
 
-  const whiteDots = useMemo(() => 
-    Array.from({ length: 15 }).map(() => ({
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      moveX: [0, Math.random() * 50 - 25, Math.random() * 50 - 25, 0],
-      moveY: [0, Math.random() * 50 - 25, Math.random() * 50 - 25, 0],
-      duration: 12 + Math.random() * 10
-    }))
-  , []);
+  useEffect(() => {
+    setRedDots(
+      Array.from({ length: 20 }).map(() => ({
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        moveX: [0, Math.random() * 60 - 30, Math.random() * 60 - 30, 0],
+        moveY: [0, Math.random() * 60 - 30, Math.random() * 60 - 30, 0],
+        duration: 10 + Math.random() * 8
+      }))
+    );
+    setWhiteDots(
+      Array.from({ length: 15 }).map(() => ({
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        moveX: [0, Math.random() * 50 - 25, Math.random() * 50 - 25, 0],
+        moveY: [0, Math.random() * 50 - 25, Math.random() * 50 - 25, 0],
+        duration: 12 + Math.random() * 10
+      }))
+    );
+  }, []);
 
   return (
     <NowPlayingProvider>
@@ -68,7 +73,6 @@ export default function Page() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="fixed top-0 left-0 right-0 z-50"
       >
         <Header />
       </motion.div>
@@ -123,6 +127,14 @@ export default function Page() {
             alt="Turntable"
             className="w-full h-full"
             style={{ objectFit: "cover", objectPosition: "center", opacity: 0.1 }}
+          />
+          
+          {/* Turntable Big Text Overlay */}
+          <img 
+            src="/images/home/SVG/turntable_V02_Bigtext.svg" 
+            alt="Turntable Big Text"
+            className="absolute w-full h-full"
+            style={{ objectFit: "cover", objectPosition: "center", opacity: 0.15 }}
           />
           
           {/* Hareketli Kırmızı ve Beyaz Noktalar - Parallax */}
@@ -192,7 +204,7 @@ export default function Page() {
         >
            {/* Üst kısım - Yazılar (Yukarıda) - Parallax */}
            <motion.div 
-             className="absolute top-[20%] left-0 right-0 z-10 flex flex-col items-center px-4"
+             className="absolute top-[calc(20%-30px)] md:top-[20%] left-0 right-0 z-10 flex flex-col items-center px-4"
              style={{ y: contentY }}
            >
              {/* FEEL GOOD SOUND. - Başlık */}

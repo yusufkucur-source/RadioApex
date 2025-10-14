@@ -62,6 +62,16 @@ export default function SimplePlayer() {
 
   return (
     <div className="relative flex items-center justify-center pb-20">
+      <style jsx>{`
+        @media (min-width: 1024px) {
+          .song-title {
+            top: calc(50% + 95px) !important;
+          }
+          .artist-name {
+            top: calc(50% + 125px) !important;
+          }
+        }
+      `}</style>
       {/* Outer Gradient Circle - Ellipse 5773 */}
       <div
         className="absolute scale-75 sm:scale-85 md:scale-95"
@@ -199,7 +209,7 @@ export default function SimplePlayer() {
 
       {/* Song Title - THE MESSAGE (Play butonunun hemen altında) */}
       <motion.div
-        className="absolute z-20 font-spaceGrotesk text-2xl sm:text-3xl md:text-[32px] font-medium tracking-[0.05em] text-[#FD1D35] text-center whitespace-nowrap"
+        className="song-title absolute z-20 font-spaceGrotesk text-2xl sm:text-3xl md:text-[32px] lg:text-3xl font-medium tracking-[0.05em] text-[#FD1D35] text-center whitespace-nowrap"
         style={{
           top: "calc(50% + 85px)"
         }}
@@ -212,7 +222,7 @@ export default function SimplePlayer() {
 
       {/* Artist Name - JOB DE JONG (Şarkı isminin altında) */}
       <motion.div
-        className="absolute z-20 font-spaceGrotesk text-base sm:text-lg md:text-xl font-medium tracking-[0.05em] text-white text-center whitespace-nowrap"
+        className="artist-name absolute z-20 font-spaceGrotesk text-base sm:text-lg md:text-xl lg:text-lg font-medium tracking-[0.05em] text-white text-center whitespace-nowrap"
         style={{
           top: "calc(50% + 125px)"
         }}
