@@ -111,7 +111,7 @@ export default function AdminPanel() {
       await signInWithEmailAndPassword(auth, email, password);
       form.reset();
     } catch (err) {
-      setError("Giriş başarısız. Lütfen bilgilerinizi kontrol edin.");
+      setError("Login failed. Please check your credentials.");
       console.error(err);
     }
   };
@@ -348,10 +348,10 @@ export default function AdminPanel() {
   if (!available) {
     return (
       <div className="mx-auto max-w-2xl rounded-3xl border border-white/10 bg-red-500/10 p-8 text-center text-white/80">
-        <h2 className="text-xl font-semibold text-white">
+        <h2 className="font-roboto text-xl font-semibold text-white">
           Firebase yapılandırması eksik
         </h2>
-        <p className="mt-4 text-sm text-white/70">
+        <p className="font-spaceGrotesk mt-4 text-sm text-white/70">
           Admin panelinin çalışması için `.env.local` dosyanıza Firebase
           konfigürasyon anahtarlarını ekleyin ve uygulamayı yeniden başlatın.
         </p>
@@ -378,8 +378,8 @@ export default function AdminPanel() {
   if (!user) {
     return (
       <div className="mx-auto max-w-md rounded-3xl border border-white/10 bg-white/[0.04] p-8 shadow-2xl backdrop-blur-2xl">
-        <h2 className="text-2xl font-semibold text-white">Admin Login</h2>
-        <p className="mt-2 text-sm text-white/60">
+        <h2 className="font-roboto text-2xl font-semibold text-white">Admin Login</h2>
+        <p className="font-spaceGrotesk mt-2 text-sm text-white/60">
           Sign in with your registered Firebase account to access the admin panel.
         </p>
         <form onSubmit={handleLogin} className="mt-8 space-y-5">
@@ -623,7 +623,7 @@ export default function AdminPanel() {
                   ))}
                   {djs.length === 0 && (
                     <p className="py-8 text-center text-sm text-white/40">
-                      No DJs added yet. Click "Manage DJs" to add your first DJ.
+                      No DJs added yet. Click &quot;Manage DJs&quot; to add your first DJ.
                     </p>
                   )}
                 </div>

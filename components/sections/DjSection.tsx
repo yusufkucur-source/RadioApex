@@ -128,22 +128,22 @@ export default function DjSection() {
 
                   <div className="mt-6 flex flex-col gap-4">
                     <div>
-                      <h3 className="text-2xl font-semibold text-white">
+                      <h3 className="font-roboto text-2xl font-semibold text-white">
                         {dj.nickname}
                       </h3>
                       {dj.fullName ? (
-                        <p className="mt-1 text-sm text-white/60">
+                        <p className="font-spaceGrotesk mt-1 text-sm text-white/60">
                           {dj.fullName}
                         </p>
                       ) : null}
                     </div>
 
                     {dj.description ? (
-                      <p className="text-sm leading-relaxed text-white/70">
+                      <p className="font-spaceGrotesk text-sm leading-relaxed text-white/70">
                         {dj.description}
                       </p>
                     ) : (
-                      <p className="text-sm text-white/50">
+                      <p className="font-spaceGrotesk text-sm text-white/50">
                         Ses frekanslarini Apex estetikleriyle birlestiren ozel
                         performans.
                       </p>
@@ -157,7 +157,7 @@ export default function DjSection() {
                             href={href as string}
                             target="_blank"
                             rel="noreferrer"
-                            className="rounded-full border border-white/15 px-3 py-1 text-[11px] uppercase tracking-[0.3em] text-white/70 transition duration-300 hover:border-[#FD1D35]/80 hover:text-[#FD1D35]"
+                            className="font-antonio rounded-full border border-white/15 px-3 py-1 text-[11px] uppercase tracking-[0.3em] text-white/70 transition duration-300 hover:border-[#FD1D35]/80 hover:text-[#FD1D35]"
                           >
                             {SOCIAL_LABELS[key] ?? key}
                           </a>

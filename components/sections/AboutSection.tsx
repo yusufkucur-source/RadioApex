@@ -43,7 +43,7 @@ export default function AboutSection() {
               duration: 0.5, 
               ease: [0.22, 1, 0.36, 1] 
             }}
-            className="text-base leading-relaxed text-white/70"
+            className="font-spaceGrotesk text-base leading-relaxed text-white/70"
           >
             {text}
           </motion.p>

@@ -2,8 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Font weight mapping - semibold (600) yok, bold (700) kullan */
+.font-semibold {
+  font-weight: 700 !important;
+}
+
+/* Font Debug - Font yükleme durumunu kontrol et */
+.font-roboto {
+  font-family: var(--font-roboto), 'Roboto', system-ui, sans-serif !important;
+  font-display: swap !important;
+}
+
+.font-antonio {
+  font-family: var(--font-antonio), 'Antonio', system-ui, sans-serif !important;
+  font-display: swap !important;
+}
+
+.font-anton {
+  font-family: var(--font-anton), 'Anton', system-ui, sans-serif !important;
+  font-display: swap !important;
+}
+
+.font-spaceGrotesk {
+  font-family: var(--font-space-grotesk), 'Space Grotesk', system-ui, sans-serif !important;
+  font-display: swap !important;
+}
+
+/* Force font loading for all elements */
+* {
+  font-display: swap;
+}
+
 :root {
   color-scheme: dark;
+  
+  /* Font Debug - CSS değişkenlerini kontrol et */
+  --debug-font-roboto: var(--font-roboto);
+  --debug-font-antonio: var(--font-antonio);
+  --debug-font-anton: var(--font-anton);
+  --debug-font-space-grotesk: var(--font-space-grotesk);
 }
 
 html,
@@ -16,6 +53,8 @@ body {
 
 body {
   @apply bg-black text-white;
+  font-family: var(--font-roboto), 'Roboto', system-ui, sans-serif;
+  font-display: swap;
 }
 
 /* Custom Scrollbar */
@@ -40,6 +79,27 @@ body {
 @layer utilities {
   .section-padding {
     @apply mx-auto w-full max-w-[1399px] px-4 py-24 sm:px-6 md:px-8;
+  }
+
+  /* Animation Performance Optimizations */
+  .animate-spin-slow,
+  .animate-spin-dots,
+  .animate-spin-text,
+  .animate-scroll,
+  .animate-scroll-infinite,
+  .animate-marquee,
+  .animate-pulse-ring {
+    will-change: transform;
+  }
+
+  /* Parallax elements */
+  .parallax-element {
+    will-change: transform;
+  }
+
+  /* Motion elements */
+  .motion-element {
+    will-change: transform, opacity;
   }
 
   .animate-spin-slow {
@@ -148,6 +208,25 @@ body {
 /* Text Glow */
 .text-glow {
   text-shadow: 0 0 20px rgba(240, 72, 104, 0.5);
+}
+
+/* Navigation Glow Effects */
+.nav-glow {
+  box-shadow: 0 0 20px rgba(253, 29, 53, 0.3);
+  transition: box-shadow 0.3s ease;
+}
+
+.nav-glow:hover {
+  box-shadow: 0 0 30px rgba(253, 29, 53, 0.6), 0 0 60px rgba(253, 29, 53, 0.3);
+}
+
+.nav-text-glow {
+  text-shadow: 0 0 10px rgba(253, 29, 53, 0.5);
+  transition: text-shadow 0.3s ease;
+}
+
+.nav-text-glow:hover {
+  text-shadow: 0 0 20px rgba(253, 29, 53, 0.8), 0 0 40px rgba(253, 29, 53, 0.4);
 }
 
 /* Smooth Scroll */

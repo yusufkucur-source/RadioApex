@@ -95,21 +95,21 @@ export default function Page() {
 
          {/* Arka plan katmanları - Parallax */}
          <motion.div 
-           className="hero-bg-outer pointer-events-none absolute inset-0" 
+           className="hero-bg-outer pointer-events-none absolute inset-0 parallax-element" 
            style={{ y: backgroundY }}
          />
          <motion.div 
-           className="hero-bg-gradient pointer-events-none absolute inset-0" 
+           className="hero-bg-gradient pointer-events-none absolute inset-0 parallax-element" 
            style={{ y: backgroundY }}
          />
          <motion.div 
-           className="hero-bg-lines pointer-events-none absolute inset-0" 
+           className="hero-bg-lines pointer-events-none absolute inset-0 parallax-element" 
            style={{ y: backgroundY }}
          />
          
          {/* TAM EKRAN BACKGROUND IMAGE - Parallax */}
          <motion.div 
-           className="pointer-events-none absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100"
+           className="pointer-events-none absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 parallax-element"
            style={{
              backgroundImage: "url('/images/home/index_background_v2.png')",
              filter: "brightness(0.7) contrast(1.1)",
@@ -119,7 +119,7 @@ export default function Page() {
         
         {/* TURNTABLE SVG - Parallax */}
         <motion.div 
-          className="pointer-events-none absolute inset-0 flex items-center justify-center"
+          className="pointer-events-none absolute inset-0 flex items-center justify-center parallax-element"
           style={{ y: turntableY }}
         >
           <img 
@@ -131,7 +131,7 @@ export default function Page() {
           
           {/* Hareketli Kırmızı ve Beyaz Noktalar - Parallax */}
           <motion.div 
-            className="absolute inset-0 overflow-hidden"
+            className="absolute inset-0 overflow-hidden parallax-element"
             style={{ y: dotsY }}
           >
             {/* Kırmızı Noktalar */}
@@ -196,12 +196,12 @@ export default function Page() {
         >
            {/* Üst kısım - Yazılar (Yukarıda) - Parallax */}
            <motion.div 
-             className="absolute top-[calc(20%-30px)] md:top-[20%] left-0 right-0 z-10 flex flex-col items-center px-4"
+             className="absolute top-[calc(20%-30px)] md:top-[20%] left-0 right-0 z-10 flex flex-col items-center px-4 parallax-element"
              style={{ y: contentY }}
            >
              {/* FEEL GOOD SOUND. - Başlık */}
              <motion.div 
-               className="whitespace-nowrap font-roboto text-[32px] sm:text-[42px] md:text-[57px] mb-8"
+               className="whitespace-nowrap font-roboto text-[32px] sm:text-[42px] md:text-[57px] mb-8 motion-element"
                style={{
                  fontStyle: "normal",
                  fontWeight: 500,
@@ -219,7 +219,7 @@ export default function Page() {
 
              {/* Açıklama Metni */}
              <motion.div 
-               className="font-spaceGrotesk text-sm sm:text-base px-4 max-w-[791px]"
+               className="font-spaceGrotesk text-sm sm:text-base px-4 max-w-[791px] motion-element"
                style={{
                  fontStyle: "normal",
                  fontWeight: 400,
@@ -238,7 +238,7 @@ export default function Page() {
 
            {/* Orta kısım - Player (PLAY BUTONU TAM ORTADA - SCROLL İLE KAYAR) */}
            <motion.div 
-             className="relative z-10 flex h-full w-full items-center justify-center"
+             className="relative z-10 flex h-full w-full items-center justify-center motion-element"
              initial={{ opacity: 0, scale: 0.9 }}
              whileInView={{ opacity: 1, scale: 1 }}
              viewport={{ once: true }}

@@ -49,7 +49,7 @@ export default function ContactSection() {
         className="mx-auto mt-16 grid w-full max-w-3xl gap-6 rounded-3xl border border-white/10 bg-white/[0.04] p-8 shadow-2xl backdrop-blur-2xl"
       >
         <div className="grid gap-3">
-          <label className="text-xs uppercase tracking-[0.3em] text-white/60">
+          <label className="font-antonio text-xs uppercase tracking-[0.3em] text-white/60">
             Name
           </label>
           <input
@@ -57,12 +57,12 @@ export default function ContactSection() {
             type="text"
             name="name"
             placeholder="Your name"
-            className="h-12 rounded-2xl border border-white/10 bg-white/5 px-4 text-sm text-white outline-none transition focus:border-apex-accent focus:bg-black/60"
+            className="font-spaceGrotesk h-12 rounded-2xl border border-white/10 bg-white/5 px-4 text-sm text-white outline-none transition focus:border-apex-accent focus:bg-black/60"
           />
         </div>
 
         <div className="grid gap-3">
-          <label className="text-xs uppercase tracking-[0.3em] text-white/60">
+          <label className="font-antonio text-xs uppercase tracking-[0.3em] text-white/60">
             Email
           </label>
           <input
@@ -75,7 +75,7 @@ export default function ContactSection() {
         </div>
 
         <div className="grid gap-3">
-          <label className="text-xs uppercase tracking-[0.3em] text-white/60">
+          <label className="font-antonio text-xs uppercase tracking-[0.3em] text-white/60">
             Message
           </label>
           <textarea
@@ -83,7 +83,7 @@ export default function ContactSection() {
             name="message"
             rows={5}
             placeholder="Share your message..."
-            className="rounded-3xl border border-white/10 bg-white/5 px-4 py-4 text-sm text-white outline-none transition focus:border-apex-accent focus:bg-black/60"
+            className="font-spaceGrotesk rounded-3xl border border-white/10 bg-white/5 px-4 py-4 text-sm text-white outline-none transition focus:border-apex-accent focus:bg-black/60"
           />
         </div>
 
@@ -92,7 +92,7 @@ export default function ContactSection() {
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.98 }}
           disabled={state === "sending"}
-          className="flex h-12 items-center justify-center rounded-full bg-gradient-to-r from-apex-accent via-apex-accent/80 to-apex-secondary/80 text-sm font-semibold uppercase tracking-[0.3em] text-white shadow-lg transition disabled:cursor-not-allowed disabled:opacity-80"
+          className="font-roboto flex h-12 items-center justify-center rounded-full bg-gradient-to-r from-apex-accent via-apex-accent/80 to-apex-secondary/80 text-sm font-semibold uppercase tracking-[0.3em] text-white shadow-lg transition disabled:cursor-not-allowed disabled:opacity-80"
         >
           {state === "idle" && "Send"}
           {state === "sending" && "Sending..."}
@@ -101,15 +101,6 @@ export default function ContactSection() {
         </motion.button>
       </motion.form>
 
-      <motion.p
-        initial={{ opacity: 0, y: 12 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-10%" }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-        className="mx-auto mt-10 max-w-2xl text-center text-sm text-white/50"
-      >
-        Form submissions are currently in demo mode. You can integrate Firestore or your preferred email service when the admin panel is ready.
-      </motion.p>
     </section>
   );
 }

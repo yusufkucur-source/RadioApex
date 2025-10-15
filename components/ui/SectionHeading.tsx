@@ -33,7 +33,7 @@ export default function SectionHeading({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-20%" }}
         transition={{ duration: 0.6 }}
-        className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] uppercase tracking-[0.45em] text-white/60"
+        className="font-antonio inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] uppercase tracking-[0.45em] text-white/60"
       >
         <span className="h-1 w-1 rounded-full bg-[#FD1D35]" />
         {eyebrow}
@@ -45,7 +45,7 @@ export default function SectionHeading({
         viewport={{ once: true, margin: "-15%" }}
         transition={{ delay: 0.05, duration: 0.7 }}
         className={clsx(
-          "mt-8 text-balance text-3xl font-semibold sm:text-4xl",
+          "font-roboto mt-8 text-balance text-3xl font-semibold sm:text-4xl",
           titleClassName || "text-white"
         )}
       >
@@ -58,7 +58,7 @@ export default function SectionHeading({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-10%" }}
           transition={{ delay: 0.1, duration: 0.7 }}
-          className="mt-6 text-base leading-relaxed text-white/70 sm:text-lg"
+          className="font-spaceGrotesk mt-6 text-base leading-relaxed text-white/70 sm:text-lg"
         >
           {description}
         </motion.p>

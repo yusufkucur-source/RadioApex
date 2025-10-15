@@ -78,34 +78,34 @@ export default function LineupSection() {
               className="group flex flex-col gap-6 rounded-3xl border border-white/10 bg-white/[0.04] p-6 shadow-2xl backdrop-blur-2xl transition duration-500 hover:-translate-y-1 hover:border-apex-secondary/70 hover:shadow-apex-secondary/20 sm:flex-row sm:items-center sm:justify-between sm:gap-10"
             >
               <div>
-                <span className="text-xs uppercase tracking-[0.35em] text-white/50">
+                <span className="font-antonio text-xs uppercase tracking-[0.35em] text-white/50">
                   {slot.day}
                 </span>
-                <h3 className="mt-3 text-2xl font-semibold text-white">
+                <h3 className="font-roboto mt-3 text-2xl font-semibold text-white">
                   {slot.title}
                 </h3>
-                <p className="mt-2 text-sm uppercase tracking-[0.3em] text-apex-secondary/80">
+                <p className="font-antonio mt-2 text-sm uppercase tracking-[0.3em] text-apex-secondary/80">
                   {slot.genre}
                 </p>
               </div>
 
               <div className="flex flex-col items-start gap-3 text-sm text-white/70 sm:items-end">
-                <div className="flex items-center gap-3 rounded-2xl border border-white/5 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.4em] text-white/60">
+                <div className="font-antonio flex items-center gap-3 rounded-2xl border border-white/5 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.4em] text-white/60">
                   <span>{slot.startTime}</span>
                   <span className="h-1 w-1 rounded-full bg-white/30" />
                   <span>{slot.endTime}</span>
                 </div>
                 {dj ? (
                   <div className="text-right">
-                    <p className="text-sm font-semibold text-white">
+                    <p className="font-roboto text-sm font-semibold text-white">
                       {dj.nickname}
                     </p>
-                    <p className="text-xs uppercase tracking-[0.25em] text-white/50">
+                    <p className="font-antonio text-xs uppercase tracking-[0.25em] text-white/50">
                       {dj.city}
                     </p>
                   </div>
                 ) : (
-                  <p className="text-xs uppercase tracking-[0.3em] text-white/40">
+                  <p className="font-antonio text-xs uppercase tracking-[0.3em] text-white/40">
                     No DJ assigned
                   </p>
                 )}

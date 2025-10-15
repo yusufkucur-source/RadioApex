@@ -91,7 +91,7 @@ export default function HomeSection() {
             initial={{ opacity: 0, y: 26 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05, duration: 0.8, ease: "easeOut" }}
-            className="text-balance text-4xl font-bold uppercase leading-tight tracking-[0.08em] text-[#FD1D35] sm:text-5xl md:text-6xl lg:text-[72px]"
+            className="font-roboto text-balance text-4xl font-bold uppercase leading-tight tracking-[0.08em] text-[#FD1D35] sm:text-5xl md:text-6xl lg:text-[72px]"
           >
             Feel Good Sound.
           </motion.h1>
@@ -100,7 +100,7 @@ export default function HomeSection() {
             initial={{ opacity: 0, y: 26 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.12, duration: 0.8, ease: "easeOut" }}
-            className="text-base leading-relaxed text-white sm:text-lg"
+            className="font-spaceGrotesk text-base leading-relaxed text-white sm:text-lg"
           >
             Radio Apex is an experimental space broadcasting electronic,
             ambient, avant-garde, and boundary-pushing sounds 24/7. Sit back and

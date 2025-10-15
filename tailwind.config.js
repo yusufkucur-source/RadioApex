@@ -8,17 +8,18 @@ module.exports = {
   ],
   theme: {
   	extend: {
-  		fontFamily: {
-  			sans: [
-  				'var(--font-manrope)',
-  				'system-ui',
-  				'sans-serif'
-  			],
-  			antonio: ['var(--font-antonio)', 'sans-serif'],
-  			anton: ['var(--font-anton)', 'sans-serif'],
-  			spaceGrotesk: ['var(--font-space-grotesk)', 'sans-serif'],
-  			roboto: ['var(--font-roboto)', 'sans-serif']
-  		},
+		fontFamily: {
+			sans: [
+				'var(--font-roboto)',
+				'Roboto',
+				'system-ui',
+				'sans-serif'
+			],
+			antonio: ['var(--font-antonio)', 'Antonio', 'system-ui', 'sans-serif'],
+			anton: ['var(--font-anton)', 'Anton', 'system-ui', 'sans-serif'],
+			spaceGrotesk: ['var(--font-space-grotesk)', 'Space Grotesk', 'system-ui', 'sans-serif'],
+			roboto: ['var(--font-roboto)', 'Roboto', 'system-ui', 'sans-serif']
+		},
   		colors: {
   			apex: {
   				background: '#050509',

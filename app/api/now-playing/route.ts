@@ -72,8 +72,7 @@ export async function GET() {
 
     return NextResponse.json(payload, {
       headers: {
-        "Cache-Control": "no-store, max-age=0",
-        "Access-Control-Allow-Origin": "*"
+        "Cache-Control": "no-store, max-age=0"
       }
     });
   } catch (error) {
@@ -91,8 +90,7 @@ export async function GET() {
       },
       {
         headers: {
-          "Cache-Control": "no-store, max-age=0",
-          "Access-Control-Allow-Origin": "*"
+          "Cache-Control": "no-store, max-age=0"
         },
         status: 200
       }

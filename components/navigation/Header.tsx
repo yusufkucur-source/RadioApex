@@ -117,7 +117,7 @@ export default function Header() {
       <header className="fixed left-4 right-4 top-4 sm:top-6 md:top-[27px] z-[100] mx-auto flex h-[60px] max-w-[1399px] items-center justify-between rounded-[50px] border border-[rgba(154,154,154,0.2)] bg-black/30 px-4 sm:px-6 md:px-8 backdrop-blur-3xl transition-all duration-500 overflow-hidden">
       <button
         onClick={() => handleNavClick("home")}
-        className="flex items-center font-anton text-[16px] sm:text-[20px] md:text-[22px] uppercase leading-none tracking-[0.3em] sm:tracking-[0.5em] text-white transition hover:text-[#FD1D35] ml-2 sm:ml-4 md:ml-6"
+        className="flex items-center font-anton text-[16px] sm:text-[20px] md:text-[22px] uppercase leading-none tracking-[0.3em] sm:tracking-[0.5em] text-white transition hover:text-[#FD1D35] ml-2 sm:ml-4 md:ml-6 nav-text-glow"
       >
         RADIO APEX
       </button>
@@ -128,7 +128,7 @@ export default function Header() {
             key={item.id}
             onClick={() => handleNavClick(item.id as SectionId)}
             className={clsx(
-              "relative px-4 py-2 font-antonio text-[15px] uppercase leading-[19px] tracking-[0.2em] transition duration-300",
+              "relative px-4 py-2 font-antonio text-[15px] uppercase leading-[19px] tracking-[0.2em] transition duration-300 nav-text-glow",
               activeSection === item.id 
                 ? "text-white" 
                 : "text-white hover:text-[#FD1D35]",
@@ -138,7 +138,7 @@ export default function Header() {
             {activeSection === item.id && (
               <motion.span
                 layoutId="activeNav"
-                className="absolute inset-0 rounded-[15px] bg-[#FD1D35]"
+                className="absolute inset-0 rounded-[15px] bg-[#FD1D35] nav-glow"
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
               />
             )}
@@ -215,9 +215,9 @@ export default function Header() {
                     <button
                       onClick={() => handleNavClick(item.id as SectionId)}
                       className={clsx(
-                        "w-full rounded-2xl px-4 py-3 text-base font-medium text-white transition",
+                        "w-full rounded-2xl px-4 py-3 text-base font-medium text-white transition nav-text-glow",
                         activeSection === item.id 
-                          ? "bg-[#FD1D35]" 
+                          ? "bg-[#FD1D35] nav-glow" 
                           : "hover:bg-[#FD1D35]/20 hover:text-[#FD1D35]"
                       )}
                     >

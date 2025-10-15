@@ -65,7 +65,7 @@ export default function RadioPlayer() {
 
   const displayArtist = useMemo(() => {
     if (hasError) {
-      return "Lütfen daha sonra tekrar deneyin";
+      return "Please try again later";
     }
     if (isLoading) {
       return "Radio Apex";
