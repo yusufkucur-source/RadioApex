@@ -11,7 +11,7 @@ export default function NowPlayingTicker() {
       return "*NOW PLAYING: RADIO APEX - YAYIN YUKLENIYOR";
     }
     const artist = nowPlaying.artist?.trim() || "RADIO APEX";
-    const title = nowPlaying.title?.trim() || "LIVE STREAM";
+    const title = nowPlaying.title?.trim() || "";
     return `*NOW PLAYING: ${artist.toUpperCase()} - ${title.toUpperCase()}`;
   }, [isLoading, nowPlaying]);
 
@@ -26,7 +26,7 @@ export default function NowPlayingTicker() {
               <span className="text-[#f04868]">*NOW PLAYING:</span>
               <span className="text-white">
                 {isLoading ? "RADIO APEX - YAYIN YUKLENIYOR" : 
-                 `${(nowPlaying.artist?.trim() || "RADIO APEX").toUpperCase()} - ${(nowPlaying.title?.trim() || "LIVE STREAM").toUpperCase()}`}
+                 `${(nowPlaying.artist?.trim() || "RADIO APEX").toUpperCase()} - ${(nowPlaying.title?.trim() || "").toUpperCase()}`}
               </span>
             </span>
           ))}
@@ -40,7 +40,7 @@ export default function NowPlayingTicker() {
               <span className="text-[#f04868]">*NOW PLAYING:</span>
               <span className="text-white">
                 {isLoading ? "RADIO APEX - YAYIN YUKLENIYOR" : 
-                 `${(nowPlaying.artist?.trim() || "RADIO APEX").toUpperCase()} - ${(nowPlaying.title?.trim() || "LIVE STREAM").toUpperCase()}`}
+                 `${(nowPlaying.artist?.trim() || "RADIO APEX").toUpperCase()} - ${(nowPlaying.title?.trim() || "").toUpperCase()}`}
               </span>
             </span>
           ))}

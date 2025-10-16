@@ -79,8 +79,8 @@ export async function GET() {
     console.error("Now playing API error", error);
     return NextResponse.json(
       {
-        title: "Radio Apex Live",
-        artist: "",
+        title: "",
+        artist: "RADIO APEX",
         isLive: true,
         coverArt: null,
         elapsed: 0,

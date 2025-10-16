@@ -32,8 +32,8 @@ type NowPlayingContextValue = {
 };
 
 const defaultState: NowPlayingPayload = {
-  title: "Radio Apex Stream",
-  artist: "Live DJ Set",
+  title: "",
+  artist: "RADIO APEX",
   isLive: true,
   coverArt: null,
   elapsed: 0,

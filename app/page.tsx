@@ -218,13 +218,31 @@ function HomeContent() {
                LIVE
              </m.span>
 
+             {/* Sanatçı Adı */}
+             <m.div 
+               className="font-roboto text-[16px] sm:text-[21px] md:text-[28px] mb-2 motion-element text-center max-w-[90vw] sm:whitespace-nowrap"
+               style={{
+                 fontStyle: "normal",
+                 fontWeight: 400,
+                 lineHeight: "1.2",
+                 letterSpacing: "0.1em",
+                 color: "#FFFFFF"
+               }}
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+             >
+{(nowPlaying.artist?.trim() || "RADIO APEX").toLocaleUpperCase('en-US')}
+             </m.div>
+
              {/* Şarkı Başlığı */}
              <m.div 
-               className="whitespace-nowrap font-roboto text-[16px] sm:text-[21px] md:text-[28px] mb-2 motion-element"
+               className="font-roboto text-[16px] sm:text-[21px] md:text-[28px] mb-8 motion-element text-center max-w-[90vw] sm:whitespace-nowrap"
                style={{
                  fontStyle: "normal",
                  fontWeight: 500,
-                 lineHeight: "1.12",
+                 lineHeight: "1.2",
                  letterSpacing: "0.1em",
                  color: "#FD1D35"
                }}
@@ -233,7 +251,7 @@ function HomeContent() {
                viewport={{ once: true }}
                transition={{ 
                  duration: 1, 
-                 delay: 0.2, 
+                 delay: 0.3, 
                  ease: "easeOut",
                  textShadow: {
                    duration: 1.5,
@@ -249,25 +267,7 @@ function HomeContent() {
                  ]
                }}
              >
-{(nowPlaying.title?.trim() || "LIVE STREAM").toLocaleUpperCase('en-US')}
-             </m.div>
-
-             {/* Sanatçı Adı */}
-             <m.div 
-               className="whitespace-nowrap font-roboto text-[10px] sm:text-[12px] md:text-[14px] mb-8 motion-element"
-               style={{
-                 fontStyle: "normal",
-                 fontWeight: 400,
-                 lineHeight: "1.12",
-                 letterSpacing: "0.1em",
-                 color: "#FFFFFF"
-               }}
-               initial={{ opacity: 0, y: 20 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true }}
-               transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-             >
-{(nowPlaying.artist?.trim() || "RADIO APEX").toLocaleUpperCase('en-US')}
+{(nowPlaying.title?.trim() || "").toLocaleUpperCase('en-US')}
              </m.div>
 
            </m.div>
@@ -285,36 +285,7 @@ function HomeContent() {
              </div>
            </m.div>
 
-           {/* Açıklama Metni - Player'ın altında */}
-           <m.div 
-             className="absolute bottom-[calc(50%-370px)] left-0 right-0 z-10 flex justify-center px-4 motion-element parallax-element"
-             style={{ y: descriptionY }}
-             initial={{ opacity: 0, y: 20 }}
-             whileInView={{ opacity: 1, y: 0 }}
-             viewport={{ once: true }}
-             transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
-           >
-             <div className="text-center">
-               <div className="font-roboto text-lg sm:text-xl md:text-2xl font-bold mb-4"
-                 style={{
-                   lineHeight: "1.2",
-                   color: "#FD1D35"
-                 }}
-               >
-                 Your Best Dance Music Station
-               </div>
-               <div className="font-spaceGrotesk text-sm sm:text-base px-4 max-w-[791px] text-center"
-                 style={{
-                   fontStyle: "normal",
-                   fontWeight: 400,
-                   lineHeight: "1.25",
-                   color: "#FFFFFF"
-                 }}
-               >
-                 Radio Apex is an experimental space broadcasting electronic, ambient, avant-garde, and boundary-pushing sounds 24/7. Sit back and drift away — or turn up the volume and dive in.
-               </div>
-             </div>
-           </m.div>
+           {/* Açıklama metni geçici olarak gizlendi */}
 
         </section>
         
@@ -364,7 +335,7 @@ function HomeContent() {
          <div className="fixed bottom-0 left-0 right-0 z-40">
            {/* Sosyal Medya İkonları */}
            <m.div 
-             className="flex items-center justify-center gap-4 pb-20"
+             className="flex items-center justify-center gap-4 pb-24"
              initial={{ opacity: 0, y: 20 }}
              animate={{ opacity: 1, y: 0 }}
              transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}

@@ -125,18 +125,18 @@ export default function Header() {
       <header className="fixed left-4 right-4 top-4 sm:top-6 md:top-[27px] z-[100] mx-auto flex h-[80px] max-w-[1399px] items-center justify-between rounded-[50px] border border-[rgba(154,154,154,0.2)] bg-black/30 px-4 sm:px-6 md:px-8 backdrop-blur-3xl transition-all duration-500 overflow-hidden">
         <button
           onClick={() => handleNavClick("home")}
-          className="flex items-center transition-all duration-300 ml-2 sm:ml-4 md:ml-6"
+          className="flex items-center transition-all duration-300 ml-2 sm:ml-3 md:ml-4"
           style={{
             filter: 'drop-shadow(0 0 20px rgba(253, 29, 53, 0.4))',
             animation: 'glow 4s ease-in-out infinite'
           }}
         >
           <Image
-            src="/images/home/SVG/radioapex_logo.svg"
+            src="/images/home/SVG/AplexLogoRed.svg"
             alt="Radio Apex"
             width={193}
             height={81}
-            className="h-8 sm:h-10 md:h-12 w-auto transition-all duration-300"
+            className="h-10 sm:h-10 md:h-12 w-auto transition-all duration-300"
             priority
           />
         </button>
@@ -180,18 +180,18 @@ export default function Header() {
       >
       <button
         onClick={() => handleNavClick("home")}
-        className="flex items-center transition-all duration-300 ml-2 sm:ml-4 md:ml-6"
+        className="flex items-center transition-all duration-300 ml-2 sm:ml-3 md:ml-4"
         style={{
           filter: 'drop-shadow(0 0 20px rgba(253, 29, 53, 0.4))',
           animation: 'glow 4s ease-in-out infinite'
         }}
       >
         <Image
-          src="/images/home/SVG/radioapex_logo.svg"
+          src="/images/home/SVG/AplexLogoRed.svg"
           alt="Radio Apex"
           width={193}
           height={81}
-          className="h-8 sm:h-10 md:h-12 w-auto transition-all duration-300"
+          className="h-10 sm:h-10 md:h-12 w-auto transition-all duration-300"
           priority
         />
       </button>
@@ -277,7 +277,7 @@ export default function Header() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.25 }}
-              className="fixed left-4 right-4 top-20 rounded-3xl border border-white/15 bg-black/30 p-4 shadow-2xl lg:hidden z-[101]"
+              className="fixed left-4 right-4 top-28 rounded-3xl border border-white/15 bg-black/30 p-4 shadow-2xl lg:hidden z-[101]"
               style={{
                 backdropFilter: 'blur(100px) saturate(200%)',
                 WebkitBackdropFilter: 'blur(100px) saturate(200%)'

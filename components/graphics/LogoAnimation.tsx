@@ -62,7 +62,7 @@ export default function LogoAnimation({
         alt="RadioApex Logo"
         width={224}
         height={224}
-        className="w-32 h-32 md:w-48 md:h-48 lg:w-56 lg:h-56 transition-transform duration-100"
+        className="w-44 h-44 md:w-48 md:h-48 lg:w-56 lg:h-56 transition-transform duration-100"
         style={{ 
           transform: `rotate(${scrollRotation}deg) scale(${scale})`,
           opacity: 0.2
