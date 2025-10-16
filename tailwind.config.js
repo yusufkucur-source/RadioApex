@@ -24,7 +24,7 @@ module.exports = {
   			apex: {
   				background: '#050509',
   				accent: '#ef4444',
-  				secondary: '#0ea5e9',
+  				secondary: '#991b1b',
   				muted: '#1f1f2e'
   			},
   			background: 'hsl(var(--background))',
@@ -69,7 +69,7 @@ module.exports = {
   			}
   		},
   		backgroundImage: {
-  			'gradient-glow': 'radial-gradient(circle at top left, rgba(239,68,68,0.35), transparent 55%), radial-gradient(circle at top right, rgba(14,165,233,0.25), transparent 50%), radial-gradient(circle at bottom, rgba(255,255,255,0.08), transparent 55%)'
+  			'gradient-glow': 'radial-gradient(circle at top left, rgba(239,68,68,0.35), transparent 55%), radial-gradient(circle at top right, rgba(153,27,27,0.25), transparent 50%), radial-gradient(circle at bottom, rgba(255,255,255,0.08), transparent 55%)'
   		},
 		keyframes: {
 			marquee: {

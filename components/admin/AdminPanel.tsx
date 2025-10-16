@@ -84,8 +84,6 @@ export default function AdminPanel() {
   const [djForm, setDjForm] = useState<DjForm>(initialDjForm);
   const [lineupForm, setLineupForm] = useState<LineupForm>(initialLineupForm);
   const [activeSection, setActiveSection] = useState<NavSection>("overview");
-  const [seedStatus, setSeedStatus] = useState<string | null>(null);
-  const [isSeeding, setIsSeeding] = useState(false);
   const [editingDjId, setEditingDjId] = useState<string | null>(null);
   const [editingLineupId, setEditingLineupId] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -318,32 +316,13 @@ export default function AdminPanel() {
 
       const result = await seedDatabaseWithSampleData(db);
       if (result.success && (result.djsAdded > 0 || result.lineupAdded > 0)) {
-        setSeedStatus(result.message);
         localStorage.setItem('radioapex_db_seeded', 'true');
-        setTimeout(() => setSeedStatus(null), 5000);
       }
     };
 
     autoSeed();
   }, [db, user]);
 
-  // Manuel seed fonksiyonu
-  const handleSeedDatabase = async () => {
-    if (!db) return;
-    
-    setIsSeeding(true);
-    setSeedStatus(null);
-    
-    const result = await seedDatabaseWithSampleData(db);
-    setSeedStatus(result.message);
-    setIsSeeding(false);
-    
-    if (result.success) {
-      localStorage.setItem('radioapex_db_seeded', 'true');
-    }
-    
-    setTimeout(() => setSeedStatus(null), 5000);
-  };
 
   if (!available) {
     return (
@@ -519,11 +498,6 @@ export default function AdminPanel() {
         </div>
       )}
 
-        {seedStatus && (
-          <div className="mb-6 rounded-2xl border border-blue-500/30 bg-blue-500/10 px-4 py-3 text-sm text-blue-100">
-            ℹ️ {seedStatus}
-          </div>
-        )}
 
         {/* Overview Section */}
         {activeSection === "overview" && (
@@ -578,26 +552,6 @@ export default function AdminPanel() {
                 </div>
               </div>
 
-              {/* Load Sample Data Button */}
-              <div className="mt-8 rounded-2xl border border-white/10 bg-gradient-to-br from-purple-500/10 to-blue-500/10 p-6">
-                <div className="flex items-center justify-between">
-            <div>
-                    <h3 className="text-sm font-semibold text-white">
-                      🌱 Database Seed
-                    </h3>
-                    <p className="mt-1 text-xs text-white/60">
-                      Veritabanına örnek DJ ve show verisi yükleyin
-                    </p>
-                  </div>
-                  <button
-                    onClick={handleSeedDatabase}
-                    disabled={isSeeding}
-                    className="rounded-full border border-white/20 bg-white/10 px-6 py-2 text-xs font-medium uppercase tracking-[0.3em] text-white transition hover:bg-white/20 disabled:opacity-50"
-                  >
-                    {isSeeding ? "Yükleniyor..." : "Sample Data Yükle"}
-                  </button>
-                </div>
-              </div>
 
               {/* Recent Activity */}
               <div className="mt-8">
