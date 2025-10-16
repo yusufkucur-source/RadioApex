@@ -231,14 +231,14 @@ function HomeContent() {
                transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
                animate={{
                  textShadow: [
-                   "0 0 20px rgba(253, 29, 53, 0.8), 0 0 40px rgba(253, 29, 53, 0.6), 0 0 60px rgba(253, 29, 53, 0.4)",
-                   "0 0 30px rgba(253, 29, 53, 1), 0 0 60px rgba(253, 29, 53, 0.8), 0 0 90px rgba(253, 29, 53, 0.6)",
-                   "0 0 20px rgba(253, 29, 53, 0.8), 0 0 40px rgba(253, 29, 53, 0.6), 0 0 60px rgba(253, 29, 53, 0.4)"
+                   "0 0 30px rgba(253, 29, 53, 1), 0 0 60px rgba(253, 29, 53, 0.8), 0 0 90px rgba(253, 29, 53, 0.6), 0 0 120px rgba(253, 29, 53, 0.4)",
+                   "0 0 50px rgba(253, 29, 53, 1), 0 0 100px rgba(253, 29, 53, 1), 0 0 150px rgba(253, 29, 53, 0.8), 0 0 200px rgba(253, 29, 53, 0.6)",
+                   "0 0 30px rgba(253, 29, 53, 1), 0 0 60px rgba(253, 29, 53, 0.8), 0 0 90px rgba(253, 29, 53, 0.6), 0 0 120px rgba(253, 29, 53, 0.4)"
                  ]
                }}
                transition={{
                  textShadow: {
-                   duration: 2,
+                   duration: 1.5,
                    repeat: Infinity,
                    ease: "easeInOut"
                  }
