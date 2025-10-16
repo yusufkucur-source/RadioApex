@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useNowPlaying } from "@/components/now-playing/NowPlayingProvider";
 
 export default function Footer() {
@@ -11,7 +11,7 @@ export default function Footer() {
     : `${(nowPlaying.artist?.trim() || "RADIO APEX").toLocaleUpperCase('en-US')} · ${(nowPlaying.title?.trim() || "LIVE STREAM").toLocaleUpperCase('en-US')}`;
 
   return (
-    <motion.footer 
+    <m.footer 
       className="fixed bottom-4 sm:bottom-6 md:bottom-8 left-4 right-4 z-50 mx-auto flex h-[32px] sm:h-[35px] md:h-[37px] max-w-[1399px] justify-center"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -46,6 +46,6 @@ export default function Footer() {
           </div>
         </div>
       </div>
-    </motion.footer>
+    </m.footer>
   );
 }

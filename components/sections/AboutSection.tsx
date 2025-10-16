@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 
 const paragraphs = [
@@ -16,7 +16,7 @@ export default function AboutSection() {
       className="section-padding scroll-snap-start relative flex min-h-screen flex-col justify-center"
     >
       {/* Title - İlk önce yukarı çıkar */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3, margin: "0px" }}
@@ -28,12 +28,12 @@ export default function AboutSection() {
           description="An independent sonic platform for deep listeners, curious minds, and nocturnal dreamers."
           titleClassName="text-[#FD1D35]"
         />
-      </motion.div>
+      </m.div>
 
       {/* Paragraflar - Stagger ile birer birer gelir */}
       <div className="mt-16 grid gap-8 lg:grid-cols-3">
         {paragraphs.map((text, index) => (
-          <motion.p
+          <m.p
             key={index}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -46,7 +46,7 @@ export default function AboutSection() {
             className="font-spaceGrotesk text-base leading-relaxed text-white/70"
           >
             {text}
-          </motion.p>
+          </m.p>
         ))}
       </div>
     </section>

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import SimplePlayer from "@/components/audio/SimplePlayer";
 import TurntableVisualizer from "@/components/graphics/TurntableVisualizer";
 import { Button } from "@/components/ui/button";
@@ -77,7 +77,7 @@ export default function HomeSection() {
       <div className="relative z-10 mx-auto flex w-full max-w-[1399px] flex-col items-center justify-center gap-12 px-4 sm:px-6 md:px-8 lg:flex-row lg:justify-between lg:gap-0">
         {/* Sol taraf - İçerik */}
         <div className="w-full max-w-xl space-y-8 text-center lg:w-auto lg:text-left">
-          <motion.span
+          <m.span
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
@@ -85,18 +85,18 @@ export default function HomeSection() {
           >
             <span className="h-1 w-1 rounded-full bg-[#FD1D35]" />
             LIVE RADIO
-          </motion.span>
+          </m.span>
 
-          <motion.h1
+          <m.h1
             initial={{ opacity: 0, y: 26 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05, duration: 0.8, ease: "easeOut" }}
             className="font-roboto text-balance text-4xl font-bold uppercase leading-tight tracking-[0.08em] text-[#FD1D35] sm:text-5xl md:text-6xl lg:text-[72px]"
           >
             Feel Good Sound.
-          </motion.h1>
+          </m.h1>
 
-          <motion.p
+          <m.p
             initial={{ opacity: 0, y: 26 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.12, duration: 0.8, ease: "easeOut" }}
@@ -105,9 +105,9 @@ export default function HomeSection() {
             Radio Apex is an experimental space broadcasting electronic,
             ambient, avant-garde, and boundary-pushing sounds 24/7. Sit back and
             drift away — or turn up the volume and dive in.
-          </motion.p>
+          </m.p>
 
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.7 }}
@@ -134,19 +134,19 @@ export default function HomeSection() {
                 </Button>
               );
             })}
-          </motion.div>
+          </m.div>
         </div>
 
         {/* Sağ taraf - Merkezi Radio Player (üst katmanda) */}
         <div className="flex w-full items-center justify-center lg:flex-1">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.92, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.8, ease: "easeOut" }}
             className="w-full max-w-md lg:max-w-none"
           >
             <SimplePlayer />
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { m, useScroll, useTransform } from "framer-motion";
 import Header from "@/components/navigation/Header";
 import Footer from "@/components/layout/Footer";
 import SimplePlayer from "@/components/audio/SimplePlayer";
@@ -69,13 +69,7 @@ export default function Page() {
   return (
     <NowPlayingProvider>
       {/* SABİT HEADER - Her zaman üstte */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-      >
-        <Header />
-      </motion.div>
+      <Header />
 
       {/* SABİT BACKGROUND ELEMENTLER - Scroll yapılırken yerinde kalır */}
       <div className="fixed inset-0 z-0 bg-apex-background">
@@ -94,21 +88,21 @@ export default function Page() {
         </div>
 
          {/* Arka plan katmanları - Parallax */}
-         <motion.div 
+         <m.div 
            className="hero-bg-outer pointer-events-none absolute inset-0 parallax-element" 
            style={{ y: backgroundY }}
          />
-         <motion.div 
+         <m.div 
            className="hero-bg-gradient pointer-events-none absolute inset-0 parallax-element" 
            style={{ y: backgroundY }}
          />
-         <motion.div 
+         <m.div 
            className="hero-bg-lines pointer-events-none absolute inset-0 parallax-element" 
            style={{ y: backgroundY }}
          />
          
          {/* TAM EKRAN BACKGROUND IMAGE - Parallax */}
-         <motion.div 
+         <m.div 
            className="pointer-events-none absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 parallax-element"
            style={{
              backgroundImage: "url('/images/home/index_background_v2.png')",
@@ -118,7 +112,7 @@ export default function Page() {
          />
         
         {/* TURNTABLE SVG - Parallax */}
-        <motion.div 
+        <m.div 
           className="pointer-events-none absolute inset-0 flex items-center justify-center parallax-element"
           style={{ y: turntableY }}
         >
@@ -130,13 +124,13 @@ export default function Page() {
           />
           
           {/* Hareketli Kırmızı ve Beyaz Noktalar - Parallax */}
-          <motion.div 
+          <m.div 
             className="absolute inset-0 overflow-hidden parallax-element"
             style={{ y: dotsY }}
           >
             {/* Kırmızı Noktalar */}
             {redDots.map((dot, i) => (
-              <motion.div
+              <m.div
                 key={`red-${i}`}
                 className="absolute w-1 h-1 rounded-full bg-[#FD1D35]"
                 style={{
@@ -161,7 +155,7 @@ export default function Page() {
             
             {/* Beyaz Noktalar */}
             {whiteDots.map((dot, i) => (
-              <motion.div
+              <m.div
                 key={`white-${i}`}
                 className="absolute w-1 h-1 rounded-full bg-white"
                 style={{
@@ -183,8 +177,8 @@ export default function Page() {
                 }}
               />
               ))}
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
       </div>
 
       {/* SCROLL YAPAN İÇERİK - Background üzerinde kayar */}
@@ -195,12 +189,12 @@ export default function Page() {
           className="scroll-snap-start relative flex min-h-screen items-center justify-center overflow-hidden text-white"
         >
            {/* Üst kısım - Yazılar (Yukarıda) - Parallax */}
-           <motion.div 
+           <m.div 
              className="absolute top-[calc(20%-30px)] md:top-[20%] left-0 right-0 z-10 flex flex-col items-center px-4 parallax-element"
              style={{ y: contentY }}
            >
              {/* FEEL GOOD SOUND. - Başlık */}
-             <motion.div 
+             <m.div 
                className="whitespace-nowrap font-roboto text-[32px] sm:text-[42px] md:text-[57px] mb-8 motion-element"
                style={{
                  fontStyle: "normal",
@@ -215,10 +209,10 @@ export default function Page() {
                transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
              >
                FEEL GOOD SOUND.
-             </motion.div>
+             </m.div>
 
              {/* Açıklama Metni */}
-             <motion.div 
+             <m.div 
                className="font-spaceGrotesk text-sm sm:text-base px-4 max-w-[791px] motion-element"
                style={{
                  fontStyle: "normal",
@@ -233,11 +227,11 @@ export default function Page() {
                transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
              >
                Radio Apex is an experimental space broadcasting electronic, ambient, avant-garde, and boundary-pushing sounds 24/7. Sit back and drift away — or turn up the volume and dive in.
-             </motion.div>
-           </motion.div>
+             </m.div>
+           </m.div>
 
            {/* Orta kısım - Player (PLAY BUTONU TAM ORTADA - SCROLL İLE KAYAR) */}
-           <motion.div 
+           <m.div 
              className="relative z-10 flex h-full w-full items-center justify-center motion-element"
              initial={{ opacity: 0, scale: 0.9 }}
              whileInView={{ opacity: 1, scale: 1 }}
@@ -247,13 +241,13 @@ export default function Page() {
              <div className="translate-y-10">
                <SimplePlayer />
              </div>
-           </motion.div>
+           </m.div>
 
 
         </section>
         
         {/* DİĞER BÖLÜMLER - Parallax scroll efektleriyle */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 60 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1, margin: "0px" }}
@@ -261,9 +255,9 @@ export default function Page() {
           className="relative"
         >
           <DjSection />
-        </motion.div>
+        </m.div>
         
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 60 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1, margin: "0px" }}
@@ -271,9 +265,9 @@ export default function Page() {
           className="relative"
         >
           <LineupSection />
-        </motion.div>
+        </m.div>
         
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 60 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1, margin: "0px" }}
@@ -281,9 +275,9 @@ export default function Page() {
           className="relative"
         >
           <AboutSection />
-        </motion.div>
+        </m.div>
         
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 60 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1, margin: "0px" }}
@@ -291,12 +285,12 @@ export default function Page() {
           className="relative"
         >
           <ContactSection />
-        </motion.div>
+        </m.div>
         
          {/* SABİT FOOTER VE SOSYAL MEDYA */}
          <div className="fixed bottom-0 left-0 right-0 z-40">
            {/* Sosyal Medya İkonları */}
-           <motion.div 
+           <m.div 
              className="flex items-center justify-center gap-4 pb-20"
              initial={{ opacity: 0, y: 20 }}
              animate={{ opacity: 1, y: 0 }}
@@ -305,7 +299,7 @@ export default function Page() {
              {socials.map((social, index) => {
                const Icon = social.icon;
                return (
-                 <motion.div
+                 <m.div
                    key={social.label}
                    initial={{ opacity: 0, scale: 0.5 }}
                    animate={{ opacity: 1, scale: 1 }}
@@ -326,10 +320,10 @@ export default function Page() {
                        <Icon className="h-5 w-5" />
                      </a>
                    </Button>
-                 </motion.div>
+                 </m.div>
                );
              })}
-           </motion.div>
+           </m.div>
            
            <Footer />
          </div>

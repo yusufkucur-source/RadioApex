@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import clsx from "clsx";
 
 type SectionHeadingProps = {
@@ -28,7 +28,7 @@ export default function SectionHeading({
         className
       )}
     >
-      <motion.span
+      <m.span
         initial={{ opacity: 0, y: 12 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-20%" }}
@@ -37,9 +37,9 @@ export default function SectionHeading({
       >
         <span className="h-1 w-1 rounded-full bg-[#FD1D35]" />
         {eyebrow}
-      </motion.span>
+      </m.span>
 
-      <motion.h2
+      <m.h2
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-15%" }}
@@ -50,10 +50,10 @@ export default function SectionHeading({
         )}
       >
         {title}
-      </motion.h2>
+      </m.h2>
 
       {description ? (
-        <motion.p
+        <m.p
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-10%" }}
@@ -61,7 +61,7 @@ export default function SectionHeading({
           className="font-spaceGrotesk mt-6 text-base leading-relaxed text-white/70 sm:text-lg"
         >
           {description}
-        </motion.p>
+        </m.p>
       ) : null}
     </div>
   );

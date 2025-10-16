@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import Image from "next/image";
-import { motion, type Variants } from "framer-motion";
+import { m, type Variants } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { useDJs } from "@/lib/firebase/hooks";
 
@@ -59,7 +59,7 @@ export default function DjSection() {
     >
       <div className="relative z-10 mx-auto flex w-full max-w-[1399px] flex-col gap-16 px-4 py-24 sm:px-6 md:px-8">
         {/* Title - İlk önce yukarı çıkar (parallax) */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3, margin: "0px" }}
@@ -72,10 +72,10 @@ export default function DjSection() {
             description="The Radio Apex DJ List showcases the creative minds shaping our nightly flow — from deep house dreamers to techno visionaries. Discover each artist's unique style, story, and sonic signature that define the Apex sound."
             titleClassName="text-[#FD1D35]"
           />
-        </motion.div>
+        </m.div>
 
           {/* Kartlar - Title'dan sonra gelir (parallax stagger) */}
-          <motion.div
+          <m.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -89,7 +89,7 @@ export default function DjSection() {
               );
 
               return (
-                <motion.article
+                <m.article
                   key={dj.id}
                   variants={cardVariants}
                   whileHover={{ translateY: -12 }}
@@ -165,10 +165,10 @@ export default function DjSection() {
                       </div>
                     ) : null}
                   </div>
-                </motion.article>
+                </m.article>
               );
             })}
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

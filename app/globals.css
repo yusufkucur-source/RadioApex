@@ -102,6 +102,20 @@ body {
     will-change: transform, opacity;
   }
 
+  /* Header animations */
+  .header-animation {
+    will-change: transform, opacity;
+    transform: translateZ(0); /* GPU acceleration */
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  
+  /* Prevent flash of unstyled content */
+  .header-animation:not(.motion-safe) {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
   .animate-spin-slow {
     animation: spin 30s linear infinite;
   }

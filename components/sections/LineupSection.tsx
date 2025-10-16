@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { useDJs, useLineup } from "@/lib/firebase/hooks";
 
@@ -45,7 +45,7 @@ export default function LineupSection() {
       className="section-padding scroll-snap-start relative flex min-h-screen flex-col justify-center"
     >
       {/* Title - İlk önce yukarı çıkar */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3, margin: "0px" }}
@@ -58,14 +58,14 @@ export default function LineupSection() {
           description="Radio Apex keeps the pulse of electronic music alive with a seamless flow of sound through every hour of the day. After 8 PM, the energy rises — from deep house to techno, from chill sets to late-night afterhours. Pure rhythm, atmosphere, and motion — on Apex, the night never ends."
           align="center"
         />
-      </motion.div>
+      </m.div>
 
       {/* Lineup items - Stagger ile birer birer gelir */}
       <div className="mt-16 grid gap-6">
         {sortedLineup.map((slot, index) => {
           const dj = slot.djId ? djMap.get(slot.djId) : undefined;
           return (
-            <motion.div
+            <m.div
               key={slot.id}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -110,7 +110,7 @@ export default function LineupSection() {
                   </p>
                 )}
               </div>
-            </motion.div>
+            </m.div>
           );
         })}
       </div>

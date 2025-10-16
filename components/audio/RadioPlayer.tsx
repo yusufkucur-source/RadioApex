@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useNowPlaying } from "@/components/now-playing/NowPlayingProvider";
 
 const STREAM_URL =
@@ -85,7 +85,7 @@ export default function RadioPlayer() {
 
   return (
     <div className="relative flex w-full flex-col items-center gap-6 text-center">
-      <motion.button
+      <m.button
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         onClick={togglePlayback}
@@ -101,7 +101,7 @@ export default function RadioPlayer() {
         <span className="absolute inset-[8%] rounded-full bg-white" />
         
         {/* Merkezi play/pause butonu */}
-        <motion.span
+        <m.span
           key={isPlaying ? "pause" : "play"}
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -125,15 +125,15 @@ export default function RadioPlayer() {
               <path d="M8 5v14l11-7z" />
             </svg>
           )}
-        </motion.span>
+        </m.span>
 
         {/* Dış halka efekti */}
         <span className="absolute inset-[-8%] rounded-full border-2 border-[#f04868]/30 animate-pulse" />
-      </motion.button>
+      </m.button>
 
       {/* Şarkı bilgileri - Figma tasarımındaki gibi */}
       <div className="flex flex-col items-center gap-3">
-        <motion.h3
+        <m.h3
           key={displayTitle}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -141,9 +141,9 @@ export default function RadioPlayer() {
           className="text-xl font-bold uppercase tracking-[0.1em] text-[#f04868] sm:text-2xl"
         >
           {displayTitle}
-        </motion.h3>
+        </m.h3>
 
-        <motion.p
+        <m.p
           key={displayArtist}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -151,7 +151,7 @@ export default function RadioPlayer() {
           className="text-sm uppercase tracking-[0.2em] text-white/90 font-medium"
         >
           {displayArtist}
-        </motion.p>
+        </m.p>
       </div>
     </div>
   );

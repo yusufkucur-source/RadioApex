@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 
 type FormState = "idle" | "sending" | "success" | "error";
@@ -25,7 +25,7 @@ export default function ContactSection() {
       className="section-padding scroll-snap-start relative flex min-h-screen flex-col justify-center"
     >
       {/* Title - İlk önce yukarı çıkar */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3, margin: "0px" }}
@@ -37,10 +37,10 @@ export default function ContactSection() {
           description="Get in touch for event announcements, live broadcast support, or collaborations."
           align="center"
         />
-      </motion.div>
+      </m.div>
 
       {/* Form - Title'dan sonra gelir */}
-      <motion.form
+      <m.form
         onSubmit={handleSubmit}
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -87,7 +87,7 @@ export default function ContactSection() {
           />
         </div>
 
-        <motion.button
+        <m.button
           type="submit"
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.98 }}
@@ -98,8 +98,8 @@ export default function ContactSection() {
           {state === "sending" && "Sending..."}
           {state === "success" && "Message sent"}
           {state === "error" && "Error occurred, try again"}
-        </motion.button>
-      </motion.form>
+        </m.button>
+      </m.form>
 
     </section>
   );

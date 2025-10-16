@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useNowPlaying } from "@/components/now-playing/NowPlayingProvider";
 
@@ -85,7 +85,7 @@ export default function SimplePlayer() {
       />
 
       {/* Middle Border Circle - Ellipse 5774 */}
-      <motion.div
+      <m.div
         className="absolute scale-75 sm:scale-90 md:scale-100"
         style={{
           width: "248px",
@@ -108,7 +108,7 @@ export default function SimplePlayer() {
       {/* Play Button / Soundwave Visualizer */}
       <AnimatePresence mode="wait">
         {!isPlaying ? (
-          <motion.button
+          <m.button
             key="play-button"
             onClick={handlePlayPause}
             className="relative z-10 cursor-pointer"
@@ -169,9 +169,9 @@ export default function SimplePlayer() {
                 bottom: "8.33%"
               }}
             />
-          </motion.button>
+          </m.button>
         ) : (
-          <motion.div
+          <m.div
             key="soundwave"
             className="relative z-10 flex items-center justify-center gap-2 cursor-pointer"
             style={{
@@ -185,7 +185,7 @@ export default function SimplePlayer() {
             onClick={handlePlayPause}
           >
             {soundwaveBars.map((bar, index) => (
-              <motion.div
+              <m.div
                 key={index}
                 className="w-2 bg-gradient-to-b from-[#FD1D35] to-[#FF6B6B] rounded-full"
                 initial={{ height: "20%" }}
@@ -203,12 +203,12 @@ export default function SimplePlayer() {
                 }}
               />
             ))}
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 
       {/* Song Title - THE MESSAGE (Play butonunun hemen altında) */}
-      <motion.div
+      <m.div
         className="song-title absolute z-20 font-spaceGrotesk text-2xl sm:text-3xl md:text-[32px] lg:text-3xl font-medium tracking-[0.05em] text-[#FD1D35] text-center whitespace-nowrap"
         style={{
           top: "calc(50% + 85px)"
@@ -218,10 +218,10 @@ export default function SimplePlayer() {
         transition={{ delay: 0.2 }}
       >
         {nowPlaying.title?.toLocaleUpperCase('en-US') || ''}
-      </motion.div>
+      </m.div>
 
       {/* Artist Name - JOB DE JONG (Şarkı isminin altında) */}
-      <motion.div
+      <m.div
         className="artist-name absolute z-20 font-spaceGrotesk text-base sm:text-lg md:text-xl lg:text-lg font-medium tracking-[0.05em] text-white text-center whitespace-nowrap"
         style={{
           top: "calc(50% + 125px)"
@@ -231,7 +231,7 @@ export default function SimplePlayer() {
         transition={{ delay: 0.3 }}
       >
         {nowPlaying.artist?.toLocaleUpperCase('en-US') || ''}
-      </motion.div>
+      </m.div>
 
       {/* Hidden Audio Element */}
       <audio

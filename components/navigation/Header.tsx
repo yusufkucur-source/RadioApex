@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, useRef } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import clsx from "clsx";
 
 const SECTIONS = [
@@ -68,7 +68,13 @@ function useActiveSection() {
 
 export default function Header() {
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const { active: activeSection, setActive: setActiveSection, scrollingRef } = useActiveSection();
+
+  // Hydration mismatch'i önlemek için
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     if (isMenuOpen) {
@@ -112,9 +118,54 @@ export default function Header() {
     setMenuOpen(false);
   };
 
+  // Client-side render için
+  if (!isClient) {
+    return (
+      <header className="fixed left-4 right-4 top-4 sm:top-6 md:top-[27px] z-[100] mx-auto flex h-[60px] max-w-[1399px] items-center justify-between rounded-[50px] border border-[rgba(154,154,154,0.2)] bg-black/30 px-4 sm:px-6 md:px-8 backdrop-blur-3xl transition-all duration-500 overflow-hidden">
+        <button
+          onClick={() => handleNavClick("home")}
+          className="flex items-center font-anton text-[16px] sm:text-[20px] md:text-[22px] uppercase leading-none tracking-[0.3em] sm:tracking-[0.5em] text-white transition hover:text-[#FD1D35] ml-2 sm:ml-4 md:ml-6 nav-text-glow"
+        >
+          RADIO APEX
+        </button>
+        <nav className="hidden items-center gap-10 lg:flex mr-2 sm:mr-4 md:mr-6">
+          {navItems.map(item => (
+            <button
+              key={item.id}
+              onClick={() => handleNavClick(item.id as SectionId)}
+              className="relative px-4 py-2 font-antonio text-[15px] uppercase leading-[19px] tracking-[0.2em] transition duration-300 nav-text-glow text-white hover:text-[#FD1D35] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FD1D35]"
+            >
+              <span className="relative z-10">{item.label}</span>
+            </button>
+          ))}
+        </nav>
+        <button
+          onClick={() => setMenuOpen(!isMenuOpen)}
+          className="relative flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-sm font-semibold text-white transition lg:hidden mr-2 sm:mr-4 md:mr-6 hover:border-white/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40"
+          aria-label="Menu"
+        >
+          <div className="flex h-5 w-5 flex-col justify-between">
+            <span className="h-0.5 w-full rounded-full bg-white transition-transform duration-300" />
+            <span className="h-0.5 w-full rounded-full bg-white transition-opacity duration-300" />
+            <span className="h-0.5 w-full rounded-full bg-white transition-transform duration-300" />
+          </div>
+        </button>
+      </header>
+    );
+  }
+
   return (
     <>
-      <header className="fixed left-4 right-4 top-4 sm:top-6 md:top-[27px] z-[100] mx-auto flex h-[60px] max-w-[1399px] items-center justify-between rounded-[50px] border border-[rgba(154,154,154,0.2)] bg-black/30 px-4 sm:px-6 md:px-8 backdrop-blur-3xl transition-all duration-500 overflow-hidden">
+      <m.header 
+        initial={{ opacity: 0, y: -20, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ 
+          duration: 0.8, 
+          ease: [0.25, 0.46, 0.45, 0.94],
+          delay: 0.2
+        }}
+        className="header-animation fixed left-4 right-4 top-4 sm:top-6 md:top-[27px] z-[100] mx-auto flex h-[60px] max-w-[1399px] items-center justify-between rounded-[50px] border border-[rgba(154,154,154,0.2)] bg-black/30 px-4 sm:px-6 md:px-8 backdrop-blur-3xl transition-all duration-500 overflow-hidden"
+      >
       <button
         onClick={() => handleNavClick("home")}
         className="flex items-center font-anton text-[16px] sm:text-[20px] md:text-[22px] uppercase leading-none tracking-[0.3em] sm:tracking-[0.5em] text-white transition hover:text-[#FD1D35] ml-2 sm:ml-4 md:ml-6 nav-text-glow"
@@ -136,7 +187,7 @@ export default function Header() {
             )}
           >
             {activeSection === item.id && (
-              <motion.span
+              <m.span
                 layoutId="activeNav"
                 className="absolute inset-0 rounded-[15px] bg-[#FD1D35] nav-glow"
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
@@ -177,14 +228,14 @@ export default function Header() {
         </div>
       </button>
 
-      </header>
+      </m.header>
 
       {/* Menu - Header'ın dışında */}
       <AnimatePresence>
         {isMenuOpen && (
           <>
             {/* Backdrop Overlay - Tüm ekranı kaplar */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -198,7 +249,7 @@ export default function Header() {
             />
             
             {/* Menu - Backdrop üzerinde */}
-            <motion.nav
+            <m.nav
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -229,7 +280,7 @@ export default function Header() {
                   </li>
                 ))}
               </ul>
-            </motion.nav>
+            </m.nav>
           </>
         )}
       </AnimatePresence>
