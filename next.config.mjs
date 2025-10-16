@@ -2,6 +2,15 @@
 const nextConfig = {
   reactStrictMode: true,
   optimizeFonts: true,
+  webpack: (config) => {
+    // Exclude IconAnimation directory from webpack compilation
+    config.module.rules.push({
+      test: /\.tsx?$/,
+      include: /public\/images\/home\/IconAnimation/,
+      use: 'ignore-loader'
+    });
+    return config;
+  },
   images: {
     remotePatterns: [
       {
