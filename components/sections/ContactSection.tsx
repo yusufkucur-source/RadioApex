@@ -22,7 +22,7 @@ export default function ContactSection() {
   return (
     <section
       id="contact"
-      className="section-padding scroll-snap-start relative flex min-h-screen flex-col justify-center pb-32 md:pb-40 lg:pb-48"
+      className="section-padding scroll-snap-start relative flex min-h-screen flex-col justify-center pb-48 sm:pb-56 md:pb-64 lg:pb-72"
     >
       {/* Title - İlk önce yukarı çıkar */}
       <m.div
