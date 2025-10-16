@@ -96,6 +96,10 @@ export default function HomeSection() {
             Feel Good Sound.
           </m.h1>
 
+          <div className="text-3xl font-bold text-red-500 mb-4">
+            Your Best Dance Music Station
+          </div>
+
           <m.p
             initial={{ opacity: 0, y: 26 }}
             animate={{ opacity: 1, y: 0 }}

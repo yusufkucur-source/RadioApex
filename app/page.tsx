@@ -294,15 +294,25 @@ function HomeContent() {
              viewport={{ once: true }}
              transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
            >
-             <div className="font-spaceGrotesk text-sm sm:text-base px-4 max-w-[791px] text-center"
-               style={{
-                 fontStyle: "normal",
-                 fontWeight: 400,
-                 lineHeight: "1.25",
-                 color: "#FFFFFF"
-               }}
-             >
-               Radio Apex is an experimental space broadcasting electronic, ambient, avant-garde, and boundary-pushing sounds 24/7. Sit back and drift away — or turn up the volume and dive in.
+             <div className="text-center">
+               <div className="font-roboto text-lg sm:text-xl md:text-2xl font-bold mb-4"
+                 style={{
+                   lineHeight: "1.2",
+                   color: "#FD1D35"
+                 }}
+               >
+                 Your Best Dance Music Station
+               </div>
+               <div className="font-spaceGrotesk text-sm sm:text-base px-4 max-w-[791px] text-center"
+                 style={{
+                   fontStyle: "normal",
+                   fontWeight: 400,
+                   lineHeight: "1.25",
+                   color: "#FFFFFF"
+                 }}
+               >
+                 Radio Apex is an experimental space broadcasting electronic, ambient, avant-garde, and boundary-pushing sounds 24/7. Sit back and drift away — or turn up the volume and dive in.
+               </div>
              </div>
            </m.div>
 

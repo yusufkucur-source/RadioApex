@@ -38,6 +38,12 @@
   font-display: swap !important;
 }
 
+.title-space-grotesk {
+  font-family: var(--font-space-grotesk), 'Space Grotesk', system-ui, sans-serif !important;
+  font-display: swap !important;
+  font-weight: 700 !important;
+}
+
 /* Force font loading for all elements */
 * {
   font-display: swap;
