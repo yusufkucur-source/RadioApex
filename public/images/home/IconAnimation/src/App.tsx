@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import logo from 'figma:asset/a97d9d5fd51e7b4b93b7623792904b633873083e.png';
 
 export default function App() {
   const [scrollRotation, setScrollRotation] = useState(0);
@@ -28,7 +27,7 @@ export default function App() {
       {/* Sabit konumda dönen amblem */}
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
         <img
-          src={logo}
+          src="/images/home/SVG/logo_icon.svg"
           alt="Dönen Amblem"
           className="w-32 h-32 md:w-48 md:h-48 transition-transform duration-100"
           style={{ transform: `rotate(${scrollRotation}deg) scale(${scale})` }}
