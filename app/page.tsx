@@ -335,7 +335,7 @@ function HomeContent() {
          <div className="fixed bottom-0 left-0 right-0 z-40">
            {/* Sosyal Medya İkonları */}
            <m.div 
-             className="flex items-center justify-center gap-4 pb-20 sm:pb-18 md:pb-16 lg:pb-14"
+             className="flex items-center justify-center gap-4 pb-20 sm:pb-18 md:pb-24 lg:pb-28"
              initial={{ opacity: 0, y: 20 }}
              animate={{ opacity: 1, y: 0 }}
              transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
