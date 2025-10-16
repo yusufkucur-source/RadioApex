@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 interface LogoAnimationProps {
   className?: string;
@@ -56,9 +57,11 @@ export default function LogoAnimation({
   return (
     <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none ${className}`}>
       {/* Clean logo without any effects */}
-      <img
+      <Image
         src="/images/home/SVG/logo_icon.svg"
         alt="RadioApex Logo"
+        width={224}
+        height={224}
         className="w-32 h-32 md:w-48 md:h-48 lg:w-56 lg:h-56 transition-transform duration-100"
         style={{ 
           transform: `rotate(${scrollRotation}deg) scale(${scale})`,

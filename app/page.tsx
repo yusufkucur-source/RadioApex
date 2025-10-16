@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useEffect } from "react";
 import { m, useScroll, useTransform } from "framer-motion";
+import Image from "next/image";
 import Header from "@/components/navigation/Header";
 import Footer from "@/components/layout/Footer";
 import SimplePlayer from "@/components/audio/SimplePlayer";
@@ -119,9 +120,11 @@ function HomeContent() {
           className="pointer-events-none absolute inset-0 flex items-center justify-center parallax-element"
           style={{ y: turntableY }}
         >
-          <img 
+          <Image 
             src="/images/home/SVG/turntable_V03.svg" 
             alt="Turntable"
+            width={1920}
+            height={1080}
             className="w-full h-full"
             style={{ objectFit: "cover", objectPosition: "center", opacity: 0.1 }}
           />
@@ -228,20 +231,22 @@ function HomeContent() {
                initial={{ opacity: 0, y: 20 }}
                whileInView={{ opacity: 1, y: 0 }}
                viewport={{ once: true }}
-               transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+               transition={{ 
+                 duration: 1, 
+                 delay: 0.2, 
+                 ease: "easeOut",
+                 textShadow: {
+                   duration: 1.5,
+                   repeat: Infinity,
+                   ease: "easeInOut"
+                 }
+               }}
                animate={{
                  textShadow: [
                    "0 0 30px rgba(253, 29, 53, 1), 0 0 60px rgba(253, 29, 53, 0.8), 0 0 90px rgba(253, 29, 53, 0.6), 0 0 120px rgba(253, 29, 53, 0.4)",
                    "0 0 50px rgba(253, 29, 53, 1), 0 0 100px rgba(253, 29, 53, 1), 0 0 150px rgba(253, 29, 53, 0.8), 0 0 200px rgba(253, 29, 53, 0.6)",
                    "0 0 30px rgba(253, 29, 53, 1), 0 0 60px rgba(253, 29, 53, 0.8), 0 0 90px rgba(253, 29, 53, 0.6), 0 0 120px rgba(253, 29, 53, 0.4)"
                  ]
-               }}
-               transition={{
-                 textShadow: {
-                   duration: 1.5,
-                   repeat: Infinity,
-                   ease: "easeInOut"
-                 }
                }}
              >
 {(nowPlaying.title?.trim() || "LIVE STREAM").toLocaleUpperCase('en-US')}

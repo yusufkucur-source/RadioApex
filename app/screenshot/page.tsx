@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Header from "@/components/navigation/Header";
 import Footer from "@/components/layout/Footer";
 import SimplePlayer from "@/components/audio/SimplePlayer";
@@ -64,9 +65,11 @@ export default function ScreenshotPage() {
           
           {/* FULL SCREEN TURNTABLE SVG */}
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-            <img 
+            <Image 
               src="/images/home/SVG/Turntable_V08_animated_CSS_ids_fixed_dots36s_v2.svg" 
               alt="Turntable"
+              width={1920}
+              height={1080}
               className="w-full h-full"
               style={{ objectFit: "cover", objectPosition: "center", opacity: 0.2 }}
             />
