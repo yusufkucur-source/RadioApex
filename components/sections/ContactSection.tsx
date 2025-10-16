@@ -36,6 +36,7 @@ export default function ContactSection() {
           title="Join the frequency"
           description="Get in touch for event announcements, live broadcast support, or collaborations."
           align="center"
+          titleClassName="text-[#FD1D35]"
         />
       </m.div>
 
