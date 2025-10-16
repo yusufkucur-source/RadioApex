@@ -46,7 +46,7 @@ export default function ContactSection() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "0px", amount: 0.3 }}
         transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-        className="mx-auto mt-16 grid w-full max-w-3xl gap-6 rounded-3xl border border-white/10 bg-white/[0.04] p-8 shadow-2xl backdrop-blur-2xl"
+        className="mx-auto mt-16 mb-20 sm:mb-18 md:mb-16 lg:mb-16 grid w-full max-w-3xl gap-6 rounded-3xl border border-white/10 bg-white/[0.04] p-8 shadow-2xl backdrop-blur-2xl"
       >
         <div className="grid gap-3">
           <label className="font-antonio text-xs uppercase tracking-[0.3em] text-white/60">
