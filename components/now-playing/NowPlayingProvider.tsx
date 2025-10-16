@@ -99,13 +99,23 @@ export const NowPlayingProvider = ({
   const [nowPlaying, setNowPlaying] =
     useState<NowPlayingPayload>(defaultState);
   const [isLoading, setIsLoading] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const handleRefresh = useCallback(async () => {
-    setIsLoading(true);
+    // Sadece ilk yüklemede loading göster
+    if (isInitialLoad) {
+      setIsLoading(true);
+    }
+    
     const payload = await fetchNowPlaying();
     setNowPlaying(payload);
-    setIsLoading(false);
-  }, []);
+    
+    // Sadece ilk yüklemede loading'i kapat
+    if (isInitialLoad) {
+      setIsLoading(false);
+      setIsInitialLoad(false);
+    }
+  }, [isInitialLoad]);
 
   useEffect(() => {
     void handleRefresh();
