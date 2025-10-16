@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, useRef } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import clsx from "clsx";
+import Image from "next/image";
 
 const SECTIONS = [
   { id: "home", label: "HOME" },
@@ -121,12 +122,23 @@ export default function Header() {
   // Client-side render için
   if (!isClient) {
     return (
-      <header className="fixed left-4 right-4 top-4 sm:top-6 md:top-[27px] z-[100] mx-auto flex h-[60px] max-w-[1399px] items-center justify-between rounded-[50px] border border-[rgba(154,154,154,0.2)] bg-black/30 px-4 sm:px-6 md:px-8 backdrop-blur-3xl transition-all duration-500 overflow-hidden">
+      <header className="fixed left-4 right-4 top-4 sm:top-6 md:top-[27px] z-[100] mx-auto flex h-[80px] max-w-[1399px] items-center justify-between rounded-[50px] border border-[rgba(154,154,154,0.2)] bg-black/30 px-4 sm:px-6 md:px-8 backdrop-blur-3xl transition-all duration-500 overflow-hidden">
         <button
           onClick={() => handleNavClick("home")}
-          className="flex items-center font-anton text-[16px] sm:text-[20px] md:text-[22px] uppercase leading-none tracking-[0.3em] sm:tracking-[0.5em] text-white transition hover:text-[#FD1D35] ml-2 sm:ml-4 md:ml-6 nav-text-glow"
+          className="flex items-center transition-all duration-300 ml-2 sm:ml-4 md:ml-6"
+          style={{
+            filter: 'drop-shadow(0 0 20px rgba(253, 29, 53, 0.4))',
+            animation: 'glow 4s ease-in-out infinite'
+          }}
         >
-          RADIO APEX
+          <Image
+            src="/images/home/SVG/radioapex_logo.svg"
+            alt="Radio Apex"
+            width={193}
+            height={81}
+            className="h-8 sm:h-10 md:h-12 w-auto transition-all duration-300"
+            priority
+          />
         </button>
         <nav className="hidden items-center gap-10 lg:flex mr-2 sm:mr-4 md:mr-6">
           {navItems.map(item => (
@@ -164,13 +176,24 @@ export default function Header() {
           ease: [0.25, 0.46, 0.45, 0.94],
           delay: 0.2
         }}
-        className="header-animation fixed left-4 right-4 top-4 sm:top-6 md:top-[27px] z-[100] mx-auto flex h-[60px] max-w-[1399px] items-center justify-between rounded-[50px] border border-[rgba(154,154,154,0.2)] bg-black/30 px-4 sm:px-6 md:px-8 backdrop-blur-3xl transition-all duration-500 overflow-hidden"
+        className="header-animation fixed left-4 right-4 top-4 sm:top-6 md:top-[27px] z-[100] mx-auto flex h-[80px] max-w-[1399px] items-center justify-between rounded-[50px] border border-[rgba(154,154,154,0.2)] bg-black/30 px-4 sm:px-6 md:px-8 backdrop-blur-3xl transition-all duration-500 overflow-hidden"
       >
       <button
         onClick={() => handleNavClick("home")}
-        className="flex items-center font-anton text-[16px] sm:text-[20px] md:text-[22px] uppercase leading-none tracking-[0.3em] sm:tracking-[0.5em] text-white transition hover:text-[#FD1D35] ml-2 sm:ml-4 md:ml-6 nav-text-glow"
+        className="flex items-center transition-all duration-300 ml-2 sm:ml-4 md:ml-6"
+        style={{
+          filter: 'drop-shadow(0 0 20px rgba(253, 29, 53, 0.4))',
+          animation: 'glow 4s ease-in-out infinite'
+        }}
       >
-        RADIO APEX
+        <Image
+          src="/images/home/SVG/radioapex_logo.svg"
+          alt="Radio Apex"
+          width={193}
+          height={81}
+          className="h-8 sm:h-10 md:h-12 w-auto transition-all duration-300"
+          priority
+        />
       </button>
 
       <nav className="hidden items-center gap-10 lg:flex mr-2 sm:mr-4 md:mr-6">

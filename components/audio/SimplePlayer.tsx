@@ -207,8 +207,8 @@ export default function SimplePlayer() {
         )}
       </AnimatePresence>
 
-      {/* Song Title - THE MESSAGE (Play butonunun hemen altında) */}
-      <m.div
+      {/* Song Title - THE MESSAGE (Play butonunun hemen altında) - GEÇİCİ OLARAK GİZLENDİ */}
+      {/* <m.div
         className="song-title absolute z-20 font-spaceGrotesk text-2xl sm:text-3xl md:text-[32px] lg:text-3xl font-medium tracking-[0.05em] text-[#FD1D35] text-center whitespace-nowrap"
         style={{
           top: "calc(50% + 85px)"
@@ -218,10 +218,10 @@ export default function SimplePlayer() {
         transition={{ delay: 0.2 }}
       >
         {nowPlaying.title?.toLocaleUpperCase('en-US') || ''}
-      </m.div>
+      </m.div> */}
 
-      {/* Artist Name - JOB DE JONG (Şarkı isminin altında) */}
-      <m.div
+      {/* Artist Name - JOB DE JONG (Şarkı isminin altında) - GEÇİCİ OLARAK GİZLENDİ */}
+      {/* <m.div
         className="artist-name absolute z-20 font-spaceGrotesk text-base sm:text-lg md:text-xl lg:text-lg font-medium tracking-[0.05em] text-white text-center whitespace-nowrap"
         style={{
           top: "calc(50% + 125px)"
@@ -231,7 +231,7 @@ export default function SimplePlayer() {
         transition={{ delay: 0.3 }}
       >
         {nowPlaying.artist?.toLocaleUpperCase('en-US') || ''}
-      </m.div>
+      </m.div> */}
 
       {/* Hidden Audio Element */}
       <audio

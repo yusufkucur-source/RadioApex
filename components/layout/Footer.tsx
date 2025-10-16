@@ -27,20 +27,24 @@ export default function Footer() {
           }}
         >
           <div className="animate-marquee inline-block">
-            {Array.from({ length: 8 }).map((_, i) => (
+            {Array.from({ length: 6 }).map((_, i) => (
               <span key={i} className="inline-block">
                 <span className="text-[#FD1D35]">*NOW PLAYING: </span>
                 <span className="text-white">{displayText}</span>
-                <span className="inline-block w-12" />
+                <span className="inline-block w-8" />
+                <span className="text-[#FD1D35]">*WELCOME TO RADIO APEX. 100% DANCE MUSIC STATION*</span>
+                <span className="inline-block w-8" />
               </span>
             ))}
           </div>
           <div className="animate-marquee inline-block" aria-hidden="true">
-            {Array.from({ length: 8 }).map((_, i) => (
+            {Array.from({ length: 6 }).map((_, i) => (
               <span key={i} className="inline-block">
                 <span className="text-[#FD1D35]">*NOW PLAYING: </span>
                 <span className="text-white">{displayText}</span>
-                <span className="inline-block w-12" />
+                <span className="inline-block w-8" />
+                <span className="text-[#FD1D35]">*WELCOME TO RADIO APEX. 100% DANCE MUSIC STATION*</span>
+                <span className="inline-block w-8" />
               </span>
             ))}
           </div>

@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Glow animation for logo */
+@keyframes glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 15px rgba(253, 29, 53, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 25px rgba(253, 29, 53, 0.6));
+  }
+}
+
 /* Font weight mapping - semibold (600) yok, bold (700) kullan */
 .font-semibold {
   font-weight: 700 !important;
@@ -302,6 +312,90 @@ html {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+}
+
+/* SVG Scroll Animations */
+.scroll-animated-svg,
+.intersection-animated-svg {
+  position: relative;
+  overflow: hidden;
+}
+
+.scroll-animated-svg svg,
+.intersection-animated-svg svg {
+  transition: all 0.3s ease;
+}
+
+.scroll-animated-svg svg path,
+.intersection-animated-svg svg path {
+  transition: stroke-dashoffset 0.1s ease;
+  will-change: stroke-dashoffset;
+}
+
+/* SVG Animation Performance */
+.scroll-animated-svg svg,
+.intersection-animated-svg svg {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Smooth SVG Drawing Effect */
+@keyframes draw-path {
+  from {
+    stroke-dashoffset: var(--path-length);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.svg-draw-animation {
+  animation: draw-path 2s ease-in-out forwards;
+}
+
+/* SVG Glow Effects */
+.svg-glow {
+  filter: drop-shadow(0 0 10px rgba(240, 72, 104, 0.5));
+  transition: filter 0.3s ease;
+}
+
+.svg-glow:hover {
+  filter: drop-shadow(0 0 20px rgba(240, 72, 104, 0.8));
+}
+
+/* SVG Pulse Animation */
+@keyframes svg-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+.svg-pulse {
+  animation: svg-pulse 2s ease-in-out infinite;
+}
+
+/* Cable SVG Specific Styles */
+.cable-svg-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.cable-svg {
+  transition: all 0.3s ease;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.cable-svg path {
+  transition: stroke-dashoffset 0.1s ease;
+  will-change: stroke-dashoffset;
 }
 
 @layer base {

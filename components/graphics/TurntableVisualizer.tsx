@@ -1,19 +1,29 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const ROTATION_KEYWORDS = ["text", "copy", "label", "dots", "point", "circle", "ring"];
 
 interface TurntableVisualizerProps {
   isFullScreen?: boolean;
+  enableScrollAnimation?: boolean;
+  scrollStartOffset?: number;
+  scrollEndOffset?: number;
+  className?: string;
 }
 
 export default function TurntableVisualizer({
   children,
-  isFullScreen = false
+  isFullScreen = false,
+  enableScrollAnimation = false,
+  scrollStartOffset = 0.1,
+  scrollEndOffset = 0.5,
+  className = ""
 }: PropsWithChildren<TurntableVisualizerProps>) {
   const [svgMarkup, setSvgMarkup] = useState<string | null>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const svgRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -77,6 +87,42 @@ export default function TurntableVisualizer({
     };
   }, []);
 
+  // Scroll animasyonu için useEffect
+  useEffect(() => {
+    if (!enableScrollAnimation) return;
+
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = scrollTop / docHeight;
+      
+      // Belirtilen aralıkta animasyonu çalıştır
+      if (scrollPercent >= scrollStartOffset && scrollPercent <= scrollEndOffset) {
+        const progress = (scrollPercent - scrollStartOffset) / (scrollEndOffset - scrollStartOffset);
+        setScrollProgress(progress);
+        
+        // SVG path'lerini animasyonlu olarak çiz
+        const svgElement = svgRef.current?.querySelector('svg');
+        if (svgElement) {
+          const paths = svgElement.querySelectorAll('path');
+          paths.forEach((path) => {
+            const length = path.getTotalLength();
+            const drawLength = length * progress;
+            path.style.strokeDasharray = `${length}`;
+            path.style.strokeDashoffset = `${length - drawLength}`;
+          });
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // İlk yüklemede çalıştır
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [enableScrollAnimation, scrollStartOffset, scrollEndOffset]);
+
   // Tam ekran modu - Figma tasarımındaki gibi
   if (isFullScreen) {
     return (
@@ -85,6 +131,7 @@ export default function TurntableVisualizer({
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           {svgMarkup ? (
             <div
+              ref={svgRef}
               className="w-full h-full"
               aria-hidden="true"
               style={{
@@ -123,7 +170,7 @@ export default function TurntableVisualizer({
 
   // Normal mod - Küçük turntable
   return (
-    <div className="hero-turntable relative aspect-square w-[500px] h-[500px] flex-shrink-0">
+    <div className={`hero-turntable relative aspect-square w-[500px] h-[500px] flex-shrink-0 ${className}`}>
       {/* Gradyan katmanları */}
       <div className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_70%)]" />
       <div className="pointer-events-none absolute inset-2 rounded-full border border-white/15" />
@@ -134,6 +181,7 @@ export default function TurntableVisualizer({
       <div className="pointer-events-none absolute inset-0">
         {svgMarkup ? (
           <div
+            ref={svgRef}
             className="h-full w-full"
             aria-hidden="true"
             dangerouslySetInnerHTML={{ __html: svgMarkup }}

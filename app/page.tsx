@@ -5,13 +5,14 @@ import { m, useScroll, useTransform } from "framer-motion";
 import Header from "@/components/navigation/Header";
 import Footer from "@/components/layout/Footer";
 import SimplePlayer from "@/components/audio/SimplePlayer";
-import { NowPlayingProvider } from "@/components/now-playing/NowPlayingProvider";
+import { NowPlayingProvider, useNowPlaying } from "@/components/now-playing/NowPlayingProvider";
 import { Button } from "@/components/ui/button";
 import { Instagram, Twitter, Music } from "lucide-react";
 import DjSection from "@/components/sections/DjSection";
 import LineupSection from "@/components/sections/LineupSection";
 import AboutSection from "@/components/sections/AboutSection";
 import ContactSection from "@/components/sections/ContactSection";
+import LogoAnimation from "@/components/graphics/LogoAnimation";
 
 const socials = [
   { 
@@ -31,7 +32,8 @@ const socials = [
   }
 ];
 
-export default function Page() {
+function HomeContent() {
+  const { nowPlaying, isLoading } = useNowPlaying();
   // Scroll hook'ları
   const { scrollY } = useScroll();
   
@@ -40,6 +42,7 @@ export default function Page() {
   const turntableY = useTransform(scrollY, [0, 1000], [0, -200]);
   const dotsY = useTransform(scrollY, [0, 1000], [0, -150]);
   const contentY = useTransform(scrollY, [0, 1000], [0, -100]);
+  const descriptionY = useTransform(scrollY, [0, 1000], [0, -50]);
 
   // Random dots - client-side only to avoid hydration mismatch
   const [redDots, setRedDots] = useState<Array<{x: number; y: number; moveX: number[]; moveY: number[]; duration: number}>>([]);
@@ -67,7 +70,7 @@ export default function Page() {
   }, []);
 
   return (
-    <NowPlayingProvider>
+    <>
       {/* SABİT HEADER - Her zaman üstte */}
       <Header />
 
@@ -123,6 +126,13 @@ export default function Page() {
             style={{ objectFit: "cover", objectPosition: "center", opacity: 0.1 }}
           />
           
+          {/* SCROLL ANIMASYONLU LOGO - Merkezi pozisyon */}
+          <LogoAnimation 
+            enableScrollAnimation={true}
+            rotationSpeed={0.5}
+            maxScroll={500}
+          />
+
           {/* Hareketli Kırmızı ve Beyaz Noktalar - Parallax */}
           <m.div 
             className="absolute inset-0 overflow-hidden parallax-element"
@@ -190,44 +200,71 @@ export default function Page() {
         >
            {/* Üst kısım - Yazılar (Yukarıda) - Parallax */}
            <m.div 
-             className="absolute top-[calc(20%-30px)] md:top-[20%] left-0 right-0 z-10 flex flex-col items-center px-4 parallax-element"
+             className="absolute top-[calc(20%-30px+30px)] md:top-[calc(20%+30px)] left-0 right-0 z-10 flex flex-col items-center px-4 parallax-element"
              style={{ y: contentY }}
            >
-             {/* FEEL GOOD SOUND. - Başlık */}
+             {/* LIVE Eyebrow */}
+             <m.span
+               initial={{ opacity: 0, y: 12 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true, margin: "-20%" }}
+               transition={{ duration: 0.6 }}
+               className="font-antonio inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] uppercase tracking-[0.45em] text-white/60 mb-4"
+             >
+               <span className="h-1 w-1 rounded-full bg-[#FD1D35]" />
+               LIVE
+             </m.span>
+
+             {/* Şarkı Başlığı */}
              <m.div 
-               className="whitespace-nowrap font-roboto text-[32px] sm:text-[42px] md:text-[57px] mb-8 motion-element"
+               className="whitespace-nowrap font-roboto text-[16px] sm:text-[21px] md:text-[28px] mb-2 motion-element"
                style={{
                  fontStyle: "normal",
                  fontWeight: 500,
                  lineHeight: "1.12",
-                 letterSpacing: "-0.25px",
+                 letterSpacing: "0.1em",
                  color: "#FD1D35"
                }}
                initial={{ opacity: 0, y: 20 }}
                whileInView={{ opacity: 1, y: 0 }}
                viewport={{ once: true }}
                transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+               animate={{
+                 textShadow: [
+                   "0 0 20px rgba(253, 29, 53, 0.8), 0 0 40px rgba(253, 29, 53, 0.6), 0 0 60px rgba(253, 29, 53, 0.4)",
+                   "0 0 30px rgba(253, 29, 53, 1), 0 0 60px rgba(253, 29, 53, 0.8), 0 0 90px rgba(253, 29, 53, 0.6)",
+                   "0 0 20px rgba(253, 29, 53, 0.8), 0 0 40px rgba(253, 29, 53, 0.6), 0 0 60px rgba(253, 29, 53, 0.4)"
+                 ]
+               }}
+               transition={{
+                 textShadow: {
+                   duration: 2,
+                   repeat: Infinity,
+                   ease: "easeInOut"
+                 }
+               }}
              >
-               FEEL GOOD SOUND.
+{(nowPlaying.title?.trim() || "LIVE STREAM").toLocaleUpperCase('en-US')}
              </m.div>
 
-             {/* Açıklama Metni */}
+             {/* Sanatçı Adı */}
              <m.div 
-               className="font-spaceGrotesk text-sm sm:text-base px-4 max-w-[791px] motion-element"
+               className="whitespace-nowrap font-roboto text-[10px] sm:text-[12px] md:text-[14px] mb-8 motion-element"
                style={{
                  fontStyle: "normal",
                  fontWeight: 400,
-                 lineHeight: "1.25",
-                 textAlign: "center",
+                 lineHeight: "1.12",
+                 letterSpacing: "0.1em",
                  color: "#FFFFFF"
                }}
                initial={{ opacity: 0, y: 20 }}
                whileInView={{ opacity: 1, y: 0 }}
                viewport={{ once: true }}
-               transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
+               transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
              >
-               Radio Apex is an experimental space broadcasting electronic, ambient, avant-garde, and boundary-pushing sounds 24/7. Sit back and drift away — or turn up the volume and dive in.
+{(nowPlaying.artist?.trim() || "RADIO APEX").toLocaleUpperCase('en-US')}
              </m.div>
+
            </m.div>
 
            {/* Orta kısım - Player (PLAY BUTONU TAM ORTADA - SCROLL İLE KAYAR) */}
@@ -243,10 +280,31 @@ export default function Page() {
              </div>
            </m.div>
 
+           {/* Açıklama Metni - Player'ın altında */}
+           <m.div 
+             className="absolute bottom-[calc(50%-370px)] left-0 right-0 z-10 flex justify-center px-4 motion-element parallax-element"
+             style={{ y: descriptionY }}
+             initial={{ opacity: 0, y: 20 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true }}
+             transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
+           >
+             <div className="font-spaceGrotesk text-sm sm:text-base px-4 max-w-[791px] text-center"
+               style={{
+                 fontStyle: "normal",
+                 fontWeight: 400,
+                 lineHeight: "1.25",
+                 color: "#FFFFFF"
+               }}
+             >
+               Radio Apex is an experimental space broadcasting electronic, ambient, avant-garde, and boundary-pushing sounds 24/7. Sit back and drift away — or turn up the volume and dive in.
+             </div>
+           </m.div>
 
         </section>
         
         {/* DİĞER BÖLÜMLER - Parallax scroll efektleriyle */}
+        
         <m.div
           initial={{ opacity: 0, y: 60 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -328,6 +386,14 @@ export default function Page() {
            <Footer />
          </div>
       </main>
+    </>
+  );
+}
+
+export default function Page() {
+  return (
+    <NowPlayingProvider>
+      <HomeContent />
     </NowPlayingProvider>
   );
 }
