@@ -74,7 +74,7 @@ export default function SimplePlayer() {
       `}</style>
       {/* Outer Gradient Circle - Ellipse 5773 */}
       <div
-        className="absolute scale-65 sm:scale-85 md:scale-95"
+        className="absolute scale-75 xs:scale-85 sm:scale-100 md:scale-110"
         style={{
           width: "380px",
           height: "380px",
@@ -86,7 +86,7 @@ export default function SimplePlayer() {
 
       {/* Middle Border Circle - Ellipse 5774 */}
       <m.div
-        className="absolute scale-65 sm:scale-90 md:scale-100"
+        className="absolute scale-50 xs:scale-60 sm:scale-90 md:scale-100"
         style={{
           width: "248px",
           height: "248px",
@@ -111,7 +111,7 @@ export default function SimplePlayer() {
           <m.button
             key="play-button"
             onClick={handlePlayPause}
-            className="relative z-10 cursor-pointer scale-75 sm:scale-100"
+            className="relative z-10 cursor-pointer scale-60 xs:scale-70 sm:scale-100"
             style={{
               width: "211px",
               height: "211px",
@@ -173,7 +173,7 @@ export default function SimplePlayer() {
         ) : (
           <m.div
             key="soundwave"
-            className="relative z-10 flex items-center justify-center gap-2 cursor-pointer scale-75 sm:scale-100"
+            className="relative z-10 flex items-center justify-center gap-2 cursor-pointer scale-60 xs:scale-70 sm:scale-100"
             style={{
               width: "211px",
               height: "211px"

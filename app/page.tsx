@@ -203,7 +203,7 @@ function HomeContent() {
         >
            {/* Üst kısım - Yazılar (Yukarıda) - Parallax */}
            <m.div 
-             className="absolute top-[calc(20%-30px+30px)] md:top-[calc(20%+30px)] left-0 right-0 z-10 flex flex-col items-center px-4 parallax-element"
+             className="absolute top-[calc(20%-30px+30px)] md:top-[calc(20%+30px)] left-0 right-0 z-30 flex flex-col items-center px-4 parallax-element"
              style={{ y: contentY }}
            >
              {/* LIVE Eyebrow */}
@@ -212,7 +212,7 @@ function HomeContent() {
                whileInView={{ opacity: 1, y: 0 }}
                viewport={{ once: true, margin: "-20%" }}
                transition={{ duration: 0.6 }}
-               className="font-antonio inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] uppercase tracking-[0.45em] text-white/60 mb-4"
+               className="font-antonio inline-flex items-center gap-2 xs:gap-3 rounded-full border border-white/10 bg-white/5 px-2 xs:px-3 py-1 text-[9px] xs:text-[11px] uppercase tracking-[0.45em] text-white/60 mb-4"
              >
                <span className="h-1 w-1 rounded-full bg-[#FD1D35]" />
                LIVE
@@ -220,7 +220,7 @@ function HomeContent() {
 
              {/* Şarkı Başlığı */}
              <m.div 
-               className="font-roboto text-[16px] sm:text-[21px] md:text-[28px] mb-2 motion-element text-center max-w-[90vw] sm:whitespace-nowrap"
+               className="font-roboto text-[14px] xs:text-[16px] sm:text-[21px] md:text-[28px] mb-2 motion-element text-center max-w-[90vw] sm:whitespace-nowrap"
                style={{
                  fontStyle: "normal",
                  fontWeight: 500,
@@ -254,7 +254,7 @@ function HomeContent() {
 
              {/* Sanatçı Adı */}
              <m.div 
-               className="font-roboto text-[12px] sm:text-[14px] md:text-[16px] mb-8 motion-element text-center max-w-[90vw] sm:whitespace-nowrap"
+               className="font-roboto text-[10px] xs:text-[12px] sm:text-[14px] md:text-[16px] mb-8 motion-element text-center max-w-[90vw] sm:whitespace-nowrap"
                style={{
                  fontStyle: "normal",
                  fontWeight: 400,
