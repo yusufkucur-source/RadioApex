@@ -18,12 +18,12 @@ import LogoAnimation from "@/components/graphics/LogoAnimation";
 const socials = [
   { 
     label: "Instagram", 
-    href: "https://instagram.com/radioapex",
+    href: "https://instagram.com/radioapextr",
     icon: Instagram
   },
   { 
     label: "Twitter", 
-    href: "https://twitter.com/radioapex",
+    href: "https://x.com/radioapextr",
     icon: Twitter
   },
   { 
@@ -203,7 +203,7 @@ function HomeContent() {
         >
            {/* Üst kısım - Yazılar (Yukarıda) - Parallax */}
            <m.div 
-             className="absolute top-[calc(20%-30px+30px)] md:top-[calc(20%+30px)] left-0 right-0 z-30 flex flex-col items-center px-4 parallax-element"
+             className="absolute top-[calc(15%-30px+30px)] md:top-[calc(20%+30px)] left-0 right-0 z-30 flex flex-col items-center px-4 parallax-element"
              style={{ y: contentY }}
            >
              {/* LIVE Eyebrow */}
