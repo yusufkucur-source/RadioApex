@@ -72,17 +72,6 @@ export default function SimplePlayer() {
           }
         }
       `}</style>
-      {/* Outer Gradient Circle - Ellipse 5773 */}
-      <div
-        className="absolute scale-75 xs:scale-85 sm:scale-100 md:scale-110"
-        style={{
-          width: "380px",
-          height: "380px",
-          background: "linear-gradient(180deg, rgba(37, 120, 130, 0.27) 0%, rgba(253, 29, 53, 0.4) 100%)",
-          borderRadius: "50%",
-          opacity: 0.7
-        }}
-      />
 
       {/* Middle Border Circle - Ellipse 5774 */}
       <m.div

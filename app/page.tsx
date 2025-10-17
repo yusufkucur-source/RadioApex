@@ -104,7 +104,7 @@ function HomeContent() {
            className="hero-bg-lines pointer-events-none absolute inset-0 parallax-element" 
            style={{ y: backgroundY }}
          />
-         
+
          {/* TAM EKRAN BACKGROUND IMAGE - Parallax */}
          <m.div 
            className="pointer-events-none absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 parallax-element"
@@ -114,6 +114,7 @@ function HomeContent() {
              y: backgroundY
            }}
          />
+
         
         {/* TURNTABLE SVG - Parallax */}
         <m.div 
@@ -201,6 +202,17 @@ function HomeContent() {
           id="home"
           className="scroll-snap-start relative flex min-h-screen items-center justify-center overflow-hidden text-white"
         >
+           {/* Gradient Ellipse - Sayfanın tam merkezinde, scroll ile kaybolur */}
+           <div
+             className="pointer-events-none fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-5 scale-75 xs:scale-85 sm:scale-100 md:scale-110 lg:scale-115 xl:scale-120 2xl:scale-125"
+             style={{
+               width: "380px",
+               height: "380px",
+               background: "linear-gradient(180deg, rgba(37, 120, 130, 0.27) 0%, rgba(253, 29, 53, 0.4) 100%)",
+               borderRadius: "50%",
+               opacity: 0.7
+             }}
+           />
            {/* Üst kısım - Yazılar (Yukarıda) - Parallax */}
            <m.div 
              className="absolute top-[calc(15%-30px+30px)] md:top-[calc(20%+30px)] left-0 right-0 z-30 flex flex-col items-center px-4 parallax-element"
