@@ -218,27 +218,9 @@ function HomeContent() {
                LIVE
              </m.span>
 
-             {/* Sanatçı Adı */}
-             <m.div 
-               className="font-roboto text-[16px] sm:text-[21px] md:text-[28px] mb-2 motion-element text-center max-w-[90vw] sm:whitespace-nowrap"
-               style={{
-                 fontStyle: "normal",
-                 fontWeight: 400,
-                 lineHeight: "1.2",
-                 letterSpacing: "0.1em",
-                 color: "#FFFFFF"
-               }}
-               initial={{ opacity: 0, y: 20 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true }}
-               transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-             >
-{(nowPlaying.artist?.trim() || "RADIO APEX").toLocaleUpperCase('en-US')}
-             </m.div>
-
              {/* Şarkı Başlığı */}
              <m.div 
-               className="font-roboto text-[16px] sm:text-[21px] md:text-[28px] mb-8 motion-element text-center max-w-[90vw] sm:whitespace-nowrap"
+               className="font-roboto text-[16px] sm:text-[21px] md:text-[28px] mb-2 motion-element text-center max-w-[90vw] sm:whitespace-nowrap"
                style={{
                  fontStyle: "normal",
                  fontWeight: 500,
@@ -251,7 +233,7 @@ function HomeContent() {
                viewport={{ once: true }}
                transition={{ 
                  duration: 1, 
-                 delay: 0.3, 
+                 delay: 0.2, 
                  ease: "easeOut",
                  textShadow: {
                    duration: 1.5,
@@ -270,6 +252,24 @@ function HomeContent() {
 {(nowPlaying.title?.trim() || "").toLocaleUpperCase('en-US')}
              </m.div>
 
+             {/* Sanatçı Adı */}
+             <m.div 
+               className="font-roboto text-[12px] sm:text-[14px] md:text-[16px] mb-8 motion-element text-center max-w-[90vw] sm:whitespace-nowrap"
+               style={{
+                 fontStyle: "normal",
+                 fontWeight: 400,
+                 lineHeight: "1.2",
+                 letterSpacing: "0.1em",
+                 color: "#FFFFFF"
+               }}
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+             >
+{(nowPlaying.artist?.trim() || "RADIO APEX").toLocaleUpperCase('en-US')}
+             </m.div>
+
            </m.div>
 
            {/* Orta kısım - Player (PLAY BUTONU TAM ORTADA - SCROLL İLE KAYAR) */}
@@ -280,7 +280,7 @@ function HomeContent() {
              viewport={{ once: true }}
              transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
            >
-             <div className="translate-y-10">
+             <div className="-translate-y-11 md:translate-y-10 sm:translate-y-0">
                <SimplePlayer />
              </div>
            </m.div>
