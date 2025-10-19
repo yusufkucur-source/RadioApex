@@ -22,6 +22,8 @@ export default function CenteredPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const { nowPlaying } = useNowPlaying();
+  
+  
 
   const handlePlayPause = async () => {
     console.log("Play button clicked!", { isPlaying, audioRef: audioRef.current });
@@ -237,7 +239,7 @@ export default function CenteredPlayer() {
           display: flex;
           align-items: center;
           justify-content: center;
-          z-index: 20;
+          z-index: 10;
           pointer-events: none;
         }
         

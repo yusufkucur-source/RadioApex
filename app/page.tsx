@@ -298,7 +298,7 @@ function HomeContent() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1, margin: "0px" }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="relative"
+          className="relative z-20"
         >
           <DjSection />
         </m.div>
@@ -308,7 +308,7 @@ function HomeContent() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1, margin: "0px" }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="relative"
+          className="relative z-20"
         >
           <LineupSection />
         </m.div>
@@ -318,7 +318,7 @@ function HomeContent() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1, margin: "0px" }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="relative"
+          className="relative z-20"
         >
           <AboutSection />
         </m.div>
@@ -328,7 +328,7 @@ function HomeContent() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1, margin: "0px" }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="relative"
+          className="relative z-20"
         >
           <ContactSection />
         </m.div>
