@@ -9,10 +9,6 @@ import CenteredPlayer from "@/components/audio/CenteredPlayer";
 import { NowPlayingProvider, useNowPlaying } from "@/components/now-playing/NowPlayingProvider";
 import { Button } from "@/components/ui/button";
 import { Instagram, Twitter, Music } from "lucide-react";
-import DjSection from "@/components/sections/DjSection";
-import LineupSection from "@/components/sections/LineupSection";
-import AboutSection from "@/components/sections/AboutSection";
-import ContactSection from "@/components/sections/ContactSection";
 import LogoAnimation from "@/components/graphics/LogoAnimation";
 
 const socials = [
@@ -33,7 +29,7 @@ const socials = [
   }
 ];
 
-function HomeContent() {
+function TestPageContent() {
   const { nowPlaying, isLoading } = useNowPlaying();
   // Scroll hook'ları
   const { scrollY } = useScroll();
@@ -291,48 +287,6 @@ function HomeContent() {
 
         </section>
         
-        {/* DİĞER BÖLÜMLER - Parallax scroll efektleriyle */}
-        
-        <m.div
-          initial={{ opacity: 0, y: 60 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.1, margin: "0px" }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="relative"
-        >
-          <DjSection />
-        </m.div>
-        
-        <m.div
-          initial={{ opacity: 0, y: 60 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.1, margin: "0px" }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="relative"
-        >
-          <LineupSection />
-        </m.div>
-        
-        <m.div
-          initial={{ opacity: 0, y: 60 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.1, margin: "0px" }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="relative"
-        >
-          <AboutSection />
-        </m.div>
-        
-        <m.div
-          initial={{ opacity: 0, y: 60 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.1, margin: "0px" }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="relative"
-        >
-          <ContactSection />
-        </m.div>
-        
          {/* SABİT FOOTER VE SOSYAL MEDYA */}
          <div className="fixed bottom-0 left-0 right-0 z-40">
            {/* Sosyal Medya İkonları */}
@@ -378,10 +332,10 @@ function HomeContent() {
   );
 }
 
-export default function Page() {
+export default function TestPage() {
   return (
     <NowPlayingProvider>
-      <HomeContent />
+      <TestPageContent />
     </NowPlayingProvider>
   );
 }
