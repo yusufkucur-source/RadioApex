@@ -4,9 +4,9 @@ import { m } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 
 const paragraphs = [
-  "Radio Apex is an independent sonic platform exploring the outer edges of sound and emotion. Broadcasting 24/7, it blends electronic, ambient, and avant-garde textures into an ever-evolving experience — a living space for deep listeners, curious minds, and nocturnal dreamers.",
-  "More than a radio, Apex is a field of experimentation where boundaries blur between genres, moods, and frequencies. Each set, mix, and transmission is a journey — sometimes meditative, sometimes chaotic, always alive.",
-  "Whether you lean back and let the sound flow through you, or turn up the volume and dive in, Radio Apex invites you to listen beyond the ordinary."
+  "Radio Apex is an independent and innovative sonic platform crafted for deep listeners, curious minds, and nocturnal dreamers. Exploring the outer edges of sound and emotion, Radio Apex broadcasts 24/7, blending the evolving textures of deep house, tech house, and techno into a continuously developing experience. Our commitment is to offer the best music through a meticulous selection process, ensuring quality and innovation in every transmission.",
+  "More than a conventional radio station, Apex is a living field of experimentation where the boundaries between genres, moods, and frequencies delightfully blur. Our team of DJs brings years of experience in Electronic Dance Music, valuing the importance of making conscious choices that can add something meaningful to our listeners' lives. Every DJ set, DJ mix, and live transmission is a journey: sometimes meditative, sometimes energetic, but always spirited and full of discovery.",
+  "This is not just a broadcast; it is a living space for deep listeners, curious minds, and nocturnal dreamers."
 ];
 
 export default function AboutSection() {

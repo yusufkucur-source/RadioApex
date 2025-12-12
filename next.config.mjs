@@ -11,6 +11,18 @@ const nextConfig = {
       {
         protocol: "https", 
         hostname: "firebasestorage.googleapis.com"
+      },
+      {
+        protocol: "https",
+        hostname: "www.dropbox.com"
+      },
+      {
+        protocol: "https",
+        hostname: "dl.dropboxusercontent.com"
+      },
+      {
+        protocol: "https",
+        hostname: "i.ibb.co"
       }
     ]
   },
