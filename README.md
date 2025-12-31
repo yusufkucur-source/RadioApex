@@ -78,6 +78,177 @@ npm run build
 npm start
 ```
 
+## Server Deployment (Sunucu Kurulumu)
+
+### Gereksinimler (Sunucuda Kurulu Olması Gerekenler)
+
+1. **Node.js 18+ ve npm**
+   ```bash
+   # Ubuntu/Debian
+   curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+   sudo apt-get install -y nodejs
+   
+   # Versiyon kontrolü
+   node --version
+   npm --version
+   ```
+
+2. **Git**
+   ```bash
+   sudo apt-get update
+   sudo apt-get install git
+   ```
+
+3. **PM2 (Process Manager - Önerilir)**
+   ```bash
+   sudo npm install -g pm2
+   ```
+
+4. **Nginx (Reverse Proxy - Önerilir)**
+   ```bash
+   sudo apt-get install nginx
+   ```
+
+### Sunucuya Yüklenecek Dosya ve Klasörler
+
+**Önerilen Yöntem: Git ile Klonlama** (En kolay ve güvenli)
+- Git kullanarak tüm projeyi klonlayın (aşağıdaki "Kurulum Adımları" bölümüne bakın)
+- Bu yöntem otomatik olarak tüm gerekli dosyaları getirir
+
+**Manuel Yükleme (Git kullanmıyorsanız):**
+
+Sunucuya yüklemeniz gereken dosya ve klasörler:
+
+**Zorunlu Dosyalar:**
+```
+RadioApex/
+├── app/                    # Tüm kaynak kodlar (zorunlu)
+├── components/             # React bileşenleri (zorunlu)
+├── lib/                    # Utility fonksiyonları (zorunlu)
+├── public/                 # Static dosyalar (resimler, favicon, vb.) (zorunlu)
+├── package.json            # Bağımlılıklar listesi (zorunlu)
+├── package-lock.json       # Bağımlılık versiyonları (zorunlu)
+├── next.config.mjs         # Next.js yapılandırması (zorunlu)
+├── tsconfig.json           # TypeScript yapılandırması (zorunlu)
+├── tailwind.config.js      # Tailwind CSS yapılandırması (zorunlu)
+├── postcss.config.js       # PostCSS yapılandırması (zorunlu)
+├── next-env.d.ts           # Next.js type tanımları (zorunlu)
+└── .eslintrc.json          # ESLint yapılandırması (opsiyonel)
+```
+
+**Yüklenmeyecek Dosyalar:**
+- `node_modules/` - Sunucuda `npm install` ile oluşturulacak
+- `.next/` - Sunucuda `npm run build` ile oluşturulacak
+- `.env.local` - Sunucuda manuel oluşturulacak (güvenlik için)
+- `.git/` - Git klasörü (gerekli değil)
+- `README.md` - Dokümantasyon (opsiyonel)
+
+**Özet:**
+1. Tüm kaynak kod klasörlerini yükleyin (`app`, `components`, `lib`)
+2. `public` klasörünü yükleyin
+3. Yapılandırma dosyalarını yükleyin (`package.json`, `next.config.mjs`, `tsconfig.json`, vb.)
+4. Sunucuda `npm install` çalıştırın
+5. Sunucuda `.env.local` dosyası oluşturun
+6. Sunucuda `npm run build` çalıştırın
+
+### Kurulum Adımları
+
+1. **Projeyi klonlayın:**
+   ```bash
+   cd /var/www  # veya istediğiniz dizin
+   git clone <repository-url> RadioApex
+   cd RadioApex
+   ```
+
+2. **Bağımlılıkları yükleyin:**
+   ```bash
+   npm install
+   ```
+
+3. **Environment variables oluşturun:**
+   ```bash
+   nano .env.local
+   ```
+   
+   Aşağıdaki değişkenleri ekleyin:
+   ```env
+   NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
+   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+   NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+   NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
+   NODE_ENV=production
+   ```
+
+4. **Production build oluşturun:**
+   ```bash
+   npm run build
+   ```
+
+5. **PM2 ile çalıştırın:**
+   ```bash
+   pm2 start npm --name "radioapex" -- start
+   pm2 save
+   pm2 startup
+   ```
+
+6. **Nginx yapılandırması (Opsiyonel):**
+   
+   `/etc/nginx/sites-available/radioapex` dosyası oluşturun:
+   ```nginx
+   server {
+       listen 80;
+       server_name radioapex.com www.radioapex.com;
+       
+       location / {
+           proxy_pass http://localhost:3000;
+           proxy_http_version 1.1;
+           proxy_set_header Upgrade $http_upgrade;
+           proxy_set_header Connection 'upgrade';
+           proxy_set_header Host $host;
+           proxy_cache_bypass $http_upgrade;
+       }
+   }
+   ```
+   
+   Sembolik link oluşturun ve Nginx'i yeniden başlatın:
+   ```bash
+   sudo ln -s /etc/nginx/sites-available/radioapex /etc/nginx/sites-enabled/
+   sudo nginx -t
+   sudo systemctl restart nginx
+   ```
+
+7. **Firewall ayarları:**
+   ```bash
+   # Port 3000'i açın (eğer Nginx kullanmıyorsanız)
+   sudo ufw allow 3000/tcp
+   
+   # HTTP ve HTTPS portlarını açın
+   sudo ufw allow 80/tcp
+   sudo ufw allow 443/tcp
+   ```
+
+### Güncelleme İşlemi
+
+Projeyi güncellemek için:
+```bash
+cd /var/www/RadioApex  # veya proje dizininiz
+git pull
+npm install
+npm run build
+pm2 restart radioapex
+```
+
+### PM2 Komutları
+
+- `pm2 list` - Çalışan uygulamaları listele
+- `pm2 logs radioapex` - Logları görüntüle
+- `pm2 restart radioapex` - Uygulamayı yeniden başlat
+- `pm2 stop radioapex` - Uygulamayı durdur
+- `pm2 delete radioapex` - Uygulamayı sil
+
 ## How to Test
 
 ### Running Tests
