@@ -1,5 +1,8 @@
 {
-  "startup_timeout": 300,
-  "max_request_queue_size": 100
+  "startup_timeout": 600,
+  "max_request_queue_size": 100,
+  "min_instances": 1,
+  "max_instances": 2,
+  "spawn_method": "direct"
 }
 
