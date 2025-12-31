@@ -1,4 +1,0 @@
-# Passenger timeout ayarları
-PassengerStartTimeout 300
-PassengerMaxRequestQueueSize 100
-
