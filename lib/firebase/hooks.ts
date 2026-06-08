@@ -192,8 +192,23 @@ const transformLineupDoc: Transformer<LineupSlot> = doc => ({
   djId: doc.djId ?? ""
 });
 
+function sortDjsAlphabetically(djs: DJProfile[]): DJProfile[] {
+  return [...djs].sort((a, b) =>
+    (a.nickname || a.fullName).localeCompare(b.nickname || b.fullName, "tr", {
+      sensitivity: "base"
+    })
+  );
+}
+
 export function useDJs(): FirestoreState<DJProfile> {
-  return useFirestoreCollection<DJProfile>("djs", sampleDjs, transformDjDoc);
+  const state = useFirestoreCollection<DJProfile>("djs", sampleDjs, transformDjDoc);
+  return useMemo(
+    () => ({
+      ...state,
+      data: sortDjsAlphabetically(state.data)
+    }),
+    [state.data, state.loading]
+  );
 }
 
 export function useLineup(): FirestoreState<LineupSlot> {

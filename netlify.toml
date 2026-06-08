@@ -1,0 +1,39 @@
+[build]
+  command = "npm run build"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Domain yönlendirmeleri
+[[redirects]]
+  from = "http://eski-domain.com/*"
+  to = "https://radioapex.com/:splat"
+  status = 301
+  force = true
+
+# www olmayan domain'i www'ye yönlendir (isteğe bağlı)
+# [[redirects]]
+#   from = "https://radioapex.com/*"
+#   to = "https://www.radioapex.com/:splat"
+#   status = 301
+#   force = true
+
+# veya www'den www olmayana yönlendir
+# [[redirects]]
+#   from = "https://www.radioapex.com/*"
+#   to = "https://radioapex.com/:splat"
+#   status = 301
+#   force = true
+
+# HTTP'den HTTPS'ye yönlendirme
+[[redirects]]
+  from = "http://*"
+  to = "https://:splat"
+  status = 301
+  force = true
+
+# Next.js sayfaları için rewrite (Next.js'in kendi routing'i için)
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/___netlify-handler"
+  status = 200

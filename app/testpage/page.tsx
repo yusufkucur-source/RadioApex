@@ -1,36 +1,11 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { m, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
-import Header from "@/components/navigation/Header";
-import Footer from "@/components/layout/Footer";
-import CenteredPlayer from "@/components/audio/CenteredPlayer";
-import { NowPlayingProvider, useNowPlaying } from "@/components/now-playing/NowPlayingProvider";
-import { Button } from "@/components/ui/button";
-import { Instagram, Twitter, Music } from "lucide-react";
 import LogoAnimation from "@/components/graphics/LogoAnimation";
 
-const socials = [
-  { 
-    label: "Instagram", 
-    href: "https://instagram.com/radioapextr",
-    icon: Instagram
-  },
-  { 
-    label: "Twitter", 
-    href: "https://x.com/radioapextr",
-    icon: Twitter
-  },
-  { 
-    label: "SoundCloud", 
-    href: "https://soundcloud.com/radioapex",
-    icon: Music
-  }
-];
-
 function TestPageContent() {
-  const { nowPlaying, isLoading } = useNowPlaying();
   // Scroll hook'ları
   const { scrollY } = useScroll();
   
@@ -38,8 +13,6 @@ function TestPageContent() {
   const backgroundY = useTransform(scrollY, [0, 1000], [0, -300]);
   const turntableY = useTransform(scrollY, [0, 1000], [0, -200]);
   const dotsY = useTransform(scrollY, [0, 1000], [0, -150]);
-  const contentY = useTransform(scrollY, [0, 1000], [0, -100]);
-  const descriptionY = useTransform(scrollY, [0, 1000], [0, -50]);
 
   // Random dots - client-side only to avoid hydration mismatch
   const [redDots, setRedDots] = useState<Array<{x: number; y: number; moveX: number[]; moveY: number[]; duration: number}>>([]);
@@ -68,9 +41,6 @@ function TestPageContent() {
 
   return (
     <>
-      {/* SABİT HEADER - Her zaman üstte */}
-      <Header />
-
       {/* SABİT BACKGROUND ELEMENTLER - Scroll yapılırken yerinde kalır */}
       <div className="fixed inset-0 z-0 bg-apex-background">
         {/* Background Lines - Grid çizgileri */}
@@ -190,152 +160,13 @@ function TestPageContent() {
             </m.div>
           </m.div>
       </div>
-
-      {/* SCROLL YAPAN İÇERİK - Background üzerinde kayar */}
-      <main className="relative z-10 w-full">
-        {/* HOME SECTION - İlk içerik */}
-        <section
-          id="home"
-          className="scroll-snap-start relative flex min-h-screen items-center justify-center overflow-hidden text-white"
-        >
-           {/* Gradient Ellipse - Sayfanın tam merkezinde, scroll ile kaybolur */}
-           <div
-             className="pointer-events-none fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-5 scale-75 xs:scale-85 sm:scale-100 md:scale-110 lg:scale-115 xl:scale-120 2xl:scale-125"
-             style={{
-               width: "380px",
-               height: "380px",
-               background: "linear-gradient(180deg, rgba(37, 120, 130, 0.27) 0%, rgba(253, 29, 53, 0.4) 100%)",
-               borderRadius: "50%",
-               opacity: 0.7
-             }}
-           />
-           {/* Üst kısım - Yazılar (Yukarıda) - Parallax */}
-           <m.div 
-             className="absolute top-[calc(15%-30px+30px)] md:top-[calc(20%+30px)] left-0 right-0 z-30 flex flex-col items-center px-4 parallax-element"
-             style={{ y: contentY }}
-           >
-             {/* LIVE Eyebrow */}
-             <m.span
-               initial={{ opacity: 0, y: 12 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true, margin: "-20%" }}
-               transition={{ duration: 0.6 }}
-               className="font-antonio inline-flex items-center gap-2 xs:gap-3 rounded-full border border-white/10 bg-white/5 px-2 xs:px-3 py-1 text-[9px] xs:text-[11px] uppercase tracking-[0.45em] text-white/60 mb-4"
-             >
-               <span className="h-1 w-1 rounded-full bg-[#FD1D35]" />
-               LIVE
-             </m.span>
-
-             {/* Şarkı Başlığı */}
-             <m.div 
-               className="font-roboto text-[14px] xs:text-[16px] sm:text-[21px] md:text-[28px] mb-2 motion-element text-center max-w-[90vw] sm:whitespace-nowrap"
-               style={{
-                 fontStyle: "normal",
-                 fontWeight: 500,
-                 lineHeight: "1.2",
-                 letterSpacing: "0.1em",
-                 color: "#FD1D35"
-               }}
-               initial={{ opacity: 0, y: 20 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true }}
-               transition={{ 
-                 duration: 1, 
-                 delay: 0.2, 
-                 ease: "easeOut",
-                 textShadow: {
-                   duration: 1.5,
-                   repeat: Infinity,
-                   ease: "easeInOut"
-                 }
-               }}
-               animate={{
-                 textShadow: [
-                   "0 0 30px rgba(253, 29, 53, 1), 0 0 60px rgba(253, 29, 53, 0.8), 0 0 90px rgba(253, 29, 53, 0.6), 0 0 120px rgba(253, 29, 53, 0.4)",
-                   "0 0 50px rgba(253, 29, 53, 1), 0 0 100px rgba(253, 29, 53, 1), 0 0 150px rgba(253, 29, 53, 0.8), 0 0 200px rgba(253, 29, 53, 0.6)",
-                   "0 0 30px rgba(253, 29, 53, 1), 0 0 60px rgba(253, 29, 53, 0.8), 0 0 90px rgba(253, 29, 53, 0.6), 0 0 120px rgba(253, 29, 53, 0.4)"
-                 ]
-               }}
-             >
-{(nowPlaying.title?.trim() || "").toLocaleUpperCase('en-US')}
-             </m.div>
-
-             {/* Sanatçı Adı */}
-             <m.div 
-               className="font-roboto text-[10px] xs:text-[12px] sm:text-[14px] md:text-[16px] mb-8 motion-element text-center max-w-[90vw] sm:whitespace-nowrap"
-               style={{
-                 fontStyle: "normal",
-                 fontWeight: 400,
-                 lineHeight: "1.2",
-                 letterSpacing: "0.1em",
-                 color: "#FFFFFF"
-               }}
-               initial={{ opacity: 0, y: 20 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true }}
-               transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-             >
-{(nowPlaying.artist?.trim() || "RADIO APEX").toLocaleUpperCase('en-US')}
-             </m.div>
-
-           </m.div>
-
-           {/* Orta kısım - Player (PLAY BUTONU TAM ORTADA - SCROLL İLE KAYAR) */}
-           <CenteredPlayer />
-
-           {/* Açıklama metni geçici olarak gizlendi */}
-
-        </section>
-        
-         {/* SABİT FOOTER VE SOSYAL MEDYA */}
-         <div className="fixed bottom-0 left-0 right-0 z-40">
-           {/* Sosyal Medya İkonları */}
-           <m.div 
-             className="flex items-center justify-center gap-4 pb-20 sm:pb-18 md:pb-24 lg:pb-28"
-             initial={{ opacity: 0, y: 20 }}
-             animate={{ opacity: 1, y: 0 }}
-             transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
-           >
-             {socials.map((social, index) => {
-               const Icon = social.icon;
-               return (
-                 <m.div
-                   key={social.label}
-                   initial={{ opacity: 0, scale: 0.5 }}
-                   animate={{ opacity: 1, scale: 1 }}
-                   transition={{ duration: 0.4, delay: 0.9 + index * 0.1, ease: "easeOut" }}
-                 >
-                   <Button
-                     variant="ghost"
-                     size="icon"
-                     asChild
-                     className="h-11 w-11 rounded-full border border-white/10 bg-white/5 text-white/60 backdrop-blur-sm transition-all hover:border-[#FD1D35]/50 hover:bg-[#FD1D35]/10 hover:text-[#FD1D35] hover:scale-110"
-                   >
-                     <a
-                       href={social.href}
-                       target="_blank"
-                       rel="noopener noreferrer"
-                       aria-label={social.label}
-                     >
-                       <Icon className="h-5 w-5" />
-                     </a>
-                   </Button>
-                 </m.div>
-               );
-             })}
-           </m.div>
-           
-           <Footer />
-         </div>
-      </main>
+      
+      {/* Sadece arka plan görünümü */}
+      <main className="relative z-10 min-h-screen" />
     </>
   );
 }
 
 export default function TestPage() {
-  return (
-    <NowPlayingProvider>
-      <TestPageContent />
-    </NowPlayingProvider>
-  );
+  return <TestPageContent />;
 }

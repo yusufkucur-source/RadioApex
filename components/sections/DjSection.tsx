@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import Image from "next/image";
 import { m, type Variants } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
