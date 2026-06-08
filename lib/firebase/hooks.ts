@@ -224,17 +224,24 @@ function getDayOrder(day: string): number {
   return DAY_ORDER[day.trim().toLowerCase()] ?? 999;
 }
 
-function timeToMinutes(time: string): number {
+// Times before 06:00 are after-midnight slots and sort at the end of the day.
+const LATE_NIGHT_CUTOFF_HOUR = 6;
+
+function timeToSortMinutes(time: string): number {
   const [hours, minutes] = time.split(":").map(part => parseInt(part, 10));
   if (Number.isNaN(hours) || Number.isNaN(minutes)) return 9999;
-  return hours * 60 + minutes;
+  let total = hours * 60 + minutes;
+  if (hours < LATE_NIGHT_CUTOFF_HOUR) {
+    total += 24 * 60;
+  }
+  return total;
 }
 
 function sortLineupByDayAndTime(lineup: LineupSlot[]): LineupSlot[] {
   return [...lineup].sort((a, b) => {
     const dayDiff = getDayOrder(a.day) - getDayOrder(b.day);
     if (dayDiff !== 0) return dayDiff;
-    return timeToMinutes(a.startTime) - timeToMinutes(b.startTime);
+    return timeToSortMinutes(a.startTime) - timeToSortMinutes(b.startTime);
   });
 }
 
