@@ -200,6 +200,44 @@ function sortDjsAlphabetically(djs: DJProfile[]): DJProfile[] {
   );
 }
 
+const DAY_ORDER: Record<string, number> = {
+  monday: 1,
+  pazartesi: 1,
+  tuesday: 2,
+  sali: 2,
+  salı: 2,
+  wednesday: 3,
+  carsamba: 3,
+  çarşamba: 3,
+  thursday: 4,
+  persembe: 4,
+  perşembe: 4,
+  friday: 5,
+  cuma: 5,
+  saturday: 6,
+  cumartesi: 6,
+  sunday: 7,
+  pazar: 7
+};
+
+function getDayOrder(day: string): number {
+  return DAY_ORDER[day.trim().toLowerCase()] ?? 999;
+}
+
+function timeToMinutes(time: string): number {
+  const [hours, minutes] = time.split(":").map(part => parseInt(part, 10));
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) return 9999;
+  return hours * 60 + minutes;
+}
+
+function sortLineupByDayAndTime(lineup: LineupSlot[]): LineupSlot[] {
+  return [...lineup].sort((a, b) => {
+    const dayDiff = getDayOrder(a.day) - getDayOrder(b.day);
+    if (dayDiff !== 0) return dayDiff;
+    return timeToMinutes(a.startTime) - timeToMinutes(b.startTime);
+  });
+}
+
 export function useDJs(): FirestoreState<DJProfile> {
   const state = useFirestoreCollection<DJProfile>("djs", sampleDjs, transformDjDoc);
   return useMemo(
@@ -212,9 +250,16 @@ export function useDJs(): FirestoreState<DJProfile> {
 }
 
 export function useLineup(): FirestoreState<LineupSlot> {
-  return useFirestoreCollection<LineupSlot>(
+  const state = useFirestoreCollection<LineupSlot>(
     "lineup",
     sampleLineup,
     transformLineupDoc
+  );
+  return useMemo(
+    () => ({
+      ...state,
+      data: sortLineupByDayAndTime(state.data)
+    }),
+    [state.data, state.loading]
   );
 }

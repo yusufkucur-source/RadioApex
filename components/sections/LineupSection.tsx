@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import { m } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { useDJs, useLineup } from "@/lib/firebase/hooks";
@@ -10,34 +9,6 @@ export default function LineupSection() {
   const { data: djs } = useDJs();
 
   const djMap = new Map(djs.map(dj => [dj.id, dj]));
-
-  // Sort lineup by day (Monday -> Sunday) and time
-  const sortedLineup = useMemo(() => {
-    const dayOrder = {
-      'Monday': 1,
-      'Tuesday': 2,
-      'Wednesday': 3,
-      'Thursday': 4,
-      'Friday': 5,
-      'Saturday': 6,
-      'Sunday': 7
-    };
-
-    return [...lineup].sort((a, b) => {
-      // First, sort by day
-      const dayA = dayOrder[a.day as keyof typeof dayOrder] || 999;
-      const dayB = dayOrder[b.day as keyof typeof dayOrder] || 999;
-      
-      if (dayA !== dayB) {
-        return dayA - dayB;
-      }
-
-      // If same day, sort by start time
-      const timeA = a.startTime.replace(':', '');
-      const timeB = b.startTime.replace(':', '');
-      return timeA.localeCompare(timeB);
-    });
-  }, [lineup]);
 
   return (
     <section
@@ -62,7 +33,7 @@ export default function LineupSection() {
 
       {/* Lineup items - Stagger ile birer birer gelir */}
       <div className="mt-16 grid gap-6">
-        {sortedLineup.map((slot, index) => {
+        {lineup.map((slot, index) => {
           const dj = slot.djId ? djMap.get(slot.djId) : undefined;
           return (
             <m.div
