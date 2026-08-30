@@ -289,10 +289,10 @@ export default function Header() {
                     <button
                       onClick={() => handleNavClick(item.id as SectionId)}
                       className={clsx(
-                        "w-full rounded-2xl px-4 py-3 text-base font-medium text-white transition nav-text-glow",
+                        "w-full rounded-2xl border border-transparent px-4 py-3 text-base font-medium text-white transition-[border-color,color] duration-500 ease-out nav-text-glow",
                         activeSection === item.id 
-                          ? "bg-[#FD1D35] nav-glow" 
-                          : "hover:bg-[#FD1D35]/20 hover:text-[#FD1D35]"
+                          ? "border-[#FD1D35] bg-[#FD1D35] nav-glow" 
+                          : "hover:border-[#FD1D35]/80 hover:bg-transparent hover:text-[#FD1D35]"
                       )}
                     >
                       {item.label}

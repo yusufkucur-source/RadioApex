@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { m, type Variants } from "framer-motion";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { useState } from "react";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { useDJs } from "@/lib/firebase/hooks";
 
@@ -36,6 +38,8 @@ const SOCIAL_LABELS: Record<string, string> = {
   mixcloud: "Mixcloud"
 };
 
+const DESCRIPTION_PREVIEW_LENGTH = 280;
+
 function toInitials(value?: string) {
   if (!value) return "DJ";
   const segments = value
@@ -49,7 +53,19 @@ function toInitials(value?: string) {
 
 export default function DjSection() {
   const { data: djs } = useDJs();
+  const [expandedDjs, setExpandedDjs] = useState<Set<string>>(new Set());
 
+  function toggleDescription(djId: string) {
+    setExpandedDjs(current => {
+      const next = new Set(current);
+      if (next.has(djId)) {
+        next.delete(djId);
+      } else {
+        next.add(djId);
+      }
+      return next;
+    });
+  }
 
   return (
     <section
@@ -76,7 +92,9 @@ export default function DjSection() {
           {/* Kartlar - Title'dan sonra gelir (parallax stagger) */}
           <m.div
             variants={containerVariants}
-            initial="hidden"
+            // Keep the list available when mobile navigation jumps directly to this section.
+            // IntersectionObserver-based entrance animations can miss that jump on some browsers.
+            initial="visible"
             whileInView="visible"
             viewport={{ once: true, amount: 0.05, margin: "0px" }}
             transition={{ staggerChildren: 0.08, delayChildren: 0.15 }}
@@ -90,6 +108,10 @@ export default function DjSection() {
               return (
                 <m.article
                   key={dj.id}
+                  layout
+                  transition={{
+                    layout: { duration: 1, ease: [0.16, 1, 0.3, 1] }
+                  }}
                   variants={cardVariants}
                   whileHover={{ translateY: -12 }}
                   className="group relative flex h-full flex-col overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.05] p-6 shadow-[0_40px_80px_rgba(5,5,9,0.55)] backdrop-blur-2xl transition-colors duration-500"
@@ -138,9 +160,37 @@ export default function DjSection() {
                     </div>
 
                     {dj.description ? (
-                      <p className="font-spaceGrotesk text-sm leading-relaxed text-white/70">
-                        {dj.description}
-                      </p>
+                      <m.div
+                        layout
+                        transition={{
+                          layout: { duration: 1, ease: [0.16, 1, 0.3, 1] }
+                        }}
+                        className="flex flex-col gap-2 overflow-hidden"
+                      >
+                        <m.p
+                          layout
+                          className={`font-spaceGrotesk text-sm leading-relaxed text-white/70 ${
+                            expandedDjs.has(dj.id) ? "" : "line-clamp-5"
+                          }`}
+                        >
+                          {dj.description}
+                        </m.p>
+                        {dj.description.length > DESCRIPTION_PREVIEW_LENGTH ? (
+                          <button
+                            type="button"
+                            onClick={() => toggleDescription(dj.id)}
+                            aria-expanded={expandedDjs.has(dj.id)}
+                            className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-[#FD1D35] transition-colors hover:text-white"
+                          >
+                            {expandedDjs.has(dj.id) ? "Show less" : "Read more"}
+                            {expandedDjs.has(dj.id) ? (
+                              <ChevronUp className="h-4 w-4" aria-hidden="true" />
+                            ) : (
+                              <ChevronDown className="h-4 w-4" aria-hidden="true" />
+                            )}
+                          </button>
+                        ) : null}
+                      </m.div>
                     ) : (
                       <p className="font-spaceGrotesk text-sm text-white/50">
                         Ses frekanslarini Apex estetikleriyle birlestiren ozel

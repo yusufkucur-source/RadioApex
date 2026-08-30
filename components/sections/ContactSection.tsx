@@ -6,17 +6,35 @@ import SectionHeading from "@/components/ui/SectionHeading";
 
 type FormState = "idle" | "sending" | "success" | "error";
 
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/mljeggng";
+
 export default function ContactSection() {
   const [state, setState] = useState<FormState>("idle");
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setState("sending");
+    const form = event.currentTarget;
+    const formData = new FormData(form);
 
-    setTimeout(() => {
+    try {
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        headers: {
+          Accept: "application/json"
+        },
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error("Form submission failed");
+      }
+
       setState("success");
-      event.currentTarget.reset();
-    }, 900);
+      form.reset();
+    } catch {
+      setState("error");
+    }
   };
 
   return (
