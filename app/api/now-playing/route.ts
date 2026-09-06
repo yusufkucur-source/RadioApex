@@ -7,6 +7,9 @@ import {
   type Firestore
 } from "firebase-admin/firestore";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 // AzuraCast API endpoint - eski HTML'den
 const AZURACAST_API = "https://radio.cast.click/api/nowplaying/radioapex";
 const HISTORY_COLLECTION = "trackHistory";
