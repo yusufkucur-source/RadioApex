@@ -37,6 +37,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://radioapex.com.tr"),
   title: "Radio Apex",
   description:
     "Radio Apex — Modern online radio experience with curated DJ sets and live lineup.",
@@ -62,8 +63,16 @@ export const metadata: Metadata = {
     title: "Radio Apex",
     description:
       "Modern online radio experience with curated DJ sets and live lineup.",
-    url: "https://radioapex.example.com",
+    url: "https://radioapex.com.tr",
     siteName: "Radio Apex",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1024,
+        height: 1024,
+        alt: "Radio Apex"
+      }
+    ],
     locale: "en_US",
     type: "website"
   },
@@ -71,7 +80,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Radio Apex",
     description:
-      "Modern online radio experience with curated DJ sets and live lineup."
+      "Modern online radio experience with curated DJ sets and live lineup.",
+    images: ["/og-image.png"]
   }
 };
 
