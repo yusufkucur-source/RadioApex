@@ -105,7 +105,7 @@ function TestPageContent() {
          <m.div 
            className="pointer-events-none absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 parallax-element"
            style={{
-             backgroundImage: "url('/images/home/index_background_v2.png')",
+             backgroundImage: "url('/images/home/index_background_v2.webp')",
              filter: "brightness(0.7) contrast(1.1)",
              y: backgroundY
            }}

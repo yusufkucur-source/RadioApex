@@ -54,7 +54,7 @@ export default function HomeSection() {
       <div 
         className="pointer-events-none absolute inset-0 -z-5 bg-cover bg-center bg-no-repeat opacity-100"
         style={{
-          backgroundImage: "url('/images/home/index_background_v2.png')",
+          backgroundImage: "url('/images/home/index_background_v2.webp')",
           filter: "brightness(0.7) contrast(1.1)"
         }}
       />

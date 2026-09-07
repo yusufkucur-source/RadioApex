@@ -58,7 +58,7 @@ export default function LogoAnimation({
     <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none ${className}`}>
       {/* Clean logo without any effects */}
       <Image
-        src="/images/home/SVG/logo_icon.svg"
+        src="/images/home/logo_icon.webp"
         alt="RadioApex Logo"
         width={224}
         height={224}

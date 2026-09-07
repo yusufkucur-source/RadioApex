@@ -132,7 +132,7 @@ export default function Header() {
           }}
         >
           <Image
-            src="/images/home/SVG/AplexLogoRed.svg"
+            src="/images/home/AplexLogoRed.webp"
             alt="Radio Apex"
             width={193}
             height={81}
@@ -187,7 +187,7 @@ export default function Header() {
         }}
       >
         <Image
-          src="/images/home/SVG/AplexLogoRed.svg"
+          src="/images/home/AplexLogoRed.webp"
           alt="Radio Apex"
           width={193}
           height={81}
