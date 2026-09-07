@@ -1,5 +1,4 @@
 import { getApps, initializeApp, cert } from "firebase-admin/app";
-import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 
 function getAdminApp() {
@@ -25,6 +24,20 @@ type NotificationRequest = {
   screen?: string;
 };
 
+async function verifyFirebaseIdToken(idToken: string) {
+  const apiKey = process.env.FIREBASE_WEB_API_KEY || process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+  if (!apiKey) throw new Error("FIREBASE_WEB_API_KEY is not configured");
+  const response = await fetch(
+    `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${encodeURIComponent(apiKey)}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ idToken })
+    }
+  );
+  if (!response.ok) throw new Error("Invalid Firebase ID token");
+}
+
 export default async function handler(request: Request) {
   if (request.method !== "POST") {
     return Response.json({ error: "Method not allowed" }, { status: 405 });
@@ -38,7 +51,7 @@ export default async function handler(request: Request) {
     if (!idToken) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
     const app = getAdminApp();
-    await getAuth(app).verifyIdToken(idToken);
+    await verifyFirebaseIdToken(idToken);
     const payload = (await request.json()) as NotificationRequest;
     const title = payload.title?.trim();
     const body = payload.body?.trim();
