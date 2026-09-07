@@ -22,27 +22,21 @@ export default function CenteredPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const { nowPlaying } = useNowPlaying();
-  
-  
 
   const handlePlayPause = async () => {
-    console.log("Play button clicked!", { isPlaying, audioRef: audioRef.current });
-    
-    if (!audioRef.current) {
-      console.error("Audio element not found");
+    const audio = audioRef.current;
+    if (!audio) {
       return;
     }
 
     try {
       if (isPlaying) {
-        console.log("Pausing audio...");
-        audioRef.current.pause();
+        audio.pause();
         setIsPlaying(false);
       } else {
-        console.log("Playing audio...");
-        // Audio element'ini yeniden yükle
-        audioRef.current.load();
-        await audioRef.current.play();
+        // `play()` loads the stream when needed. Calling `load()` first would
+        // open the live stream on page mount and restart it on every play.
+        await audio.play();
         setIsPlaying(true);
       }
     } catch (error) {
@@ -56,23 +50,16 @@ export default function CenteredPlayer() {
     const audio = audioRef.current;
     if (!audio) return;
 
-    // Audio element'ini başlangıçta yükle
-    audio.load();
-
     const handlePlay = () => {
-      console.log("Audio started playing");
       setIsPlaying(true);
     };
     const handlePause = () => {
-      console.log("Audio paused");
       setIsPlaying(false);
     };
     const handleEnded = () => {
-      console.log("Audio ended");
       setIsPlaying(false);
     };
-    const handleError = (e: any) => {
-      console.error("Audio error:", e);
+    const handleError = () => {
       setIsPlaying(false);
     };
 
@@ -86,6 +73,9 @@ export default function CenteredPlayer() {
       audio.removeEventListener('pause', handlePause);
       audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('error', handleError);
+      audio.pause();
+      audio.removeAttribute("src");
+      audio.load();
     };
   }, []);
 
@@ -223,9 +213,6 @@ export default function CenteredPlayer() {
         preload="none"
         crossOrigin="anonymous"
         className="hidden"
-        onError={(e) => console.error("Audio load error:", e)}
-        onLoadStart={() => console.log("Audio loading started")}
-        onCanPlay={() => console.log("Audio can play")}
       />
 
       <style jsx>{`
