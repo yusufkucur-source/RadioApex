@@ -6,7 +6,15 @@ function getAdminApp() {
   if (getApps().length) return getApps()[0];
   const serviceAccount =
     process.env.FIREBASE_SERVICE_ACCOUNT || process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
-  if (serviceAccount) return initializeApp({ credential: cert(JSON.parse(serviceAccount)) });
+  if (serviceAccount) {
+    let parsed: Record<string, string>;
+    try {
+      parsed = JSON.parse(serviceAccount);
+    } catch {
+      parsed = JSON.parse(Buffer.from(serviceAccount, "base64").toString("utf8"));
+    }
+    return initializeApp({ credential: cert(parsed) });
+  }
   return initializeApp({
     credential: cert({
       projectId: process.env.FIREBASE_PROJECT_ID,
