@@ -31,6 +31,31 @@ type NowPlayingContextValue = {
   refresh: () => void;
 };
 
+type AzuraCastSong = {
+  text?: string;
+  artist?: string;
+  title?: string;
+  art?: string;
+};
+
+type AzuraCastResponse = {
+  now_playing?: {
+    song?: AzuraCastSong;
+    elapsed?: number;
+    duration?: number;
+  };
+  listeners?: number | { total?: number; current?: number };
+  live?: {
+    is_live?: boolean;
+  };
+  song_history?: Array<{
+    song?: AzuraCastSong;
+  }>;
+};
+
+const AZURACAST_NOW_PLAYING_URL =
+  "https://radio.cast.click/api/nowplaying/radioapex";
+
 const defaultState: NowPlayingPayload = {
   title: "",
   artist: "RADIO APEX",
@@ -60,6 +85,46 @@ function removeTurkishCharacters(text: string): string {
   return text.replace(/[çÇğĞıİöÖşŞüÜ]/g, (char) => charMap[char] || char);
 }
 
+function normalizeTrackText(value?: string) {
+  return removeTurkishCharacters((value || "").replace(/\s+/g, " ").trim());
+}
+
+function normalizeAzuraSong(song?: AzuraCastSong): SongHistoryItem {
+  const text = normalizeTrackText(
+    song?.text || [song?.artist, song?.title].filter(Boolean).join(" - ")
+  );
+  const [fallbackArtist = "", ...fallbackTitleParts] = text.split(" - ");
+  const fallbackTitle = fallbackTitleParts.join(" - ");
+
+  return {
+    title: normalizeTrackText(song?.title || fallbackTitle || text),
+    artist: normalizeTrackText(song?.artist || fallbackArtist || "RADIO APEX")
+  };
+}
+
+function parseAzuraNowPlaying(data: AzuraCastResponse): NowPlayingPayload {
+  const current = normalizeAzuraSong(data.now_playing?.song);
+  const listeners = data.listeners;
+  const listenerCount =
+    typeof listeners === "number"
+      ? listeners
+      : listeners?.total ?? listeners?.current ?? 0;
+
+  return {
+    ...defaultState,
+    title: current.title || defaultState.title,
+    artist: current.artist || defaultState.artist,
+    isLive: Boolean(data.live?.is_live),
+    coverArt: data.now_playing?.song?.art || null,
+    elapsed: data.now_playing?.elapsed || 0,
+    duration: data.now_playing?.duration || 0,
+    listeners: listenerCount,
+    songHistory:
+      data.song_history?.slice(0, 5).map((item) => normalizeAzuraSong(item.song)) ??
+      []
+  };
+}
+
 async function fetchNowPlaying(): Promise<NowPlayingPayload> {
   try {
     const response = await fetch("/api/now-playing");
@@ -85,6 +150,17 @@ async function fetchNowPlaying(): Promise<NowPlayingPayload> {
     };
   } catch (error) {
     console.error("Failed to load now playing metadata", error);
+  }
+
+  try {
+    const fallbackResponse = await fetch(AZURACAST_NOW_PLAYING_URL);
+    if (!fallbackResponse.ok) {
+      throw new Error(`Fallback request failed: ${fallbackResponse.status}`);
+    }
+
+    return parseAzuraNowPlaying((await fallbackResponse.json()) as AzuraCastResponse);
+  } catch (error) {
+    console.error("Failed to load fallback now playing metadata", error);
     return defaultState;
   }
 }

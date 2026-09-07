@@ -18,6 +18,7 @@ const HISTORY_STATE_DOC = "radioapex";
 const HISTORY_LIMIT = 5;
 const HISTORY_PRUNE_LIMIT = 50;
 const API_RESPONSE_CACHE_MS = 12000;
+const HISTORY_RESOLUTION_TIMEOUT_MS = 2500;
 
 let firebaseApp: App | null = null;
 let firestoreDb: Firestore | null = null;
@@ -300,6 +301,19 @@ async function resolveSongHistory(
   }
 }
 
+function withTimeout<T>(
+  promise: Promise<T>,
+  timeoutMs: number,
+  message: string
+): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) => {
+      setTimeout(() => reject(new Error(message)), timeoutMs);
+    })
+  ]);
+}
+
 export async function GET() {
   try {
     if (cachedPayload && Date.now() - cachedPayloadAt < API_RESPONSE_CACHE_MS) {
@@ -341,7 +355,17 @@ export async function GET() {
     // Canlı yayın durumu
     const isLive = !!(data?.live?.is_live);
     const externalHistory = getExternalSongHistory(data);
-    const songHistory = await resolveSongHistory(currentTrack, externalHistory);
+    let songHistory = externalHistory;
+
+    try {
+      songHistory = await withTimeout(
+        resolveSongHistory(currentTrack, externalHistory),
+        HISTORY_RESOLUTION_TIMEOUT_MS,
+        "Track history resolution timed out"
+      );
+    } catch (error) {
+      console.warn("Track history resolution failed", error);
+    }
 
     const payload: NowPlayingPayload = {
       title: title.trim() || "Radio Apex Live",
