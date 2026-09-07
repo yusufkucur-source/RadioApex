@@ -20,7 +20,7 @@ import { getFirebaseApp, getFirebaseAuthInstance, getFirestoreInstance } from "@
 import { useDJs, useLineup, type DJProfile, type LineupSlot } from "@/lib/firebase/hooks";
 import { seedDatabaseWithSampleData } from "@/lib/firebase/seedData";
 
-type NavSection = "overview" | "djs" | "lineup";
+type NavSection = "overview" | "djs" | "lineup" | "notifications";
 
 type DjForm = {
   nickname: string;
@@ -87,6 +87,11 @@ export default function AdminPanel() {
   const [editingDjId, setEditingDjId] = useState<string | null>(null);
   const [editingLineupId, setEditingLineupId] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [notificationForm, setNotificationForm] = useState({
+    title: "",
+    body: "",
+    screen: "home"
+  });
 
   useEffect(() => {
     if (!auth) return;
@@ -117,6 +122,33 @@ export default function AdminPanel() {
   const handleLogout = async () => {
     if (!auth) return;
     await signOut(auth);
+  };
+
+  const handleNotificationSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!user) return;
+    setError(null);
+    setSuccessMessage(null);
+    setIsSubmitting(true);
+    try {
+      const idToken = await user.getIdToken();
+      const response = await fetch("/.netlify/functions/send-push-notification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`
+        },
+        body: JSON.stringify(notificationForm)
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Bildirim gönderilemedi.");
+      setSuccessMessage(`✅ Bildirim gönderildi (${result.sent ?? 0} cihaz).`);
+      setNotificationForm({ title: "", body: "", screen: "home" });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Bildirim gönderilemedi.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleDjSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -430,6 +462,17 @@ export default function AdminPanel() {
               )}
             >
               📅 Lineup Schedule
+            </button>
+            <button
+              onClick={() => setActiveSection("notifications")}
+              className={clsx(
+                "w-full rounded-xl px-4 py-3 text-left text-sm font-medium transition",
+                activeSection === "notifications"
+                  ? "bg-gradient-to-r from-apex-accent/20 to-apex-secondary/20 text-white border border-apex-accent/30"
+                  : "text-white/60 hover:text-white hover:bg-white/5"
+              )}
+            >
+              🔔 Bildirim Gönder
             </button>
           </nav>
 
@@ -924,6 +967,50 @@ export default function AdminPanel() {
                  )}
               </div>
             </div>
+          </div>
+        )}
+
+        {activeSection === "notifications" && (
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-8 backdrop-blur-2xl">
+            <h2 className="text-2xl font-semibold text-white">Mobil Bildirim Gönder</h2>
+            <p className="mt-2 text-sm text-white/60">
+              Bildirim, izin vermiş tüm Radio Apex mobil kullanıcılarına gönderilir.
+            </p>
+            <form onSubmit={handleNotificationSubmit} className="mt-8 max-w-2xl space-y-5">
+              <input
+                required
+                maxLength={80}
+                value={notificationForm.title}
+                onChange={event => setNotificationForm(prev => ({ ...prev, title: event.target.value }))}
+                placeholder="Örn. DJ listesi güncellendi!"
+                className="h-12 w-full rounded-2xl border border-white/10 bg-white/5 px-4 text-sm text-white outline-none focus:border-apex-accent"
+              />
+              <textarea
+                required
+                maxLength={240}
+                value={notificationForm.body}
+                onChange={event => setNotificationForm(prev => ({ ...prev, body: event.target.value }))}
+                placeholder="Örn. Yeni DJ'leri keşfet."
+                rows={4}
+                className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none focus:border-apex-accent"
+              />
+              <select
+                value={notificationForm.screen}
+                onChange={event => setNotificationForm(prev => ({ ...prev, screen: event.target.value }))}
+                className="h-12 w-full rounded-2xl border border-white/10 bg-black/50 px-4 text-sm text-white outline-none focus:border-apex-accent"
+              >
+                <option value="home">Ana sayfa</option>
+                <option value="djs">DJ listesi</option>
+                <option value="lineup">Lineup</option>
+              </select>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="h-12 w-full rounded-full bg-gradient-to-r from-apex-accent to-apex-secondary text-xs font-semibold uppercase tracking-[0.3em] text-white disabled:opacity-50"
+              >
+                {isSubmitting ? "Gönderiliyor..." : "Bildirimi Gönder"}
+              </button>
+            </form>
           </div>
         )}
       </main>
