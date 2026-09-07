@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { collection, onSnapshot, type DocumentData } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  type DocumentData,
+  type QuerySnapshot
+} from "firebase/firestore";
 import { getFirestoreInstance } from "@/lib/firebase/client";
 
 export type DJProfile = {
@@ -120,15 +125,123 @@ type FirestoreState<T> = {
 
 type Transformer<T> = (doc: DocumentData) => T;
 
+type FirestoreRestValue = {
+  stringValue?: string;
+  integerValue?: string;
+  doubleValue?: number;
+  booleanValue?: boolean;
+  timestampValue?: string;
+  nullValue?: null;
+  mapValue?: { fields?: Record<string, FirestoreRestValue> };
+  arrayValue?: { values?: FirestoreRestValue[] };
+};
+
+type FirestoreRestResponse = {
+  documents?: Array<{
+    name: string;
+    fields?: Record<string, FirestoreRestValue>;
+  }>;
+};
+
+const publicCollectionRequests = new Map<string, Promise<DocumentData[]>>();
+
+function decodeFirestoreValue(value: FirestoreRestValue): unknown {
+  if ("stringValue" in value) return value.stringValue;
+  if ("integerValue" in value) return Number(value.integerValue);
+  if ("doubleValue" in value) return value.doubleValue;
+  if ("booleanValue" in value) return value.booleanValue;
+  if ("timestampValue" in value) return value.timestampValue;
+  if ("nullValue" in value) return null;
+  if (value.mapValue) return decodeFirestoreFields(value.mapValue.fields);
+  if (value.arrayValue) {
+    return (value.arrayValue.values ?? []).map(decodeFirestoreValue);
+  }
+  return undefined;
+}
+
+function decodeFirestoreFields(
+  fields: Record<string, FirestoreRestValue> = {}
+): DocumentData {
+  return Object.fromEntries(
+    Object.entries(fields).map(([key, value]) => [key, decodeFirestoreValue(value)])
+  );
+}
+
+function fetchPublicCollection(collectionName: string): Promise<DocumentData[]> {
+  const cachedRequest = publicCollectionRequests.get(collectionName);
+  if (cachedRequest) return cachedRequest;
+
+  const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
+  const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+  if (!projectId || !apiKey) {
+    return Promise.reject(new Error("Firebase public configuration is missing"));
+  }
+
+  const endpoint = new URL(
+    `https://firestore.googleapis.com/v1/projects/${encodeURIComponent(projectId)}/databases/(default)/documents/${encodeURIComponent(collectionName)}`
+  );
+  endpoint.searchParams.set("key", apiKey);
+
+  const request = fetch(endpoint).then(async response => {
+    if (!response.ok) {
+      throw new Error(`Firestore REST request failed: ${response.status}`);
+    }
+
+    const payload = (await response.json()) as FirestoreRestResponse;
+    return (payload.documents ?? []).map(document => ({
+      id: document.name.split("/").pop() ?? "",
+      ...decodeFirestoreFields(document.fields)
+    }));
+  });
+
+  publicCollectionRequests.set(collectionName, request);
+  return request;
+}
+
 function useFirestoreCollection<T extends { id: string }>(
   collectionName: string,
   fallback: T[],
-  transformer?: Transformer<T>
+  transformer?: Transformer<T>,
+  realtime = true
 ): FirestoreState<T> {
   const [data, setData] = useState<T[]>(fallback);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
+
+    const applyDocuments = (documents: DocumentData[]) => {
+      if (cancelled) return;
+
+      if (documents.length === 0) {
+        setData(fallback);
+        setLoading(false);
+        return;
+      }
+
+      const parsed = documents.map(document =>
+        transformer ? transformer(document) : (document as T)
+      );
+      setData(parsed);
+      setLoading(false);
+    };
+
+    const handleError = (error: unknown) => {
+      if (cancelled) return;
+      console.error(`Failed to load ${collectionName}`, error);
+      setData(fallback);
+      setLoading(false);
+    };
+
+    if (!realtime) {
+      void fetchPublicCollection(collectionName)
+        .then(applyDocuments)
+        .catch(handleError);
+      return () => {
+        cancelled = true;
+      };
+    }
+
     const db = getFirestoreInstance();
     if (!db) {
       setLoading(false);
@@ -136,32 +249,33 @@ function useFirestoreCollection<T extends { id: string }>(
       return;
     }
 
-    const unsubscribe = onSnapshot(
-      collection(db, collectionName),
-      snapshot => {
-        // Eğer Firestore collection'ı boşsa, fallback data kullan
-        if (snapshot.docs.length === 0) {
-          setData(fallback);
-          setLoading(false);
-          return;
-        }
-        
-        const parsed = snapshot.docs.map(doc =>
-          transformer ? transformer({ id: doc.id, ...doc.data() }) : ({ id: doc.id, ...doc.data() } as T)
-        );
-        setData(parsed);
-        setLoading(false);
-      },
-      error => {
-        console.error(`Failed to load ${collectionName}`, error);
+    const collectionRef = collection(db, collectionName);
+
+    const applySnapshot = (snapshot: QuerySnapshot<DocumentData>) => {
+      if (cancelled) return;
+
+      if (snapshot.empty) {
         setData(fallback);
         setLoading(false);
+        return;
       }
-    );
 
-    return () => unsubscribe();
+      const parsed = snapshot.docs.map(doc =>
+        transformer
+          ? transformer({ id: doc.id, ...doc.data() })
+          : ({ id: doc.id, ...doc.data() } as T)
+      );
+      setData(parsed);
+      setLoading(false);
+    };
+
+    const unsubscribe = onSnapshot(collectionRef, applySnapshot, handleError);
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collectionName]);
+  }, [collectionName, realtime]);
 
   return useMemo(
     () => ({
@@ -245,8 +359,13 @@ function sortLineupByDayAndTime(lineup: LineupSlot[]): LineupSlot[] {
   });
 }
 
-export function useDJs(): FirestoreState<DJProfile> {
-  const state = useFirestoreCollection<DJProfile>("djs", sampleDjs, transformDjDoc);
+export function useDJs({ realtime = true }: { realtime?: boolean } = {}): FirestoreState<DJProfile> {
+  const state = useFirestoreCollection<DJProfile>(
+    "djs",
+    sampleDjs,
+    transformDjDoc,
+    realtime
+  );
   return useMemo(
     () => ({
       ...state,
@@ -256,11 +375,12 @@ export function useDJs(): FirestoreState<DJProfile> {
   );
 }
 
-export function useLineup(): FirestoreState<LineupSlot> {
+export function useLineup({ realtime = true }: { realtime?: boolean } = {}): FirestoreState<LineupSlot> {
   const state = useFirestoreCollection<LineupSlot>(
     "lineup",
     sampleLineup,
-    transformLineupDoc
+    transformLineupDoc,
+    realtime
   );
   return useMemo(
     () => ({

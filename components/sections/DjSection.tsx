@@ -52,7 +52,7 @@ function toInitials(value?: string) {
 }
 
 export default function DjSection() {
-  const { data: djs } = useDJs();
+  const { data: djs } = useDJs({ realtime: false });
   const [expandedDjs, setExpandedDjs] = useState<Set<string>>(new Set());
 
   function toggleDescription(djId: string) {

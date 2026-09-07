@@ -5,8 +5,8 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import { useDJs, useLineup } from "@/lib/firebase/hooks";
 
 export default function LineupSection() {
-  const { data: lineup } = useLineup();
-  const { data: djs } = useDJs();
+  const { data: lineup } = useLineup({ realtime: false });
+  const { data: djs } = useDJs({ realtime: false });
 
   const djMap = new Map(djs.map(dj => [dj.id, dj]));
 
