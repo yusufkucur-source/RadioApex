@@ -141,7 +141,9 @@ export default function AdminPanel() {
         body: JSON.stringify(notificationForm)
       });
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "Bildirim gönderilemedi.");
+      if (!response.ok) {
+        throw new Error(result.detail ? `${result.error || "Bildirim gönderilemedi."} (${result.detail})` : result.error || "Bildirim gönderilemedi.");
+      }
       setSuccessMessage(`✅ Bildirim gönderildi (${result.sent ?? 0} cihaz).`);
       setNotificationForm({ title: "", body: "", screen: "home" });
     } catch (err) {

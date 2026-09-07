@@ -93,6 +93,9 @@ export default async function handler(request: Request) {
     return Response.json({ sent });
   } catch (error) {
     console.error("Push notification error", error);
-    return Response.json({ error: "Notification could not be sent" }, { status: 500 });
+    return Response.json({
+      error: "Notification could not be sent",
+      detail: error instanceof Error ? error.message : "Unknown server error"
+    }, { status: 500 });
   }
 }

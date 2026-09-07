@@ -40,6 +40,9 @@ export default async function handler(request: Request) {
     return Response.json({ ok: true });
   } catch (error) {
     console.error("Push token registration error", error);
-    return Response.json({ error: "Token could not be registered" }, { status: 500 });
+    return Response.json({
+      error: "Token could not be registered",
+      detail: error instanceof Error ? error.message : "Unknown server error"
+    }, { status: 500 });
   }
 }
