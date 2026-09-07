@@ -80,7 +80,20 @@ export default function CenteredPlayer() {
   }, []);
 
   return (
-    <div className="centered-player-container">
+    <div
+      className="centered-player-container"
+      style={{
+        position: "fixed",
+        inset: 0,
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 10,
+        pointerEvents: "none"
+      }}
+    >
       {/* Rotating Circle - Background */}
       <div
         className="rotating-circle"
@@ -216,20 +229,6 @@ export default function CenteredPlayer() {
       />
 
       <style jsx>{`
-        .centered-player-container {
-          position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 100vw;
-          height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 10;
-          pointer-events: none;
-        }
-        
         .play-button {
           display: flex;
           align-items: center;
