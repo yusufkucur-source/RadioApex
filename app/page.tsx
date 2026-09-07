@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
 import { m, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import Header from "@/components/navigation/Header";
@@ -33,6 +32,20 @@ const socials = [
   }
 ];
 
+const redDots = Array.from({ length: 20 }, (_, index) => ({
+  x: (index * 37 + 11) % 100,
+  y: (index * 53 + 7) % 100,
+  duration: 10 + (index % 9),
+  delay: index * 0.3
+}));
+
+const whiteDots = Array.from({ length: 15 }, (_, index) => ({
+  x: (index * 43 + 19) % 100,
+  y: (index * 61 + 13) % 100,
+  duration: 12 + (index % 11),
+  delay: index * 0.4
+}));
+
 function HomeContent() {
   const { nowPlaying, isLoading } = useNowPlaying();
   // Scroll hook'ları
@@ -44,31 +57,6 @@ function HomeContent() {
   const dotsY = useTransform(scrollY, [0, 1000], [0, -150]);
   const contentY = useTransform(scrollY, [0, 1000], [0, -100]);
   const descriptionY = useTransform(scrollY, [0, 1000], [0, -50]);
-
-  // Random dots - client-side only to avoid hydration mismatch
-  const [redDots, setRedDots] = useState<Array<{x: number; y: number; moveX: number[]; moveY: number[]; duration: number}>>([]);
-  const [whiteDots, setWhiteDots] = useState<Array<{x: number; y: number; moveX: number[]; moveY: number[]; duration: number}>>([]);
-
-  useEffect(() => {
-    setRedDots(
-      Array.from({ length: 20 }).map(() => ({
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        moveX: [0, Math.random() * 60 - 30, Math.random() * 60 - 30, 0],
-        moveY: [0, Math.random() * 60 - 30, Math.random() * 60 - 30, 0],
-        duration: 10 + Math.random() * 8
-      }))
-    );
-    setWhiteDots(
-      Array.from({ length: 15 }).map(() => ({
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        moveX: [0, Math.random() * 50 - 25, Math.random() * 50 - 25, 0],
-        moveY: [0, Math.random() * 50 - 25, Math.random() * 50 - 25, 0],
-        duration: 12 + Math.random() * 10
-      }))
-    );
-  }, []);
 
   return (
     <>
@@ -144,50 +132,30 @@ function HomeContent() {
           >
             {/* Kırmızı Noktalar */}
             {redDots.map((dot, i) => (
-              <m.div
+              <div
                 key={`red-${i}`}
-                className="absolute w-1 h-1 rounded-full bg-[#FD1D35]"
+                className="ambient-dot-red absolute w-1 h-1 rounded-full bg-[#FD1D35]"
                 style={{
                   left: `${dot.x}%`,
                   top: `${dot.y}%`,
-                  boxShadow: '0 0 8px rgba(253, 29, 53, 0.8)'
-                }}
-                animate={{
-                  x: dot.moveX,
-                  y: dot.moveY,
-                  scale: [1, 1.8, 1, 1.5, 1],
-                  opacity: [0.4, 0.9, 0.5, 0.8, 0.4]
-                }}
-                transition={{
-                  duration: dot.duration,
-                  repeat: Infinity,
-                  delay: i * 0.3,
-                  ease: "easeInOut"
+                  boxShadow: '0 0 8px rgba(253, 29, 53, 0.8)',
+                  animationDuration: `${dot.duration}s`,
+                  animationDelay: `${dot.delay}s`
                 }}
               />
             ))}
             
             {/* Beyaz Noktalar */}
             {whiteDots.map((dot, i) => (
-              <m.div
+              <div
                 key={`white-${i}`}
-                className="absolute w-1 h-1 rounded-full bg-white"
+                className="ambient-dot-white absolute w-1 h-1 rounded-full bg-white"
                 style={{
                   left: `${dot.x}%`,
                   top: `${dot.y}%`,
-                  boxShadow: '0 0 6px rgba(255, 255, 255, 0.6)'
-                }}
-                animate={{
-                  x: dot.moveX,
-                  y: dot.moveY,
-                  scale: [1, 1.3, 1, 1.6, 1],
-                  opacity: [0.2, 0.6, 0.3, 0.7, 0.2]
-                }}
-                transition={{
-                  duration: dot.duration,
-                  repeat: Infinity,
-                  delay: i * 0.4,
-                  ease: "easeInOut"
+                  boxShadow: '0 0 6px rgba(255, 255, 255, 0.6)',
+                  animationDuration: `${dot.duration}s`,
+                  animationDelay: `${dot.delay}s`
                 }}
               />
               ))}
@@ -238,7 +206,8 @@ function HomeContent() {
                  fontWeight: 500,
                  lineHeight: "1.2",
                  letterSpacing: "0.1em",
-                 color: "#FD1D35"
+                 color: "#FD1D35",
+                 textShadow: "0 0 40px rgba(253, 29, 53, 0.75), 0 0 80px rgba(253, 29, 53, 0.45)"
                }}
                initial={{ opacity: 0, y: 20 }}
                whileInView={{ opacity: 1, y: 0 }}
@@ -246,19 +215,7 @@ function HomeContent() {
                transition={{ 
                  duration: 1, 
                  delay: 0.2, 
-                 ease: "easeOut",
-                 textShadow: {
-                   duration: 1.5,
-                   repeat: Infinity,
-                   ease: "easeInOut"
-                 }
-               }}
-               animate={{
-                 textShadow: [
-                   "0 0 30px rgba(253, 29, 53, 1), 0 0 60px rgba(253, 29, 53, 0.8), 0 0 90px rgba(253, 29, 53, 0.6), 0 0 120px rgba(253, 29, 53, 0.4)",
-                   "0 0 50px rgba(253, 29, 53, 1), 0 0 100px rgba(253, 29, 53, 1), 0 0 150px rgba(253, 29, 53, 0.8), 0 0 200px rgba(253, 29, 53, 0.6)",
-                   "0 0 30px rgba(253, 29, 53, 1), 0 0 60px rgba(253, 29, 53, 0.8), 0 0 90px rgba(253, 29, 53, 0.6), 0 0 120px rgba(253, 29, 53, 0.4)"
-                 ]
+                 ease: "easeOut"
                }}
              >
 {(nowPlaying.title?.trim() || "").toLocaleUpperCase('en-US')}
