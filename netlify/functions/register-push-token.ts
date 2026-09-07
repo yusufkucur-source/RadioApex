@@ -4,7 +4,8 @@ import { getFirestore } from "firebase-admin/firestore";
 
 function getAdminApp() {
   if (getApps().length) return getApps()[0];
-  const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT;
+  const serviceAccount =
+    process.env.FIREBASE_SERVICE_ACCOUNT || process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
   if (serviceAccount) return initializeApp({ credential: cert(JSON.parse(serviceAccount)) });
   return initializeApp({
     credential: cert({
