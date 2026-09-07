@@ -50,6 +50,7 @@ export default async function handler(request: Request) {
     return Response.json({ error: "Method not allowed" }, { status: 405 });
   }
 
+  let stage = "start";
   try {
     const authorization = request.headers.get("authorization");
     const idToken = authorization?.startsWith("Bearer ")
@@ -57,6 +58,7 @@ export default async function handler(request: Request) {
       : null;
     if (!idToken) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
+    stage = "auth";
     const app = getAdminApp();
     await verifyFirebaseIdToken(idToken);
     const payload = (await request.json()) as NotificationRequest;
@@ -66,6 +68,7 @@ export default async function handler(request: Request) {
       return Response.json({ error: "Title and body are required" }, { status: 400 });
     }
 
+    stage = "firestore";
     const snapshot = await getFirestore(app).collection("pushTokens").get();
     const tokens = [...new Set(snapshot.docs
       .map((item) => item.data().token)
@@ -81,6 +84,7 @@ export default async function handler(request: Request) {
     }));
     let sent = 0;
     for (let index = 0; index < messages.length; index += 100) {
+      stage = "expo";
       const response = await fetch("https://exp.host/--/api/v2/push/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -95,7 +99,7 @@ export default async function handler(request: Request) {
     console.error("Push notification error", error);
     return Response.json({
       error: "Notification could not be sent",
-      detail: error instanceof Error ? error.message : "Unknown server error"
+      detail: `${stage}: ${error instanceof Error ? error.message : "Unknown server error"}`
     }, { status: 500 });
   }
 }
