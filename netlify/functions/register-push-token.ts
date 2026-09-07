@@ -1,6 +1,5 @@
-import { createHash } from "node:crypto";
 import { getApps, initializeApp, cert } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
+import { FieldValue, getFirestore } from "firebase-admin/firestore";
 
 function getAdminApp() {
   if (getApps().length) return getApps()[0];
@@ -31,10 +30,9 @@ export default async function handler(request: Request) {
     if (!token || !token.startsWith("ExponentPushToken[")) {
       return Response.json({ error: "Invalid push token" }, { status: 400 });
     }
-    const id = createHash("sha256").update(token).digest("hex");
-    await getFirestore(getAdminApp()).collection("pushTokens").doc(id).set({
-      token,
-      platform: platform || "unknown",
+    await getFirestore(getAdminApp()).doc("pushTokens/registry").set({
+      tokens: FieldValue.arrayUnion(token),
+      platforms: FieldValue.arrayUnion(platform || "unknown"),
       updatedAt: new Date().toISOString()
     }, { merge: true });
     return Response.json({ ok: true });

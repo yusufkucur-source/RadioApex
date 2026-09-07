@@ -69,10 +69,9 @@ export default async function handler(request: Request) {
     }
 
     stage = "firestore";
-    const snapshot = await getFirestore(app).collection("pushTokens").get();
-    const tokens = [...new Set(snapshot.docs
-      .map((item) => item.data().token)
-      .filter((token): token is string => typeof token === "string" && token.length > 0))];
+    const snapshot = await getFirestore(app).doc("pushTokens/registry").get();
+    const tokens = [...new Set((snapshot.data()?.tokens || [])
+      .filter((token: unknown): token is string => typeof token === "string" && token.length > 0))];
     if (!tokens.length) return Response.json({ sent: 0, message: "No registered devices" });
 
     const messages = tokens.map((to) => ({
