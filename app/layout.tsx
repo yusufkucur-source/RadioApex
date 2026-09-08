@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Antonio, Anton, Space_Grotesk, Roboto } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 // Font tanımları - display: swap ile hızlı yükleme
 const antonio = Antonio({
@@ -99,6 +100,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Radio Apex" />
       </head>
       <body className="min-h-screen bg-apex-background text-white antialiased">
+        <GoogleAnalytics />
         <Providers>{children}</Providers>
       </body>
     </html>

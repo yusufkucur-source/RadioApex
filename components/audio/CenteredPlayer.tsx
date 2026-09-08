@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useNowPlaying } from "@/components/now-playing/NowPlayingProvider";
+import { trackAnalyticsEvent } from "@/lib/analytics";
 
 const STREAM_URL = "https://radio.cast.click/radio/8000/radio.mp3";
 
@@ -33,11 +34,13 @@ export default function CenteredPlayer() {
       if (isPlaying) {
         audio.pause();
         setIsPlaying(false);
+        trackAnalyticsEvent("stream_stop", { source: "website" });
       } else {
         // `play()` loads the stream when needed. Calling `load()` first would
         // open the live stream on page mount and restart it on every play.
         await audio.play();
         setIsPlaying(true);
+        trackAnalyticsEvent("stream_start", { source: "website" });
       }
     } catch (error) {
       console.error("Audio play error:", error);
