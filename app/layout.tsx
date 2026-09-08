@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     siteName: "Radio Apex",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og-image.png?v=2",
         width: 1024,
         height: 1024,
         alt: "Radio Apex"
@@ -73,7 +73,7 @@ export const metadata: Metadata = {
     title: "Radio Apex",
     description:
       "Modern online radio experience with curated DJ sets and live lineup.",
-    images: ["/og-image.png"]
+    images: ["/og-image.png?v=2"]
   }
 };
 
