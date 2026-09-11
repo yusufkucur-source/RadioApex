@@ -70,11 +70,18 @@ export const metadata: Metadata = {
     type: "website"
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "Radio Apex",
     description:
       "Modern online radio experience with curated DJ sets and live lineup.",
-    images: ["/og-image.png?v=2"]
+    images: [
+      {
+        url: "/twittercard.png?v=1",
+        width: 1200,
+        height: 1200,
+        alt: "Radio Apex"
+      }
+    ]
   }
 };
 
