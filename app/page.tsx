@@ -12,7 +12,6 @@ import DjSection from "@/components/sections/DjSection";
 import LineupSection from "@/components/sections/LineupSection";
 import AboutSection from "@/components/sections/AboutSection";
 import ContactSection from "@/components/sections/ContactSection";
-import LogoAnimation from "@/components/graphics/LogoAnimation";
 
 const socials = [
   { 
@@ -116,13 +115,6 @@ function HomeContent() {
             height={1080}
             className="w-full h-full"
             style={{ objectFit: "cover", objectPosition: "center", opacity: 0.1 }}
-          />
-          
-          {/* SCROLL ANIMASYONLU LOGO - Merkezi pozisyon */}
-          <LogoAnimation 
-            enableScrollAnimation={true}
-            rotationSpeed={0.5}
-            maxScroll={500}
           />
 
           {/* Hareketli Kırmızı ve Beyaz Noktalar - Parallax */}
