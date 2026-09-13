@@ -187,31 +187,6 @@ export default function CenteredPlayer() {
                 priority
               />
 
-              {/* Icon Border - kırmızı border with glow */}
-              <div
-                className="absolute inset-0 rounded-full pointer-events-none"
-                style={{
-                  border: "4px solid #FD1D35",
-                  left: "8.33%",
-                  right: "8.33%",
-                  top: "8.33%",
-                  bottom: "8.33%",
-                  boxShadow:
-                    "0 0 20px rgba(253, 29, 53, 0.8), inset 0 0 20px rgba(253, 29, 53, 0.3)",
-                }}
-              />
-
-              {/* Pulse Effect */}
-              <span
-                className="absolute rounded-full pointer-events-none border-4 border-[#FD1D35] animate-pulse-ring"
-                style={{
-                  left: "8.33%",
-                  right: "8.33%",
-                  top: "8.33%",
-                  bottom: "8.33%",
-                }}
-              />
-
               {/* Buffering Indicator */}
               {isBuffering && (
                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-full bg-black/60 backdrop-blur-sm">

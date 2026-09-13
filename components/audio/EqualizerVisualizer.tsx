@@ -45,10 +45,10 @@ export default function EqualizerVisualizer({
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`group relative flex items-center justify-center cursor-pointer select-none outline-none ${className}`}
+      className={`group relative flex items-center justify-center cursor-pointer select-none outline-none w-full h-full ${className}`}
       style={{
-        width: `${size}px`,
-        height: `${size}px`,
+        maxWidth: `${size}px`,
+        maxHeight: `${size}px`,
       }}
     >
       {/* 1. Dış Arka Plan Parlama Efekti */}
