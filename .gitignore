@@ -20,6 +20,7 @@ dist
 # Testing
 coverage
 .playwright-mcp
+tsconfig.tsbuildinfo
 
 # OS files
 .DS_Store
