@@ -23,9 +23,10 @@ import {
 import clsx from "clsx";
 import { addDoc, collection, deleteDoc, doc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { onAuthStateChanged, signInWithEmailAndPassword, signOut, type User } from "firebase/auth";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { Button } from "@/components/ui/button";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
-import { getFirebaseApp, getFirebaseAuthInstance, getFirestoreInstance } from "@/lib/firebase/client";
+import { getFirebaseApp, getFirebaseAuthInstance, getFirebaseStorageInstance, getFirestoreInstance } from "@/lib/firebase/client";
 import { useDJs, useLineup, type DJProfile, type LineupSlot } from "@/lib/firebase/hooks";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
@@ -180,21 +181,16 @@ export default function AdminDashboardV2() {
   };
 
   const uploadDjPhoto = async (file: File, djId: string) => {
-    if (!user) throw new Error("Admin session is missing.");
-    const token = await user.getIdToken();
-    const body = new FormData();
-    body.set("file", file);
-    body.set("djId", djId);
-    const response = await fetch("/api/admin/upload-dj-photo", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-      body
-    });
-    const payload = await response.json();
-    if (!response.ok || !payload.photoUrl) {
-      throw new Error(payload.error || "Fotoğraf yüklenemedi.");
-    }
-    return String(payload.photoUrl);
+    const storage = getFirebaseStorageInstance();
+    if (!user || !storage) throw new Error("Fotoğraf depolama bağlantısı hazır değil.");
+    if (!file.type.startsWith("image/")) throw new Error("Sadece resim dosyası yüklenebilir.");
+    if (file.size > 5 * 1024 * 1024) throw new Error("Fotoğraf en fazla 5 MB olabilir.");
+
+    const extension = file.type.includes("png") ? "png" : file.type.includes("webp") ? "webp" : "jpg";
+    const name = file.name.replace(/\.[a-z0-9]{3,4}$/i, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "") || "photo";
+    const storageRef = ref(storage, `djs/${djId}/uploaded-${Date.now()}-${name}.${extension}`);
+    await uploadBytes(storageRef, file, { contentType: file.type });
+    return getDownloadURL(storageRef);
   };
 
   const handleDjSave = async (event: FormEvent<HTMLFormElement>) => {
