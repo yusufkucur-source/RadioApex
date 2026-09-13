@@ -170,9 +170,9 @@ export default function CenteredPlayer() {
                   }}
                 />
 
-                {/* Vector Inline Play SVG (Edge-to-Edge Circle + Centered Triangle) */}
+                {/* Vector Inline Play SVG (Orjinal Play_circle.svg ile birebir aynı oranlar) */}
                 <svg
-                  viewBox="15.5 15.5 180 180"
+                  viewBox="0 0 211 211"
                   className="w-full h-full relative z-10"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -180,7 +180,7 @@ export default function CenteredPlayer() {
                   <path
                     d="M105.5 193.417C154.055 193.417 193.416 154.055 193.416 105.5C193.416 56.945 154.055 17.5834 105.5 17.5834C56.9446 17.5834 17.583 56.945 17.583 105.5C17.583 154.055 56.9446 193.417 105.5 193.417Z"
                     stroke="#FD1D35"
-                    strokeWidth="3"
+                    strokeWidth="4"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     className="group-hover:stroke-[#ff3b52] transition-colors"
@@ -188,7 +188,7 @@ export default function CenteredPlayer() {
                   <path
                     d="M87.9163 70.3334L140.666 105.5L87.9163 140.667V70.3334Z"
                     stroke="#FD1D35"
-                    strokeWidth="3"
+                    strokeWidth="4"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     className="group-hover:stroke-[#ff3b52] transition-colors"
