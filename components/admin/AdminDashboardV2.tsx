@@ -113,7 +113,12 @@ export default function AdminDashboardV2() {
     try {
       const token = await user.getIdToken();
       const response = await fetch("/api/admin/analytics", { headers: { Authorization: `Bearer ${token}` } });
-      const payload = await response.json();
+      const contentType = response.headers.get("content-type") || "";
+      const responseText = await response.text();
+      if (!contentType.includes("application/json")) {
+        throw new Error("Canlı sunucu analytics API yerine HTML sayfası döndürüyor. Yeni build sunucuya alınmamış, Node.js app restart edilmemiş veya /api route'u Next.js'e gitmiyor olabilir.");
+      }
+      const payload = JSON.parse(responseText);
       if (!response.ok) throw new Error(payload.error || "Analytics verisi yüklenemedi.");
       setAnalytics(payload);
     } catch (reason) {
