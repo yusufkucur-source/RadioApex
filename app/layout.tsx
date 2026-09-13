@@ -60,9 +60,9 @@ export const metadata: Metadata = {
     siteName: "Radio Apex",
     images: [
       {
-        url: "/og-image.png?v=2",
-        width: 1024,
-        height: 1024,
+        url: "/twittercard.png?v=2",
+        width: 1200,
+        height: 1200,
         alt: "Radio Apex"
       }
     ],
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
       "Modern online radio experience with curated DJ sets and live lineup.",
     images: [
       {
-        url: "/twittercard.png?v=1",
+        url: "/twittercard.png?v=2",
         width: 1200,
         height: 1200,
         alt: "Radio Apex"
