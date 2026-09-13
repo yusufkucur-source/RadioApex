@@ -1,7 +1,5 @@
 import { createSign } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
-import { cert, getApps, initializeApp } from "firebase-admin/app";
-import { getAuth } from "firebase-admin/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -84,23 +82,28 @@ async function getAccessToken(account: ServiceAccount) {
   return payload.access_token;
 }
 
-async function verifyAdmin(request: NextRequest, account: ServiceAccount) {
+async function verifyAdmin(request: NextRequest) {
   const token = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
   if (!token) return false;
 
-  if (!getApps().length) {
-    if (!account.project_id || !account.client_email || !account.private_key) return false;
-    initializeApp({
-      credential: cert({
-        projectId: account.project_id,
-        clientEmail: account.client_email,
-        privateKey: account.private_key
-      })
-    });
-  }
-
-  await getAuth().verifyIdToken(token);
-  return true;
+  // Firebase Admin SDK, Netlify'nin serverless bundle'ında başlangıç hatası
+  // verebildiği için oturumu Firebase'in kendi Identity Toolkit endpoint'iyle
+  // doğruluyoruz. İstemcinin zaten kullandığı web API anahtarı bu istek için
+  // gereklidir; token geçersizse endpoint kullanıcı döndürmez.
+  const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+  if (!apiKey) return false;
+  const response = await fetch(
+    `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${encodeURIComponent(apiKey)}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ idToken: token }),
+      cache: "no-store"
+    }
+  );
+  if (!response.ok) return false;
+  const payload = (await response.json()) as { users?: unknown[] };
+  return Array.isArray(payload.users) && payload.users.length > 0;
 }
 
 function numberAt(row: { metricValues?: Array<{ value?: string }> } | undefined, index: number) {
@@ -162,7 +165,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    if (!(await verifyAdmin(request, account))) {
+    if (!(await verifyAdmin(request))) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
   } catch {
