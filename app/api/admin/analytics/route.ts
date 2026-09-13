@@ -22,6 +22,7 @@ type AnalyticsSnapshot = {
   devices: Array<{ label: string; value: number }>;
   channels: Array<{ label: string; value: number }>;
   pages: Array<{ label: string; value: number }>;
+  sections: Array<{ label: string; value: number }>;
   generatedAt: string;
 };
 
@@ -115,7 +116,14 @@ type ReportRow = {
   metricValues?: Array<{ value?: string }>;
 };
 
-async function runReport(accessToken: string, propertyId: string, dimension: string, metric: string, limit = 6) {
+async function runReport(
+  accessToken: string,
+  propertyId: string,
+  dimension: string,
+  metric: string,
+  limit = 6,
+  dimensionFilter?: object
+) {
   const response = await fetch(
     `https://analyticsdata.googleapis.com/v1beta/properties/${propertyId}:runReport`,
     {
@@ -125,6 +133,7 @@ async function runReport(accessToken: string, propertyId: string, dimension: str
         dateRanges: [{ startDate: "6daysAgo", endDate: "today" }],
         dimensions: [{ name: dimension }],
         metrics: [{ name: metric }],
+        ...(dimensionFilter ? { dimensionFilter } : {}),
         limit,
         orderBys: [{ metric: { metricName: metric }, desc: true }]
       }),
@@ -207,12 +216,18 @@ export async function GET(request: NextRequest) {
     if (!reportResponse.ok) throw new Error(report.error?.message || "GA4 report could not be loaded.");
 
     const rows = report.rows || [];
-    const [realtimeActiveUsers, countries, devices, channels, pages] = await Promise.all([
+    const [realtimeActiveUsers, countries, devices, channels, pages, sectionEvents] = await Promise.all([
       runRealtimeReport(accessToken, propertyId),
       runReport(accessToken, propertyId, "country", "activeUsers"),
       runReport(accessToken, propertyId, "deviceCategory", "activeUsers", 3),
       runReport(accessToken, propertyId, "sessionDefaultChannelGroup", "sessions"),
-      runReport(accessToken, propertyId, "pagePath", "screenPageViews")
+      runReport(accessToken, propertyId, "pagePath", "screenPageViews"),
+      runReport(accessToken, propertyId, "eventName", "eventCount", 6, {
+        filter: {
+          fieldName: "eventName",
+          stringFilter: { matchType: "BEGINS_WITH", value: "section_view_" }
+        }
+      })
     ]);
     const snapshot: AnalyticsSnapshot = {
       realtimeActiveUsers,
@@ -229,6 +244,10 @@ export async function GET(request: NextRequest) {
       devices,
       channels,
       pages,
+      sections: sectionEvents.map((section) => ({
+        ...section,
+        label: section.label.replace(/^section_view_/, "").replace(/-/g, " ").toUpperCase()
+      })),
       generatedAt: new Date().toISOString()
     };
     cache = { value: snapshot, expiresAt: Date.now() + 60 * 1000 };

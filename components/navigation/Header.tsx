@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import clsx from "clsx";
 import Image from "next/image";
+import { trackAnalyticsEvent } from "@/lib/analytics";
 
 const SECTIONS = [
   { id: "home", label: "HOME" },
@@ -18,6 +19,7 @@ type SectionId = (typeof SECTIONS)[number]["id"];
 function useActiveSection() {
   const [active, setActive] = useState<SectionId>("home");
   const scrollingRef = useRef(false);
+  const viewedSectionsRef = useRef<Set<SectionId>>(new Set());
 
   useEffect(() => {
     // Intersection Observer ile section'ları izle
@@ -28,13 +30,22 @@ function useActiveSection() {
     };
 
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      // Scroll sırasında güncelleme yapma
-      if (scrollingRef.current) return;
-
       // Görünür section'ları bul
       const visibleSections = entries
         .filter(entry => entry.isIntersecting)
         .map(entry => entry.target.id as SectionId);
+
+      // A navigation click temporarily pauses active-state updates, but the
+      // resulting section still needs to be counted as viewed.
+      visibleSections.forEach((sectionId) => {
+        if (!viewedSectionsRef.current.has(sectionId)) {
+          viewedSectionsRef.current.add(sectionId);
+          trackAnalyticsEvent(`section_view_${sectionId}`);
+        }
+      });
+
+      // Scroll sırasında aktif navigasyonu güncelleme yapma
+      if (scrollingRef.current) return;
 
       // Eğer görünür section varsa, ilkini aktif yap
       if (visibleSections.length > 0) {
