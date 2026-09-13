@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import Image from "next/image";
 import EqualizerVisualizer from "./EqualizerVisualizer";
 import { trackAnalyticsEvent } from "@/lib/analytics";
 
@@ -142,61 +141,71 @@ export default function CenteredPlayer() {
         {/* Play Button & Modern Fine Bars Visualizer */}
         <AnimatePresence mode="wait">
           {!isPlaying ? (
-            <m.button
-              key="play-button"
-              onClick={handlePlayPause}
-              className="play-button absolute inset-0 m-auto"
-              style={{
-                width: "250px",
-                height: "250px",
-                filter:
-                  "drop-shadow(0 0 35px rgba(253, 29, 53, 0.65)) drop-shadow(0 0 70px rgba(253, 29, 53, 0.45))",
-                position: "relative",
-                zIndex: 10,
-                pointerEvents: "auto",
-              }}
+            <m.div
+              key="play-button-wrapper"
+              className="absolute inset-0 m-auto flex items-center justify-center pointer-events-auto"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
-              whileHover={{
-                scale: 1.05,
-                filter:
-                  "drop-shadow(0 0 45px rgba(253, 29, 53, 0.85)) drop-shadow(0 0 90px rgba(253, 29, 53, 0.55))",
-              }}
-              whileTap={{ scale: 0.98 }}
-              aria-label={`Yayını Başlat (${quality} kbps)`}
             >
-              {/* Glow Background Layer */}
-              <div
-                className="absolute inset-0 rounded-full pointer-events-none animate-pulse"
+              <button
+                type="button"
+                onClick={handlePlayPause}
+                className="group relative flex items-center justify-center w-full h-full p-0 m-0 bg-transparent border-none cursor-pointer outline-none select-none transition-transform duration-200 hover:scale-105 active:scale-95"
                 style={{
-                  background:
-                    "radial-gradient(circle, rgba(253, 29, 53, 0.3) 0%, rgba(253, 29, 53, 0) 70%)",
-                  filter: "blur(20px)",
-                  transform: "scale(1.2)",
+                  filter:
+                    "drop-shadow(0 0 35px rgba(253, 29, 53, 0.65)) drop-shadow(0 0 70px rgba(253, 29, 53, 0.45))",
                 }}
-              />
+                aria-label={`Yayını Başlat (${quality} kbps)`}
+              >
+                {/* Glow Background Layer */}
+                <div
+                  className="absolute inset-0 rounded-full pointer-events-none animate-pulse"
+                  style={{
+                    background:
+                      "radial-gradient(circle, rgba(253, 29, 53, 0.3) 0%, rgba(253, 29, 53, 0) 70%)",
+                    filter: "blur(20px)",
+                    transform: "scale(1.15)",
+                  }}
+                />
 
-              <Image
-                src="/images/home/Play_circle.svg"
-                alt="Play"
-                width={250}
-                height={250}
-                className="w-full h-full relative z-10"
-                priority
-              />
+                {/* Vector Inline Play SVG (Edge-to-Edge Circle + Centered Triangle) */}
+                <svg
+                  viewBox="15.5 15.5 180 180"
+                  className="w-full h-full relative z-10"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M105.5 193.417C154.055 193.417 193.416 154.055 193.416 105.5C193.416 56.945 154.055 17.5834 105.5 17.5834C56.9446 17.5834 17.583 56.945 17.583 105.5C17.583 154.055 56.9446 193.417 105.5 193.417Z"
+                    stroke="#FD1D35"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="group-hover:stroke-[#ff3b52] transition-colors"
+                  />
+                  <path
+                    d="M87.9163 70.3334L140.666 105.5L87.9163 140.667V70.3334Z"
+                    stroke="#FD1D35"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="group-hover:stroke-[#ff3b52] transition-colors"
+                  />
+                </svg>
 
-              {/* Buffering Indicator */}
-              {isBuffering && (
-                <div className="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-full bg-black/60 backdrop-blur-sm">
-                  <div className="w-12 h-12 border-4 border-white/20 border-t-[#FD1D35] rounded-full animate-spin mb-2" />
-                  <span className="font-antonio text-[10px] tracking-widest text-white uppercase">
-                    CONNECTING...
-                  </span>
-                </div>
-              )}
-            </m.button>
+                {/* Buffering Indicator */}
+                {isBuffering && (
+                  <div className="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-full bg-black/60 backdrop-blur-sm">
+                    <div className="w-12 h-12 border-4 border-white/20 border-t-[#FD1D35] rounded-full animate-spin mb-2" />
+                    <span className="font-antonio text-[10px] tracking-widest text-white uppercase">
+                      CONNECTING...
+                    </span>
+                  </div>
+                )}
+              </button>
+            </m.div>
           ) : (
             <m.div
               key="equalizer-visualizer"
@@ -340,24 +349,10 @@ export default function CenteredPlayer() {
           height: 300px;
         }
 
-        .play-button {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: none;
-          border: none;
-          cursor: pointer;
-          pointer-events: auto;
-        }
-
         @media (max-width: 768px) {
           .player-stage {
             width: 240px;
             height: 240px;
-          }
-          .play-button {
-            width: 190px !important;
-            height: 190px !important;
           }
         }
 
@@ -365,10 +360,6 @@ export default function CenteredPlayer() {
           .player-stage {
             width: 200px;
             height: 200px;
-          }
-          .play-button {
-            width: 150px !important;
-            height: 150px !important;
           }
         }
       `}</style>
