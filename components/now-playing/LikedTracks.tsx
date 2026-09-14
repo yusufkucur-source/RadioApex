@@ -143,11 +143,11 @@ export default function LikedTracks({ title, artist }: Pick<Track, "title" | "ar
         <m.button
           type="button"
           onClick={() => setIsOpen((open) => !open)}
-          initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.65, y: 8, rotate: -12, filter: "blur(2px)" }}
-          animate={{ opacity: 1, scale: 1, y: 0, rotate: 0, filter: "blur(0px)" }}
-          exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.8, y: 4, filter: "blur(2px)" }}
-          transition={{ type: "spring", stiffness: 460, damping: 24, mass: 0.65 }}
-          className="relative inline-flex h-[34px] w-[34px] items-center justify-center rounded-full border border-white/15 bg-black/25 text-white/80 backdrop-blur-sm transition hover:border-[#FD1D35]/70 hover:text-white sm:h-10 sm:w-10"
+          initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.72, y: 6 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.85, y: 3 }}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.24, ease: [0.22, 1, 0.36, 1] }}
+          className="relative inline-flex h-[34px] w-[34px] items-center justify-center rounded-full border border-white/15 bg-black/25 text-white/80 will-change-transform backdrop-blur-sm transition hover:border-[#FD1D35]/70 hover:text-white sm:h-10 sm:w-10"
           aria-label={`Open ${likedTracks.length} liked tracks`}
           aria-expanded={isOpen}
           title="Liked tracks"
