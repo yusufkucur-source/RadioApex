@@ -100,7 +100,7 @@ export default function LikedTracks({ title, artist }: Pick<Track, "title" | "ar
           disabled={!isReady || !title.trim()}
           aria-label={isLiked ? "Remove from liked tracks" : "Like this track"}
           aria-pressed={isLiked}
-          className="inline-flex h-10 w-[122px] items-center justify-center gap-2 rounded-full border border-white/15 bg-black/25 px-4 text-[11px] font-medium uppercase tracking-[0.16em] text-white/80 backdrop-blur-sm transition hover:border-[#FD1D35]/70 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex h-[34px] w-[104px] items-center justify-center gap-1.5 rounded-full border border-white/15 bg-black/25 px-3 text-[10px] font-medium uppercase tracking-[0.14em] text-white/80 backdrop-blur-sm transition hover:border-[#FD1D35]/70 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 sm:h-10 sm:w-[122px] sm:gap-2 sm:px-4 sm:text-[11px] sm:tracking-[0.16em]"
         >
           <AnimatePresence mode="wait" initial={false}>
             <m.span
@@ -111,7 +111,7 @@ export default function LikedTracks({ title, artist }: Pick<Track, "title" | "ar
               transition={{ duration: shouldReduceMotion ? 0 : 0.18, ease: [0.22, 1, 0.36, 1] }}
               className="flex items-center gap-2"
             >
-              <Heart className={`h-4 w-4 ${isLiked ? "fill-[#FD1D35] text-[#FD1D35]" : "text-white"}`} />
+              <Heart className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${isLiked ? "fill-[#FD1D35] text-[#FD1D35]" : "text-white"}`} />
               {isLiked ? "Liked" : "Like"}
             </m.span>
           </AnimatePresence>
@@ -142,12 +142,12 @@ export default function LikedTracks({ title, artist }: Pick<Track, "title" | "ar
         <button
           type="button"
           onClick={() => setIsOpen((open) => !open)}
-          className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-black/25 text-white/80 backdrop-blur-sm transition hover:border-[#FD1D35]/70 hover:text-white"
+          className="relative inline-flex h-[34px] w-[34px] items-center justify-center rounded-full border border-white/15 bg-black/25 text-white/80 backdrop-blur-sm transition hover:border-[#FD1D35]/70 hover:text-white sm:h-10 sm:w-10"
           aria-label={`Open ${likedTracks.length} liked tracks`}
           aria-expanded={isOpen}
           title="Liked tracks"
         >
-          <Music className="h-4 w-4" />
+          <Music className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#FD1D35] px-1 text-[9px] font-bold text-white">
             {likedTracks.length}
           </span>
