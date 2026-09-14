@@ -8,6 +8,7 @@ import CenteredPlayer from "@/components/audio/CenteredPlayer";
 import { NowPlayingProvider, useNowPlaying } from "@/components/now-playing/NowPlayingProvider";
 import { Button } from "@/components/ui/button";
 import { Instagram, Twitter, Music } from "lucide-react";
+import LikedTracks from "@/components/now-playing/LikedTracks";
 import DjSection from "@/components/sections/DjSection";
 import LineupSection from "@/components/sections/LineupSection";
 import AboutSection from "@/components/sections/AboutSection";
@@ -230,6 +231,11 @@ function HomeContent() {
              >
 {(nowPlaying.artist?.trim() || "RADIO APEX").toLocaleUpperCase('en-US')}
              </m.div>
+
+             <LikedTracks
+               title={nowPlaying.title?.trim() || ""}
+               artist={nowPlaying.artist?.trim() || "RADIO APEX"}
+             />
 
            </m.div>
 
