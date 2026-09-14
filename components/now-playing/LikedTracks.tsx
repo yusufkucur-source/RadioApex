@@ -92,8 +92,16 @@ export default function LikedTracks({ title, artist }: Pick<Track, "title" | "ar
 
   return (
     <div className="relative z-40 flex flex-col items-center gap-2">
-      <div className="flex items-center gap-2">
-      <div className="relative">
+      <m.div
+        layout
+        transition={{ duration: shouldReduceMotion ? 0 : 0.26, ease: [0.22, 1, 0.36, 1] }}
+        className="flex items-center gap-2"
+      >
+      <m.div
+        layout="position"
+        transition={{ duration: shouldReduceMotion ? 0 : 0.26, ease: [0.22, 1, 0.36, 1] }}
+        className="relative"
+      >
         <button
           type="button"
           onClick={toggleCurrentTrack}
@@ -137,7 +145,7 @@ export default function LikedTracks({ title, artist }: Pick<Track, "title" | "ar
             })}
           </span>
         )}
-      </div>
+      </m.div>
       <AnimatePresence initial={false}>
       {likedTracks.length > 0 && (
         <m.button
@@ -159,7 +167,7 @@ export default function LikedTracks({ title, artist }: Pick<Track, "title" | "ar
         </m.button>
       )}
       </AnimatePresence>
-      </div>
+      </m.div>
 
       <AnimatePresence>
         {isOpen && (
