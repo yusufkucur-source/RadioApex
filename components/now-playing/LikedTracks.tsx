@@ -69,6 +69,7 @@ export default function LikedTracks({ title, artist }: Pick<Track, "title" | "ar
   const updateTracks = (nextTracks: Track[]) => {
     setLikedTracks(nextTracks);
     saveLikedTracks(nextTracks);
+    if (nextTracks.length === 0) setIsOpen(false);
   };
 
   const toggleCurrentTrack = () => {
@@ -92,37 +93,39 @@ export default function LikedTracks({ title, artist }: Pick<Track, "title" | "ar
 
   return (
     <div className="relative z-40 flex flex-col items-center gap-2">
-      <m.div
-        layout
-        transition={{ duration: shouldReduceMotion ? 0 : 0.26, ease: [0.22, 1, 0.36, 1] }}
-        className="flex items-center gap-2"
+      <div
+        className={`flex items-center gap-2 will-change-transform transition-transform ${
+          likedTracks.length > 0 ? "translate-x-0" : "translate-x-[21px] sm:translate-x-6"
+        }`}
+        style={{
+          transitionDuration: shouldReduceMotion ? "0ms" : "360ms",
+          transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
+        }}
       >
-      <m.div
-        layout="position"
-        transition={{ duration: shouldReduceMotion ? 0 : 0.26, ease: [0.22, 1, 0.36, 1] }}
-        className="relative"
-      >
+      <div className="relative">
         <button
           type="button"
           onClick={toggleCurrentTrack}
           disabled={!isReady || !title.trim()}
           aria-label={isLiked ? "Remove from liked tracks" : "Like this track"}
           aria-pressed={isLiked}
-          className="inline-flex h-[34px] w-[104px] items-center justify-center gap-1.5 rounded-full border border-white/15 bg-black/25 px-3 text-[10px] font-medium uppercase tracking-[0.14em] text-white/80 backdrop-blur-sm transition hover:border-[#FD1D35]/70 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 sm:h-10 sm:w-[122px] sm:gap-2 sm:px-4 sm:text-[11px] sm:tracking-[0.16em]"
+          className="inline-flex h-[34px] w-[104px] items-center justify-center gap-1.5 rounded-full border border-white/15 bg-black/40 px-3 text-[10px] font-medium uppercase tracking-[0.14em] text-white/80 transition-colors hover:border-[#FD1D35]/70 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 sm:h-10 sm:w-[122px] sm:gap-2 sm:px-4 sm:text-[11px] sm:tracking-[0.16em]"
         >
-          <AnimatePresence mode="wait" initial={false}>
-            <m.span
-              key={isLiked ? "liked" : "like"}
-              initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.55, rotate: -18, filter: "blur(2px)" }}
-              animate={{ opacity: 1, scale: 1, rotate: 0, filter: "blur(0px)" }}
-              exit={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.55, rotate: 18, filter: "blur(2px)" }}
-              transition={{ duration: shouldReduceMotion ? 0 : 0.18, ease: [0.22, 1, 0.36, 1] }}
-              className="flex items-center gap-2"
-            >
-              <Heart className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${isLiked ? "fill-[#FD1D35] text-[#FD1D35]" : "text-white"}`} />
-              {isLiked ? "Liked" : "Like"}
-            </m.span>
-          </AnimatePresence>
+          <m.span
+            initial={false}
+            animate={
+              shouldReduceMotion
+                ? undefined
+                : isLiked
+                  ? { scale: [1, 1.12, 1], rotate: [0, -3, 0] }
+                  : { scale: [1, 0.96, 1], rotate: 0 }
+            }
+            transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+            className="flex items-center gap-2"
+          >
+            <Heart className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${isLiked ? "fill-[#FD1D35] text-[#FD1D35]" : "text-white"}`} />
+            {isLiked ? "Liked" : "Like"}
+          </m.span>
         </button>
         {!shouldReduceMotion && burstId > 0 && (
           <span aria-hidden="true" className="pointer-events-none absolute inset-0">
@@ -145,9 +148,10 @@ export default function LikedTracks({ title, artist }: Pick<Track, "title" | "ar
             })}
           </span>
         )}
-      </m.div>
+      </div>
+      <div className="relative h-[34px] w-[34px] shrink-0 sm:h-10 sm:w-10">
       <AnimatePresence initial={false}>
-      {likedTracks.length > 0 && (
+        {likedTracks.length > 0 && (
         <m.button
           type="button"
           onClick={() => setIsOpen((open) => !open)}
@@ -155,7 +159,7 @@ export default function LikedTracks({ title, artist }: Pick<Track, "title" | "ar
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.85, y: 3 }}
           transition={{ duration: shouldReduceMotion ? 0 : 0.24, ease: [0.22, 1, 0.36, 1] }}
-          className="relative inline-flex h-[34px] w-[34px] items-center justify-center rounded-full border border-white/15 bg-black/25 text-white/80 will-change-transform backdrop-blur-sm transition hover:border-[#FD1D35]/70 hover:text-white sm:h-10 sm:w-10"
+          className="absolute inset-0 inline-flex items-center justify-center rounded-full border border-white/15 bg-black/40 text-white/80 will-change-transform transition-colors hover:border-[#FD1D35]/70 hover:text-white"
           aria-label={`Open ${likedTracks.length} liked tracks`}
           aria-expanded={isOpen}
           title="Liked tracks"
@@ -165,18 +169,19 @@ export default function LikedTracks({ title, artist }: Pick<Track, "title" | "ar
             {likedTracks.length}
           </span>
         </m.button>
-      )}
+        )}
       </AnimatePresence>
-      </m.div>
+      </div>
+      </div>
 
       <AnimatePresence>
         {isOpen && (
         <m.div
-          initial={shouldReduceMotion ? false : { opacity: 0, y: -8, scale: 0.96, filter: "blur(5px)" }}
-          animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-          exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -5, scale: 0.98, filter: "blur(3px)" }}
-          transition={{ duration: shouldReduceMotion ? 0 : 0.22, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute top-full mt-2 w-[min(90vw,360px)] origin-top overflow-hidden rounded-2xl border border-white/10 bg-[#111217]/95 text-left shadow-2xl backdrop-blur-xl"
+          initial={shouldReduceMotion ? false : { opacity: 0, y: -8, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -5, scale: 0.98 }}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.26, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute top-full mt-2 w-[min(90vw,360px)] origin-top overflow-hidden rounded-2xl border border-white/10 bg-[#111217]/95 text-left shadow-2xl will-change-transform"
         >
           <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
             <span className="text-xs font-medium uppercase tracking-[0.14em] text-white/70">Liked tracks</span>
