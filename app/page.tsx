@@ -161,7 +161,7 @@ function HomeContent() {
         {/* HOME SECTION - İlk içerik */}
         <section
           id="home"
-          className="scroll-snap-start relative flex min-h-screen items-center justify-center overflow-hidden text-white"
+          className="scroll-snap-start relative flex min-h-[100dvh] h-[100dvh] items-center justify-center overflow-hidden text-white"
         >
            {/* Gradient Ellipse - Sayfanın tam merkezinde, scroll ile kaybolur */}
            <div
@@ -179,7 +179,7 @@ function HomeContent() {
              className="absolute left-0 right-0 z-30 flex flex-col items-center px-4 parallax-element pointer-events-none"
              style={{ 
                y: contentY,
-               bottom: "calc(50% + (var(--player-stage-size, 300px) * 0.5) + clamp(14px, 2.5vh, 24px))"
+               bottom: "calc(50% + (var(--player-stage-size, 300px) * 0.5) + clamp(30px, 5vh, 48px))"
              }}
            >
              {/* LIVE Eyebrow */}
@@ -188,15 +188,15 @@ function HomeContent() {
                whileInView={{ opacity: 1, y: 0 }}
                viewport={{ once: true, margin: "-20%" }}
                transition={{ duration: 0.6 }}
-               className="font-antonio inline-flex items-center gap-1.5 xs:gap-2 sm:gap-3 rounded-full border border-white/10 bg-white/5 px-2 xs:px-2.5 sm:px-3 py-0.5 sm:py-1 text-[8px] xs:text-[9px] sm:text-[11px] uppercase tracking-[0.45em] text-white/60 mb-2 xs:mb-2.5 sm:mb-3 md:mb-3.5"
+               className="font-antonio inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-2.5 xs:px-3 py-1 text-[9px] xs:text-[10px] sm:text-[11px] uppercase tracking-[0.45em] text-white/60 mb-2 xs:mb-2.5 sm:mb-3 md:mb-3.5"
              >
-               <span className="h-1 w-1 rounded-full bg-[#FD1D35]" />
+               <span className="h-1.5 w-1.5 rounded-full bg-[#FD1D35]" />
                LIVE
              </m.span>
 
              {/* Şarkı Başlığı */}
              <m.div 
-               className="font-roboto text-[13px] xs:text-[15px] sm:text-[19px] md:text-[24px] lg:text-[28px] mb-1 xs:mb-1.5 sm:mb-2 motion-element text-center max-w-[90vw] sm:whitespace-nowrap pointer-events-auto"
+               className="font-roboto text-[18px] xs:text-[21px] sm:text-[24px] md:text-[28px] lg:text-[32px] mb-1 xs:mb-1.5 sm:mb-2 motion-element text-center max-w-[90vw] sm:whitespace-nowrap pointer-events-auto"
                style={{
                  fontStyle: "normal",
                  fontWeight: 500,
@@ -219,7 +219,7 @@ function HomeContent() {
 
              {/* Sanatçı Adı */}
              <m.div 
-               className="font-roboto text-[9px] xs:text-[11px] sm:text-[13px] md:text-[15px] lg:text-[16px] mb-2.5 xs:mb-3 sm:mb-3.5 motion-element text-center max-w-[90vw] sm:whitespace-nowrap pointer-events-auto"
+               className="font-roboto text-[12px] xs:text-[13px] sm:text-[14px] md:text-[16px] mb-2.5 xs:mb-3 sm:mb-3.5 motion-element text-center max-w-[90vw] sm:whitespace-nowrap pointer-events-auto"
                style={{
                  fontStyle: "normal",
                  fontWeight: 400,
@@ -295,9 +295,9 @@ function HomeContent() {
         
          {/* SABİT FOOTER VE SOSYAL MEDYA */}
          <div className="fixed bottom-0 left-0 right-0 z-40 pointer-events-none">
-           {/* Sosyal Medya İkonları */}
+           {/* Sosyal Medya İkonları - Footer üstünde net ve temiz boşluk */}
            <m.div 
-             className="flex items-center justify-center gap-2.5 xs:gap-3 sm:gap-4 pb-14 xs:pb-16 md:pb-20 lg:pb-24 pointer-events-auto"
+             className="flex items-center justify-center gap-2.5 xs:gap-3 sm:gap-4 pb-[82px] xs:pb-[88px] sm:pb-[94px] md:pb-[102px] lg:pb-[110px] pointer-events-auto"
              initial={{ opacity: 0, y: 20 }}
              animate={{ opacity: 1, y: 0 }}
              transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
@@ -329,7 +329,7 @@ function HomeContent() {
                  </m.div>
                );
              })}
-           </m.div>
+            </m.div>
            
            <Footer />
          </div>
