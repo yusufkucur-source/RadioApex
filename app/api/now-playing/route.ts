@@ -6,6 +6,7 @@ import {
   Timestamp,
   type Firestore
 } from "firebase-admin/firestore";
+import { cleanTrackText, isUnknownTrackText } from "@/lib/utils";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -124,15 +125,18 @@ function normalizeTrackText(value?: string) {
 }
 
 function normalizeSong(song?: AzuraCastSong): SongHistoryItem {
-  const text = normalizeTrackText(
+  const text = cleanTrackText(
     song?.text || [song?.artist, song?.title].filter(Boolean).join(" - ")
   );
   const [fallbackArtist = "", ...fallbackTitleParts] = text.split(" - ");
   const fallbackTitle = fallbackTitleParts.join(" - ");
 
+  const rawTitle = song?.title || fallbackTitle || text;
+  const rawArtist = song?.artist || fallbackArtist;
+
   return {
-    title: normalizeTrackText(song?.title || fallbackTitle || text || "Unknown"),
-    artist: normalizeTrackText(song?.artist || fallbackArtist || "")
+    title: cleanTrackText(rawTitle),
+    artist: cleanTrackText(rawArtist)
   };
 }
 
@@ -147,7 +151,8 @@ function isRecordableTrack(track: SongHistoryItem) {
 
   return Boolean(
     track.title &&
-      title !== "unknown" &&
+      !isUnknownTrackText(track.title) &&
+      !isUnknownTrackText(track.artist) &&
       title !== "radio apex live" &&
       !(title === "radio apex" && artist === "radio apex")
   );
@@ -337,8 +342,8 @@ export async function GET() {
     // Şarkı bilgilerini parse et (eski HTML mantığı)
     const song = data?.now_playing?.song || {};
     const currentSong = normalizeSong(song);
-    const title = currentSong.title || "Radio Apex Live";
-    const artist = currentSong.artist || "";
+    const title = cleanTrackText(currentSong.title);
+    const artist = cleanTrackText(currentSong.artist);
     const currentTrack: CurrentTrack = {
       artist,
       coverArt: song.art || null,
@@ -368,8 +373,8 @@ export async function GET() {
     }
 
     const payload: NowPlayingPayload = {
-      title: title.trim() || "Radio Apex Live",
-      artist: artist.trim() || "",
+      title: title.trim(),
+      artist: artist.trim(),
       isLive,
       coverArt: song.art || null,
       elapsed: data?.now_playing?.elapsed || 0,
@@ -391,7 +396,7 @@ export async function GET() {
     return NextResponse.json(
       {
         title: "",
-        artist: "RADIO APEX",
+        artist: "",
         isLive: true,
         coverArt: null,
         elapsed: 0,

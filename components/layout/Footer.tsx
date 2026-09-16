@@ -2,20 +2,33 @@
 
 import { m } from "framer-motion";
 import { useNowPlaying } from "@/components/now-playing/NowPlayingProvider";
+import { isUnknownTrackText } from "@/lib/utils";
 
 export default function Footer() {
   const { nowPlaying, isLoading } = useNowPlaying();
 
-  const displayText = isLoading
-    ? "RADIO APEX - LIVE"
-    : `${(nowPlaying.artist?.trim() || "RADIO APEX").toLocaleUpperCase('en-US')} · ${(nowPlaying.title?.trim() || "").toLocaleUpperCase('en-US')}`;
+  const title = !isUnknownTrackText(nowPlaying.title) ? nowPlaying.title.trim() : "";
+  const artist = !isUnknownTrackText(nowPlaying.artist) ? nowPlaying.artist.trim() : "";
+
+  let trackInfo = "";
+  if (artist && title) {
+    trackInfo = `${artist.toLocaleUpperCase('en-US')} · ${title.toLocaleUpperCase('en-US')}`;
+  } else if (title) {
+    trackInfo = title.toLocaleUpperCase('en-US');
+  } else if (artist && artist.toLowerCase() !== "radio apex") {
+    trackInfo = artist.toLocaleUpperCase('en-US');
+  }
 
   // Optimize: Create content once and reuse
   const marqueeContent = (
     <>
-      <span className="text-[#FD1D35]">*NOW PLAYING: </span>
-      <span className="text-white">{displayText}</span>
-      <span className="inline-block w-8" />
+      {trackInfo ? (
+        <>
+          <span className="text-[#FD1D35]">*NOW PLAYING: </span>
+          <span className="text-white">{trackInfo}</span>
+          <span className="inline-block w-8" />
+        </>
+      ) : null}
       <span className="text-white">*WELCOME TO RADIO APEX. 100% DANCE MUSIC STATION*</span>
       <span className="inline-block w-8" />
     </>

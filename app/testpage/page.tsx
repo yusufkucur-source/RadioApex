@@ -7,6 +7,7 @@ import Header from "@/components/navigation/Header";
 import Footer from "@/components/layout/Footer";
 import CenteredPlayer from "@/components/audio/CenteredPlayer";
 import { NowPlayingProvider, useNowPlaying } from "@/components/now-playing/NowPlayingProvider";
+import { isUnknownTrackText } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Instagram, Twitter, Music } from "lucide-react";
 import LogoAnimation from "@/components/graphics/LogoAnimation";
@@ -256,27 +257,27 @@ function TestPageContent() {
                    "0 0 30px rgba(253, 29, 53, 1), 0 0 60px rgba(253, 29, 53, 0.8), 0 0 90px rgba(253, 29, 53, 0.6), 0 0 120px rgba(253, 29, 53, 0.4)"
                  ]
                }}
-             >
-{(nowPlaying.title?.trim() || "").toLocaleUpperCase('en-US')}
-             </m.div>
+              >
+                {!isUnknownTrackText(nowPlaying.title) ? nowPlaying.title.trim().toLocaleUpperCase('en-US') : ""}
+              </m.div>
 
-             {/* Sanatçı Adı */}
-             <m.div 
-               className="font-roboto text-[10px] xs:text-[12px] sm:text-[14px] md:text-[16px] mb-8 motion-element text-center max-w-[90vw] sm:whitespace-nowrap"
-               style={{
-                 fontStyle: "normal",
-                 fontWeight: 400,
-                 lineHeight: "1.2",
-                 letterSpacing: "0.1em",
-                 color: "#FFFFFF"
-               }}
-               initial={{ opacity: 0, y: 20 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true }}
-               transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-             >
-{(nowPlaying.artist?.trim() || "RADIO APEX").toLocaleUpperCase('en-US')}
-             </m.div>
+              {/* Sanatçı Adı */}
+              <m.div 
+                className="font-roboto text-[10px] xs:text-[12px] sm:text-[14px] md:text-[16px] mb-8 motion-element text-center max-w-[90vw] sm:whitespace-nowrap"
+                style={{
+                  fontStyle: "normal",
+                  fontWeight: 400,
+                  lineHeight: "1.2",
+                  letterSpacing: "0.1em",
+                  color: "#FFFFFF"
+                }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+              >
+                {!isUnknownTrackText(nowPlaying.artist) ? nowPlaying.artist.trim().toLocaleUpperCase('en-US') : ""}
+              </m.div>
 
            </m.div>
 

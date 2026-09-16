@@ -1,4 +1,4 @@
-"use client";
+"use client";
 
 import {
   createContext,
@@ -8,6 +8,7 @@ import {
   useMemo,
   useState
 } from "react";
+import { isUnknownTrackText } from "@/lib/utils";
 
 export type SongHistoryItem = {
   title: string;
@@ -58,7 +59,7 @@ const AZURACAST_NOW_PLAYING_URL =
 
 const defaultState: NowPlayingPayload = {
   title: "",
-  artist: "RADIO APEX",
+  artist: "",
   isLive: true,
   coverArt: null,
   elapsed: 0,
@@ -96,9 +97,12 @@ function normalizeAzuraSong(song?: AzuraCastSong): SongHistoryItem {
   const [fallbackArtist = "", ...fallbackTitleParts] = text.split(" - ");
   const fallbackTitle = fallbackTitleParts.join(" - ");
 
+  const rawTitle = song?.title || fallbackTitle || text;
+  const rawArtist = song?.artist || fallbackArtist;
+
   return {
-    title: normalizeTrackText(song?.title || fallbackTitle || text),
-    artist: normalizeTrackText(song?.artist || fallbackArtist || "RADIO APEX")
+    title: isUnknownTrackText(rawTitle) ? "" : normalizeTrackText(rawTitle),
+    artist: isUnknownTrackText(rawArtist) ? "" : normalizeTrackText(rawArtist)
   };
 }
 
@@ -120,8 +124,10 @@ function parseAzuraNowPlaying(data: AzuraCastResponse): NowPlayingPayload {
     duration: data.now_playing?.duration || 0,
     listeners: listenerCount,
     songHistory:
-      data.song_history?.slice(0, 5).map((item) => normalizeAzuraSong(item.song)) ??
-      []
+      data.song_history
+        ?.slice(0, 5)
+        .map((item) => normalizeAzuraSong(item.song))
+        .filter((song) => Boolean(song.title)) ?? []
   };
 }
 
@@ -133,15 +139,20 @@ async function fetchNowPlaying(): Promise<NowPlayingPayload> {
     }
     const data = (await response.json()) as Partial<NowPlayingPayload>;
     
-    // Türkçe karakterleri kaldır
+    // Türkçe karakterleri kaldır ve unknown kontrolü yap
+    const rawTitle = data.title ? removeTurkishCharacters(data.title) : "";
+    const rawArtist = data.artist ? removeTurkishCharacters(data.artist) : "";
+
     const normalizedData = {
       ...data,
-      title: data.title ? removeTurkishCharacters(data.title) : defaultState.title,
-      artist: data.artist ? removeTurkishCharacters(data.artist) : defaultState.artist,
-      songHistory: data.songHistory?.map(song => ({
-        title: removeTurkishCharacters(song.title),
-        artist: removeTurkishCharacters(song.artist)
-      })) || []
+      title: isUnknownTrackText(rawTitle) ? "" : rawTitle.trim(),
+      artist: isUnknownTrackText(rawArtist) ? "" : rawArtist.trim(),
+      songHistory: (data.songHistory || [])
+        .map(song => ({
+          title: isUnknownTrackText(song.title) ? "" : removeTurkishCharacters(song.title).trim(),
+          artist: isUnknownTrackText(song.artist) ? "" : removeTurkishCharacters(song.artist).trim()
+        }))
+        .filter(song => Boolean(song.title))
     };
     
     return {

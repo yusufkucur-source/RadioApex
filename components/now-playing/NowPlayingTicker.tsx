@@ -2,17 +2,28 @@
 
 import { useMemo } from "react";
 import { useNowPlaying } from "@/components/now-playing/NowPlayingProvider";
+import { isUnknownTrackText } from "@/lib/utils";
 
 export default function NowPlayingTicker() {
   const { nowPlaying, isLoading } = useNowPlaying();
 
-  const text = useMemo(() => {
+  const displayText = useMemo(() => {
     if (isLoading) {
-      return "*NOW PLAYING: RADIO APEX - YAYIN YUKLENIYOR";
+      return "RADIO APEX - YAYIN YUKLENIYOR";
     }
-    const artist = nowPlaying.artist?.trim() || "RADIO APEX";
-    const title = nowPlaying.title?.trim() || "";
-    return `*NOW PLAYING: ${artist.toUpperCase()} - ${title.toUpperCase()}`;
+    const artist = !isUnknownTrackText(nowPlaying.artist) ? nowPlaying.artist.trim().toUpperCase() : "";
+    const title = !isUnknownTrackText(nowPlaying.title) ? nowPlaying.title.trim().toUpperCase() : "";
+
+    if (artist && title) {
+      return `${artist} - ${title}`;
+    }
+    if (title) {
+      return title;
+    }
+    if (artist && artist !== "RADIO APEX") {
+      return artist;
+    }
+    return "";
   }, [isLoading, nowPlaying]);
 
   return (
@@ -23,11 +34,14 @@ export default function NowPlayingTicker() {
         <span className="animate-marquee flex min-w-full items-center gap-20">
           {Array.from({ length: 4 }).map((_, index) => (
             <span key={index} className="flex items-center gap-4">
-              <span className="text-[#f04868]">*NOW PLAYING:</span>
-              <span className="text-white">
-                {isLoading ? "RADIO APEX - YAYIN YUKLENIYOR" : 
-                 `${(nowPlaying.artist?.trim() || "RADIO APEX").toUpperCase()} - ${(nowPlaying.title?.trim() || "").toUpperCase()}`}
-              </span>
+              {displayText ? (
+                <>
+                  <span className="text-[#f04868]">*NOW PLAYING:</span>
+                  <span className="text-white">{displayText}</span>
+                </>
+              ) : (
+                <span className="text-white">*WELCOME TO RADIO APEX*</span>
+              )}
             </span>
           ))}
         </span>
@@ -37,11 +51,14 @@ export default function NowPlayingTicker() {
         >
           {Array.from({ length: 4 }).map((_, index) => (
             <span key={index} className="flex items-center gap-4">
-              <span className="text-[#f04868]">*NOW PLAYING:</span>
-              <span className="text-white">
-                {isLoading ? "RADIO APEX - YAYIN YUKLENIYOR" : 
-                 `${(nowPlaying.artist?.trim() || "RADIO APEX").toUpperCase()} - ${(nowPlaying.title?.trim() || "").toUpperCase()}`}
-              </span>
+              {displayText ? (
+                <>
+                  <span className="text-[#f04868]">*NOW PLAYING:</span>
+                  <span className="text-white">{displayText}</span>
+                </>
+              ) : (
+                <span className="text-white">*WELCOME TO RADIO APEX*</span>
+              )}
             </span>
           ))}
         </span>

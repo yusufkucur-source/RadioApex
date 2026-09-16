@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { m } from "framer-motion";
 import { useNowPlaying } from "@/components/now-playing/NowPlayingProvider";
+import { isUnknownTrackText } from "@/lib/utils";
 
 const STREAM_URL =
   process.env.NEXT_PUBLIC_STREAM_URL ??
@@ -60,7 +61,9 @@ export default function RadioPlayer() {
     if (isLoading) {
       return "Yayın hazırlanıyor";
     }
-    return nowPlaying.title?.trim() || "Radio Apex Live";
+    const clean = nowPlaying.title?.trim();
+    if (!clean || isUnknownTrackText(clean)) return "";
+    return clean;
   }, [hasError, isLoading, nowPlaying.title]);
 
   const displayArtist = useMemo(() => {
@@ -70,7 +73,9 @@ export default function RadioPlayer() {
     if (isLoading) {
       return "Radio Apex";
     }
-    return nowPlaying.artist?.trim() || "Radio Apex";
+    const clean = nowPlaying.artist?.trim();
+    if (!clean || isUnknownTrackText(clean)) return "";
+    return clean;
   }, [hasError, isLoading, nowPlaying.artist]);
 
   const statusLabel = useMemo(() => {

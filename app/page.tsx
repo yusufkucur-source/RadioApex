@@ -9,6 +9,7 @@ import { NowPlayingProvider, useNowPlaying } from "@/components/now-playing/NowP
 import { Button } from "@/components/ui/button";
 import { Instagram, Twitter, Music } from "lucide-react";
 import LikedTracks from "@/components/now-playing/LikedTracks";
+import { isUnknownTrackText } from "@/lib/utils";
 import DjSection from "@/components/sections/DjSection";
 import LineupSection from "@/components/sections/LineupSection";
 import AboutSection from "@/components/sections/AboutSection";
@@ -48,6 +49,14 @@ const whiteDots = Array.from({ length: 15 }, (_, index) => ({
 
 function HomeContent() {
   const { nowPlaying, isLoading } = useNowPlaying();
+  
+  const displayTitle = !isUnknownTrackText(nowPlaying.title)
+    ? nowPlaying.title.trim().toLocaleUpperCase('en-US')
+    : "";
+  const displayArtist = !isUnknownTrackText(nowPlaying.artist)
+    ? nowPlaying.artist.trim().toLocaleUpperCase('en-US')
+    : "";
+
   // Scroll hook'ları
   const { scrollY } = useScroll();
   
@@ -195,52 +204,58 @@ function HomeContent() {
              </m.span>
 
               {/* Şarkı Başlığı */}
-              <m.div 
-                className="font-roboto text-[22px] xs:text-[25px] sm:text-[28px] md:text-[30px] lg:text-[34px] mb-0.5 xs:mb-1 motion-element text-center max-w-[90vw] sm:whitespace-nowrap pointer-events-auto"
-                style={{
-                  fontStyle: "normal",
-                  fontWeight: 600,
-                  lineHeight: "1.2",
-                  letterSpacing: "0.08em",
-                  color: "#FD1D35",
-                  textShadow: "0 0 40px rgba(253, 29, 53, 0.75), 0 0 80px rgba(253, 29, 53, 0.45)"
-                }}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ 
-                  duration: 1, 
-                  delay: 0.2, 
-                  ease: "easeOut"
-                }}
-              >
-                {(nowPlaying.title?.trim() || "").toLocaleUpperCase('en-US')}
-              </m.div>
+              {displayTitle ? (
+                <m.div 
+                  className="font-roboto text-[22px] xs:text-[25px] sm:text-[28px] md:text-[30px] lg:text-[34px] mb-0.5 xs:mb-1 motion-element text-center max-w-[90vw] sm:whitespace-nowrap pointer-events-auto"
+                  style={{
+                    fontStyle: "normal",
+                    fontWeight: 600,
+                    lineHeight: "1.2",
+                    letterSpacing: "0.08em",
+                    color: "#FD1D35",
+                    textShadow: "0 0 40px rgba(253, 29, 53, 0.75), 0 0 80px rgba(253, 29, 53, 0.45)"
+                  }}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ 
+                    duration: 1, 
+                    delay: 0.2, 
+                    ease: "easeOut"
+                  }}
+                >
+                  {displayTitle}
+                </m.div>
+              ) : null}
 
               {/* Sanatçı Adı */}
-              <m.div 
-                className="font-roboto text-[13px] xs:text-[14px] sm:text-[15px] md:text-[16px] lg:text-[17px] mb-2 xs:mb-2.5 sm:mb-3 motion-element text-center max-w-[90vw] sm:whitespace-nowrap pointer-events-auto"
-                style={{
-                  fontStyle: "normal",
-                  fontWeight: 400,
-                  lineHeight: "1.2",
-                  letterSpacing: "0.08em",
-                  color: "rgba(255, 255, 255, 0.9)"
-                }}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-              >
-                {(nowPlaying.artist?.trim() || "RADIO APEX").toLocaleUpperCase('en-US')}
-              </m.div>
+              {displayArtist ? (
+                <m.div 
+                  className="font-roboto text-[13px] xs:text-[14px] sm:text-[15px] md:text-[16px] lg:text-[17px] mb-2 xs:mb-2.5 sm:mb-3 motion-element text-center max-w-[90vw] sm:whitespace-nowrap pointer-events-auto"
+                  style={{
+                    fontStyle: "normal",
+                    fontWeight: 400,
+                    lineHeight: "1.2",
+                    letterSpacing: "0.08em",
+                    color: "rgba(255, 255, 255, 0.9)"
+                  }}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+                >
+                  {displayArtist}
+                </m.div>
+              ) : null}
 
-             <div className="pointer-events-auto">
-               <LikedTracks
-                 title={nowPlaying.title?.trim() || ""}
-                 artist={nowPlaying.artist?.trim() || "RADIO APEX"}
-               />
-             </div>
+              {displayTitle ? (
+                <div className="pointer-events-auto">
+                  <LikedTracks
+                    title={displayTitle}
+                    artist={displayArtist || "RADIO APEX"}
+                  />
+                </div>
+              ) : null}
 
            </m.div>
 
