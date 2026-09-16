@@ -194,46 +194,46 @@ function HomeContent() {
                LIVE
              </m.span>
 
-             {/* Şarkı Başlığı */}
-             <m.div 
-               className="font-roboto text-[16px] xs:text-[18px] sm:text-[22px] md:text-[26px] lg:text-[30px] mb-0.5 xs:mb-1 sm:mb-1.5 motion-element text-center max-w-[90vw] sm:whitespace-nowrap pointer-events-auto"
-               style={{
-                 fontStyle: "normal",
-                 fontWeight: 500,
-                 lineHeight: "1.2",
-                 letterSpacing: "0.1em",
-                 color: "#FD1D35",
-                 textShadow: "0 0 40px rgba(253, 29, 53, 0.75), 0 0 80px rgba(253, 29, 53, 0.45)"
-               }}
-               initial={{ opacity: 0, y: 20 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true }}
-               transition={{ 
-                 duration: 1, 
-                 delay: 0.2, 
-                 ease: "easeOut"
-               }}
-             >
-{(nowPlaying.title?.trim() || "").toLocaleUpperCase('en-US')}
-             </m.div>
+              {/* Şarkı Başlığı */}
+              <m.div 
+                className="font-roboto text-[22px] xs:text-[25px] sm:text-[28px] md:text-[30px] lg:text-[34px] mb-0.5 xs:mb-1 motion-element text-center max-w-[90vw] sm:whitespace-nowrap pointer-events-auto"
+                style={{
+                  fontStyle: "normal",
+                  fontWeight: 600,
+                  lineHeight: "1.2",
+                  letterSpacing: "0.08em",
+                  color: "#FD1D35",
+                  textShadow: "0 0 40px rgba(253, 29, 53, 0.75), 0 0 80px rgba(253, 29, 53, 0.45)"
+                }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ 
+                  duration: 1, 
+                  delay: 0.2, 
+                  ease: "easeOut"
+                }}
+              >
+                {(nowPlaying.title?.trim() || "").toLocaleUpperCase('en-US')}
+              </m.div>
 
-             {/* Sanatçı Adı */}
-             <m.div 
-               className="font-roboto text-[11px] xs:text-[12px] sm:text-[13px] md:text-[15px] lg:text-[16px] mb-2 xs:mb-2.5 sm:mb-3 motion-element text-center max-w-[90vw] sm:whitespace-nowrap pointer-events-auto"
-               style={{
-                 fontStyle: "normal",
-                 fontWeight: 400,
-                 lineHeight: "1.2",
-                 letterSpacing: "0.1em",
-                 color: "#FFFFFF"
-               }}
-               initial={{ opacity: 0, y: 20 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true }}
-               transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-             >
-{(nowPlaying.artist?.trim() || "RADIO APEX").toLocaleUpperCase('en-US')}
-             </m.div>
+              {/* Sanatçı Adı */}
+              <m.div 
+                className="font-roboto text-[13px] xs:text-[14px] sm:text-[15px] md:text-[16px] lg:text-[17px] mb-2 xs:mb-2.5 sm:mb-3 motion-element text-center max-w-[90vw] sm:whitespace-nowrap pointer-events-auto"
+                style={{
+                  fontStyle: "normal",
+                  fontWeight: 400,
+                  lineHeight: "1.2",
+                  letterSpacing: "0.08em",
+                  color: "rgba(255, 255, 255, 0.9)"
+                }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+              >
+                {(nowPlaying.artist?.trim() || "RADIO APEX").toLocaleUpperCase('en-US')}
+              </m.div>
 
              <div className="pointer-events-auto">
                <LikedTracks
