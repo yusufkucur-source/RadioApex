@@ -179,7 +179,7 @@ function HomeContent() {
              className="absolute left-0 right-0 z-30 flex flex-col items-center px-4 parallax-element pointer-events-none"
              style={{ 
                y: contentY,
-               bottom: "calc(50% + (var(--player-stage-size, 300px) * 0.5) + clamp(30px, 5vh, 48px))"
+               bottom: "calc(50% + (var(--player-stage-size, 300px) * 0.5) + clamp(14px, 2.2vh, 22px))"
              }}
            >
              {/* LIVE Eyebrow */}
@@ -188,7 +188,7 @@ function HomeContent() {
                whileInView={{ opacity: 1, y: 0 }}
                viewport={{ once: true, margin: "-20%" }}
                transition={{ duration: 0.6 }}
-               className="font-antonio inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-2.5 xs:px-3 py-1 text-[9px] xs:text-[10px] sm:text-[11px] uppercase tracking-[0.45em] text-white/60 mb-2 xs:mb-2.5 sm:mb-3 md:mb-3.5"
+               className="font-antonio inline-flex items-center gap-1.5 xs:gap-2 rounded-full border border-white/10 bg-white/5 px-2.5 xs:px-3 py-0.5 sm:py-1 text-[8.5px] xs:text-[9.5px] sm:text-[11px] uppercase tracking-[0.45em] text-white/60 mb-1.5 xs:mb-2 sm:mb-2.5"
              >
                <span className="h-1.5 w-1.5 rounded-full bg-[#FD1D35]" />
                LIVE
@@ -196,7 +196,7 @@ function HomeContent() {
 
              {/* Şarkı Başlığı */}
              <m.div 
-               className="font-roboto text-[18px] xs:text-[21px] sm:text-[24px] md:text-[28px] lg:text-[32px] mb-1 xs:mb-1.5 sm:mb-2 motion-element text-center max-w-[90vw] sm:whitespace-nowrap pointer-events-auto"
+               className="font-roboto text-[16px] xs:text-[18px] sm:text-[22px] md:text-[26px] lg:text-[30px] mb-0.5 xs:mb-1 sm:mb-1.5 motion-element text-center max-w-[90vw] sm:whitespace-nowrap pointer-events-auto"
                style={{
                  fontStyle: "normal",
                  fontWeight: 500,
@@ -219,7 +219,7 @@ function HomeContent() {
 
              {/* Sanatçı Adı */}
              <m.div 
-               className="font-roboto text-[12px] xs:text-[13px] sm:text-[14px] md:text-[16px] mb-2.5 xs:mb-3 sm:mb-3.5 motion-element text-center max-w-[90vw] sm:whitespace-nowrap pointer-events-auto"
+               className="font-roboto text-[11px] xs:text-[12px] sm:text-[13px] md:text-[15px] lg:text-[16px] mb-2 xs:mb-2.5 sm:mb-3 motion-element text-center max-w-[90vw] sm:whitespace-nowrap pointer-events-auto"
                style={{
                  fontStyle: "normal",
                  fontWeight: 400,
