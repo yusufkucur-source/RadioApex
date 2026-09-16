@@ -72,7 +72,7 @@ export default function EqualizerVisualizer({
             boxShadow: "0 0 12px rgba(253, 29, 53, 0.6)",
           }}
           animate={{
-            inset: ["0px", "-20%"],
+            inset: ["8.33%", "-12%"],
             opacity: [0.8, 0],
             borderWidth: ["2px", "0.5px"],
           }}
@@ -86,7 +86,7 @@ export default function EqualizerVisualizer({
 
       {/* 3. Dış Çerçeve Çemberi (Kapsül) */}
       <div
-        className="absolute inset-0 rounded-full border-2 border-[#FD1D35] pointer-events-none transition-all duration-500"
+        className="absolute inset-[8.33%] rounded-full border-2 border-[#FD1D35] pointer-events-none transition-all duration-500"
         style={{
           boxShadow: isPlaying
             ? "0 0 35px rgba(253, 29, 53, 0.6), inset 0 0 25px rgba(253, 29, 53, 0.3)"
@@ -98,7 +98,7 @@ export default function EqualizerVisualizer({
       {/* 4. FINE BARS (30 Adet İnce, Sık, Modern Spektrum Barı) */}
       <div
         className="relative z-10 flex items-center justify-center gap-[2px] xs:gap-[2.5px] sm:gap-[3.5px] md:gap-[4px] px-2 sm:px-4"
-        style={{ width: "90%", height: "65%" }}
+        style={{ width: "75%", height: "55%" }}
       >
         {FINE_BARS.map((bar) => (
           <div

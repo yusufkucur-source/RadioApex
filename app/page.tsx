@@ -193,7 +193,7 @@ function HomeContent() {
              className="absolute left-0 right-0 z-30 flex flex-col items-center px-4 parallax-element pointer-events-none"
              style={{ 
                y: contentY,
-               bottom: "calc(50% + (var(--player-stage-size, 300px) * 0.5) + clamp(14px, 2.2vh, 22px))"
+               bottom: "calc(50% + (var(--player-stage-size, 300px) * 0.4167) + clamp(6px, 1.2vh, 12px))"
              }}
            >
              {/* LIVE Eyebrow */}
