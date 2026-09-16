@@ -214,9 +214,9 @@ function HomeContent() {
                   className="font-roboto text-[22px] xs:text-[25px] sm:text-[28px] md:text-[30px] lg:text-[34px] mb-0.5 xs:mb-1 motion-element text-center max-w-[90vw] sm:whitespace-nowrap pointer-events-auto"
                   style={{
                     fontStyle: "normal",
-                    fontWeight: 600,
+                    fontWeight: 500,
                     lineHeight: "1.2",
-                    letterSpacing: "0.08em",
+                    letterSpacing: "0.1em",
                     color: "#FD1D35",
                     textShadow: "0 0 40px rgba(253, 29, 53, 0.75), 0 0 80px rgba(253, 29, 53, 0.45)"
                   }}
