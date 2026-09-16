@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { m, type Variants } from "framer-motion";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { useDJs } from "@/lib/firebase/hooks";
 
@@ -53,6 +53,7 @@ function toInitials(value?: string) {
 
 export default function DjSection() {
   const { data: djs } = useDJs({ realtime: false });
+  const activeDjs = useMemo(() => djs.filter(dj => dj.isActive !== false), [djs]);
   const [expandedDjs, setExpandedDjs] = useState<Set<string>>(new Set());
 
   function toggleDescription(djId: string) {
@@ -100,7 +101,7 @@ export default function DjSection() {
             transition={{ staggerChildren: 0.08, delayChildren: 0.15 }}
             className="grid gap-8 sm:grid-cols-2 xl:grid-cols-3"
           >
-            {djs.map(dj => {
+            {activeDjs.map(dj => {
               const socialEntries = Object.entries(dj.socials ?? {}).filter(
                 ([, href]) => Boolean(href)
               );
@@ -125,18 +126,18 @@ export default function DjSection() {
                   />
                   <div className="pointer-events-none absolute inset-0 -z-20 rounded-[36px] bg-black/50 blur-3xl transition-colors duration-500 group-hover:bg-[#FD1D35]/15" />
 
-                  <div className="relative overflow-hidden rounded-2xl border border-white/10">
+                  <div className="relative h-56 w-full overflow-hidden rounded-2xl border border-white/10">
                     {dj.photoUrl ? (
                       <Image
                         src={dj.photoUrl}
                         alt={dj.nickname}
                         width={480}
                         height={480}
-                        className="h-56 w-full object-cover transition duration-700 group-hover:scale-105"
+                        className="h-full w-full object-cover object-[center_20%] transition duration-700 group-hover:scale-105"
                         sizes="(min-width: 1280px) 18vw, (min-width: 768px) 34vw, 90vw"
                       />
                     ) : (
-                      <div className="flex h-56 w-full items-center justify-center bg-[radial-gradient(circle_at_top,rgba(253,29,53,0.35),rgba(185,28,28,0.2))] text-4xl font-semibold text-white/40">
+                      <div className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_top,rgba(253,29,53,0.35),rgba(185,28,28,0.2))] text-4xl font-semibold text-white/40">
                         {toInitials(dj.nickname || dj.fullName)}
                       </div>
                     )}

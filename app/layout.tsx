@@ -37,11 +37,65 @@ const roboto = Roboto({
   preload: true
 });
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "RadioStation",
+      "@id": "https://radioapex.com.tr/#station",
+      "name": "Radio Apex",
+      "url": "https://radioapex.com.tr",
+      "logo": "https://radioapex.com.tr/images/home/AplexLogoRed.webp",
+      "image": "https://radioapex.com.tr/twittercard.png",
+      "description":
+        "Radio Apex — Modern online radio experience with curated DJ sets and live lineup.",
+      "genre": [
+        "Electronic",
+        "Deep House",
+        "Techno",
+        "Minimal Techno",
+        "Organic House"
+      ],
+      "sameAs": [
+        "https://instagram.com/radioapextr",
+        "https://x.com/radioapextr",
+        "https://soundcloud.com/radioapex"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://radioapex.com.tr/#website",
+      "url": "https://radioapex.com.tr",
+      "name": "Radio Apex",
+      "publisher": {
+        "@id": "https://radioapex.com.tr/#station"
+      }
+    }
+  ]
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://radioapex.com.tr"),
-  title: "Radio Apex",
+  title: {
+    default: "Radio Apex | Online Canlı Radyo & Curated DJ Sets",
+    template: "%s | Radio Apex"
+  },
   description:
-    "Radio Apex — Modern online radio experience with curated DJ sets and live lineup.",
+    "Radio Apex — Modern online radio experience with curated DJ sets, deep house, techno, and live electronic music lineup.",
+  keywords: [
+    "Radio Apex",
+    "online radyo",
+    "canlı radyo dinle",
+    "electronic music radio",
+    "deep house",
+    "techno radio",
+    "curated dj sets",
+    "istanbul radio",
+    "kesintisiz radyo"
+  ],
+  alternates: {
+    canonical: "https://radioapex.com.tr"
+  },
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -52,10 +106,11 @@ export const metadata: Metadata = {
       { url: "/apple-touch-icon-180.png", sizes: "180x180", type: "image/png" }
     ]
   },
+  manifest: "/manifest.json",
   openGraph: {
-    title: "Radio Apex",
+    title: "Radio Apex | Online Canlı Radyo & Curated DJ Sets",
     description:
-      "Modern online radio experience with curated DJ sets and live lineup.",
+      "Modern online radio experience with curated DJ sets, deep house, techno, and live electronic music lineup.",
     url: "https://radioapex.com.tr",
     siteName: "Radio Apex",
     images: [
@@ -66,14 +121,15 @@ export const metadata: Metadata = {
         alt: "Radio Apex"
       }
     ],
-    locale: "en_US",
+    locale: "tr_TR",
+    alternateLocale: ["en_US"],
     type: "website"
   },
   twitter: {
-    card: "summary",
-    title: "Radio Apex",
+    card: "summary_large_image",
+    title: "Radio Apex | Online Canlı Radyo & Curated DJ Sets",
     description:
-      "Modern online radio experience with curated DJ sets and live lineup.",
+      "Modern online radio experience with curated DJ sets, deep house, techno, and live electronic music lineup.",
     images: [
       {
         url: "/twittercard.png?v=2",
@@ -82,6 +138,17 @@ export const metadata: Metadata = {
         alt: "Radio Apex"
       }
     ]
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1
+    }
   }
 };
 
@@ -97,10 +164,10 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <meta name="theme-color" content="#000000" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />

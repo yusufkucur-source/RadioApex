@@ -108,7 +108,8 @@ export default function Header() {
     []
   );
 
-  const handleNavClick = (id: SectionId) => {
+  const handleNavClick = (id: SectionId, e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
     const element = document.getElementById(id);
     if (!element) return;
     
@@ -134,8 +135,9 @@ export default function Header() {
   if (!isClient) {
     return (
       <header className="fixed left-4 right-4 top-4 sm:top-6 md:top-[27px] z-[100] mx-auto flex h-[80px] max-w-[1399px] items-center justify-between rounded-[50px] border border-[rgba(154,154,154,0.2)] bg-black/30 px-4 sm:px-6 md:px-8 backdrop-blur-3xl transition-all duration-500 overflow-hidden">
-        <button
-          onClick={() => handleNavClick("home")}
+        <a
+          href="#home"
+          onClick={(e) => handleNavClick("home", e)}
           className="flex items-center transition-all duration-300 ml-2 sm:ml-3 md:ml-4"
           style={{
             filter: 'drop-shadow(0 0 20px rgba(253, 29, 53, 0.4))',
@@ -150,16 +152,17 @@ export default function Header() {
             className="h-10 sm:h-10 md:h-12 w-auto transition-all duration-300"
             priority
           />
-        </button>
+        </a>
         <nav className="hidden items-center gap-10 lg:flex mr-2 sm:mr-4 md:mr-6">
           {navItems.map(item => (
-            <button
+            <a
               key={item.id}
-              onClick={() => handleNavClick(item.id as SectionId)}
+              href={`#${item.id}`}
+              onClick={(e) => handleNavClick(item.id as SectionId, e)}
               className="relative px-4 py-2 font-antonio text-[15px] uppercase leading-[19px] tracking-[0.2em] transition duration-300 nav-text-glow text-white hover:text-[#FD1D35] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FD1D35]"
             >
               <span className="relative z-10">{item.label}</span>
-            </button>
+            </a>
           ))}
         </nav>
         <button
@@ -189,8 +192,9 @@ export default function Header() {
         }}
         className="header-animation fixed left-4 right-4 top-4 sm:top-6 md:top-[27px] z-[100] mx-auto flex h-[80px] max-w-[1399px] items-center justify-between rounded-[50px] border border-[rgba(154,154,154,0.2)] bg-black/30 px-4 sm:px-6 md:px-8 backdrop-blur-3xl transition-all duration-500 overflow-hidden"
       >
-      <button
-        onClick={() => handleNavClick("home")}
+      <a
+        href="#home"
+        onClick={(e) => handleNavClick("home", e)}
         className="flex items-center transition-all duration-300 ml-2 sm:ml-3 md:ml-4"
         style={{
           filter: 'drop-shadow(0 0 20px rgba(253, 29, 53, 0.4))',
@@ -205,13 +209,14 @@ export default function Header() {
           className="h-10 sm:h-10 md:h-12 w-auto transition-all duration-300"
           priority
         />
-      </button>
+      </a>
 
       <nav className="hidden items-center gap-10 lg:flex mr-2 sm:mr-4 md:mr-6">
         {navItems.map(item => (
-          <button
+          <a
             key={item.id}
-            onClick={() => handleNavClick(item.id as SectionId)}
+            href={`#${item.id}`}
+            onClick={(e) => handleNavClick(item.id as SectionId, e)}
             className={clsx(
               "relative px-4 py-2 font-antonio text-[15px] uppercase leading-[19px] tracking-[0.2em] transition duration-300 nav-text-glow",
               activeSection === item.id 
@@ -228,7 +233,7 @@ export default function Header() {
               />
             )}
             <span className="relative z-10">{item.label}</span>
-          </button>
+          </a>
         ))}
       </nav>
 
@@ -297,17 +302,18 @@ export default function Header() {
               <ul className="grid gap-0 text-center">
                 {navItems.map((item, index) => (
                   <li key={item.id}>
-                    <button
-                      onClick={() => handleNavClick(item.id as SectionId)}
+                    <a
+                      href={`#${item.id}`}
+                      onClick={(e) => handleNavClick(item.id as SectionId, e)}
                       className={clsx(
-                        "w-full rounded-2xl border border-transparent px-4 py-3 text-base font-medium text-white transition-[border-color,color] duration-500 ease-out nav-text-glow",
+                        "block w-full rounded-2xl border border-transparent px-4 py-3 text-base font-medium text-white transition-[border-color,color] duration-500 ease-out nav-text-glow",
                         activeSection === item.id 
                           ? "border-[#FD1D35] bg-[#FD1D35] nav-glow" 
                           : "hover:border-[#FD1D35]/80 hover:bg-transparent hover:text-[#FD1D35]"
                       )}
                     >
                       {item.label}
-                    </button>
+                    </a>
                     {index < navItems.length - 1 && (
                       <div className="mx-4 my-2 h-px bg-white/10" />
                     )}

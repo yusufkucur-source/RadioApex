@@ -7,6 +7,8 @@ import {
   CalendarDays,
   ChevronRight,
   Disc3,
+  Eye,
+  EyeOff,
   Headphones,
   LayoutDashboard,
   Loader2,
@@ -50,7 +52,7 @@ type NowPlayingData = {
   listeners: number;
 };
 
-const emptyDj = { nickname: "", fullName: "", city: "", photoUrl: "", description: "" };
+const emptyDj = { nickname: "", fullName: "", city: "", photoUrl: "", description: "", isActive: true };
 const emptyLineup = { day: "Monday", startTime: "", endTime: "", title: "", genre: "", djId: "" };
 const navItems: Array<{ id: Section; label: string; icon: typeof LayoutDashboard }> = [
   { id: "overview", label: "Genel Bakış", icon: LayoutDashboard },
@@ -220,6 +222,20 @@ export default function AdminDashboardV2() {
     } finally { setBusy(false); }
   };
 
+  const toggleDjActive = async (dj: DJProfile) => {
+    if (!db) return;
+    setBusy(true); setError(null);
+    try {
+      const nextActive = dj.isActive === false;
+      await updateDoc(doc(db, "djs", dj.id), { isActive: nextActive, updatedAt: serverTimestamp() });
+      setNotice(`${dj.nickname} ${nextActive ? "aktif edildi (sitede görünür)." : "pasife alındı (sitede gizlendi)."}`);
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "Durum güncellenemedi.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const migrateDjPhotos = async () => {
     if (!user || !window.confirm("Mevcut DJ fotoğraf linkleri Firebase Storage'a taşınsın mı?")) return;
     setBusy(true); setError(null); setNotice(null);
@@ -288,7 +304,7 @@ export default function AdminDashboardV2() {
     <main className="min-h-screen lg:pl-64"><header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-white/10 bg-[#09090b]/95 px-4 backdrop-blur lg:px-8"><div className="flex items-center gap-3"><button className="lg:hidden" onClick={() => setMobileMenu(true)}><Menu size={22} /></button><div><h1 className="text-base font-semibold">{navItems.find((item) => item.id === section)?.label}</h1><p className="hidden text-xs text-white/45 sm:block">Radio Apex yönetim alanı</p></div></div>{section !== "notifications" && <Button onClick={() => { setDrawer(section === "lineup" ? "lineup" : "dj"); }} className="bg-apex-accent hover:bg-apex-accent/90"><Plus />{section === "lineup" ? "Program ekle" : "DJ ekle"}</Button>}</header>
       <div className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">{error && <div className="mb-5 rounded-md border border-red-400/20 bg-red-400/10 px-4 py-3 text-sm text-red-200">{error}</div>}{notice && <div className="mb-5 flex items-center justify-between rounded-md border border-emerald-400/20 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-200">{notice}<button onClick={() => setNotice(null)}><X size={16} /></button></div>}
         {section === "overview" && <Overview analytics={analytics} nowPlaying={nowPlaying} analyticsError={analyticsError} analyticsLoading={analyticsLoading} onReload={() => { void loadAnalytics(); void loadNowPlaying(); }} djs={djs.length} lineup={lineup.length} />}
-        {section === "djs" && <DjsTable djs={djs} busy={busy} onAdd={() => setDrawer("dj")} onMigratePhotos={() => void migrateDjPhotos()} onEdit={(dj) => { setDjForm({ nickname: dj.nickname, fullName: dj.fullName, city: dj.city, photoUrl: dj.photoUrl, description: dj.description || "" }); setDjPhotoFile(null); setEditingDj(dj.id); setDrawer("dj"); }} onDelete={(id) => void remove("djs", id)} />}
+        {section === "djs" && <DjsTable djs={djs} busy={busy} onAdd={() => setDrawer("dj")} onMigratePhotos={() => void migrateDjPhotos()} onToggleActive={toggleDjActive} onEdit={(dj) => { setDjForm({ nickname: dj.nickname, fullName: dj.fullName, city: dj.city, photoUrl: dj.photoUrl, description: dj.description || "", isActive: dj.isActive !== false }); setDjPhotoFile(null); setEditingDj(dj.id); setDrawer("dj"); }} onDelete={(id) => void remove("djs", id)} />}
         {section === "lineup" && <LineupTable lineup={lineup} djs={djMap} onAdd={() => setDrawer("lineup")} onEdit={(slot) => { setLineupForm({ day: slot.day, startTime: slot.startTime, endTime: slot.endTime, title: slot.title, genre: slot.genre, djId: slot.djId || "" }); setEditingLineup(slot.id); setDrawer("lineup"); }} onDelete={(id) => void remove("lineup", id)} />}
         {section === "notifications" && <NotificationForm value={notification} busy={busy} onChange={setNotification} onSubmit={sendNotification} />}
       </div>
@@ -335,10 +351,219 @@ function Distribution({ title, subtitle, data }: { title: string; subtitle: stri
   return <Panel className="p-5"><h2 className="font-semibold">{title}</h2><p className="mt-1 text-xs text-white/45">{subtitle} · Son 7 gün</p><div className="mt-5 space-y-3">{data.length ? data.map((item) => <div key={item.label}><div className="flex items-center justify-between gap-3 text-sm"><span className="truncate text-white/70" title={item.label}>{item.label === "(not set)" ? "Belirtilmedi" : item.label}</span><strong className="text-xs">{formatNumber(item.value)}</strong></div><div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-white/10"><div className="h-full rounded-full bg-apex-accent/80" style={{ width: `${(item.value / topValue) * 100}%` }} /></div></div>) : <p className="py-5 text-sm text-white/40">Henüz veri yok.</p>}</div></Panel>;
 }
 
-function DjsTable({ djs, busy, onAdd, onMigratePhotos, onEdit, onDelete }: { djs: DJProfile[]; busy: boolean; onAdd: () => void; onMigratePhotos: () => void; onEdit: (dj: DJProfile) => void; onDelete: (id: string) => void }) { return <Panel><div className="flex flex-col gap-4 border-b border-white/10 p-5 sm:flex-row sm:items-center sm:justify-between"><div><h2 className="font-semibold">DJ listesi</h2><p className="mt-1 text-sm text-white/45">{djs.length} kayıt</p></div><div className="flex flex-wrap gap-2"><Button variant="outline" size="sm" disabled={busy} onClick={onMigratePhotos} className="border-white/15 bg-transparent text-white hover:bg-white/10 hover:text-white">{busy ? <Loader2 className="animate-spin" /> : null}Fotoğrafları Storage&apos;a taşı</Button><Button size="sm" onClick={onAdd} className="bg-apex-accent hover:bg-apex-accent/90"><Plus />DJ ekle</Button></div></div><div className="divide-y divide-white/10">{djs.map((dj) => <div key={dj.id} className="flex items-center gap-4 p-4 sm:px-5"><div className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-full bg-white/10 text-sm font-bold">{dj.photoUrl ? <img src={dj.photoUrl} alt="" className="h-full w-full object-cover" /> : dj.nickname.slice(0, 1)}</div><div className="min-w-0 flex-1"><p className="truncate font-medium">{dj.nickname}</p><p className="truncate text-sm text-white/45">{dj.fullName} {dj.city && `· ${dj.city}`}</p></div><div className="flex gap-1"><Button variant="ghost" size="icon" aria-label="Düzenle" onClick={() => onEdit(dj)}><Pencil /></Button><Button variant="ghost" size="icon" aria-label="Sil" onClick={() => onDelete(dj.id)} className="text-red-300 hover:bg-red-400/10 hover:text-red-200"><Trash2 /></Button></div></div>)}{!djs.length && <EmptyState label="Henüz DJ eklenmemiş." onClick={onAdd} />}</div></Panel>; }
+function DjsTable({
+  djs,
+  busy,
+  onAdd,
+  onMigratePhotos,
+  onToggleActive,
+  onEdit,
+  onDelete
+}: {
+  djs: DJProfile[];
+  busy: boolean;
+  onAdd: () => void;
+  onMigratePhotos: () => void;
+  onToggleActive: (dj: DJProfile) => void;
+  onEdit: (dj: DJProfile) => void;
+  onDelete: (id: string) => void;
+}) {
+  return (
+    <Panel>
+      <div className="flex flex-col gap-4 border-b border-white/10 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="font-semibold">DJ listesi</h2>
+          <p className="mt-1 text-sm text-white/45">
+            {djs.length} kayıt ({djs.filter((d) => d.isActive !== false).length} aktif)
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={busy}
+            onClick={onMigratePhotos}
+            className="border-white/15 bg-transparent text-white hover:bg-white/10 hover:text-white"
+          >
+            {busy ? <Loader2 className="animate-spin" /> : null}Fotoğrafları Storage&apos;a taşı
+          </Button>
+          <Button size="sm" onClick={onAdd} className="bg-apex-accent hover:bg-apex-accent/90">
+            <Plus />DJ ekle
+          </Button>
+        </div>
+      </div>
+      <div className="divide-y divide-white/10">
+        {djs.map((dj) => {
+          const isDjActive = dj.isActive !== false;
+          return (
+            <div
+              key={dj.id}
+              className={clsx(
+                "flex items-center gap-4 p-4 sm:px-5 transition-opacity",
+                !isDjActive && "opacity-60"
+              )}
+            >
+              <div className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-full bg-white/10 text-sm font-bold">
+                {dj.photoUrl ? (
+                  <img src={dj.photoUrl} alt="" className="h-full w-full object-cover object-top" />
+                ) : (
+                  dj.nickname.slice(0, 1)
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <p className="truncate font-medium">{dj.nickname}</p>
+                  <span
+                    className={clsx(
+                      "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium border",
+                      isDjActive
+                        ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                        : "bg-white/5 text-white/45 border-white/10"
+                    )}
+                  >
+                    <span
+                      className={clsx(
+                        "h-1.5 w-1.5 rounded-full",
+                        isDjActive ? "bg-emerald-400" : "bg-white/30"
+                      )}
+                    />
+                    {isDjActive ? "Aktif" : "Pasif"}
+                  </span>
+                </div>
+                <p className="truncate text-sm text-white/45">
+                  {dj.fullName} {dj.city && `· ${dj.city}`}
+                </p>
+              </div>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  disabled={busy}
+                  aria-label={isDjActive ? "Pasife al" : "Aktifleştir"}
+                  title={isDjActive ? "Sitede gizle (Pasife al)" : "Sitede göster (Aktif et)"}
+                  onClick={() => onToggleActive(dj)}
+                  className={
+                    isDjActive
+                      ? "text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300"
+                      : "text-white/40 hover:bg-white/10 hover:text-white"
+                  }
+                >
+                  {isDjActive ? <Eye size={17} /> : <EyeOff size={17} />}
+                </Button>
+                <Button variant="ghost" size="icon" aria-label="Düzenle" onClick={() => onEdit(dj)}>
+                  <Pencil size={17} />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Sil"
+                  onClick={() => onDelete(dj.id)}
+                  className="text-red-300 hover:bg-red-400/10 hover:text-red-200"
+                >
+                  <Trash2 size={17} />
+                </Button>
+              </div>
+            </div>
+          );
+        })}
+        {!djs.length && <EmptyState label="Henüz DJ eklenmemiş." onClick={onAdd} />}
+      </div>
+    </Panel>
+  );
+}
 function LineupTable({ lineup, djs, onAdd, onEdit, onDelete }: { lineup: LineupSlot[]; djs: Map<string, string>; onAdd: () => void; onEdit: (slot: LineupSlot) => void; onDelete: (id: string) => void }) { return <Panel><div className="flex items-center justify-between border-b border-white/10 p-5"><div><h2 className="font-semibold">Yayın akışı</h2><p className="mt-1 text-sm text-white/45">{lineup.length} program</p></div><Button size="sm" onClick={onAdd} className="bg-apex-accent hover:bg-apex-accent/90"><Plus />Program ekle</Button></div><div className="divide-y divide-white/10">{lineup.map((slot) => <div key={slot.id} className="flex items-center gap-4 p-4 sm:px-5"><div className="grid h-10 w-14 shrink-0 place-items-center rounded-md bg-white/5 text-xs text-white/65">{slot.startTime || "—"}</div><div className="min-w-0 flex-1"><p className="truncate font-medium">{slot.title}</p><p className="truncate text-sm text-white/45">{slot.day} · {slot.startTime}–{slot.endTime} · {djs.get(slot.djId || "") || "DJ atanmadı"}</p></div><div className="flex gap-1"><Button variant="ghost" size="icon" aria-label="Düzenle" onClick={() => onEdit(slot)}><Pencil /></Button><Button variant="ghost" size="icon" aria-label="Sil" onClick={() => onDelete(slot.id)} className="text-red-300 hover:bg-red-400/10 hover:text-red-200"><Trash2 /></Button></div></div>)}{!lineup.length && <EmptyState label="Henüz program eklenmemiş." onClick={onAdd} />}</div></Panel>; }
 function EmptyState({ label, onClick }: { label: string; onClick: () => void }) { return <div className="p-12 text-center"><p className="text-sm text-white/45">{label}</p><Button variant="outline" size="sm" onClick={onClick} className="mt-4 border-white/15 bg-transparent text-white hover:bg-white/10 hover:text-white"><Plus />İlk kaydı ekle</Button></div>; }
 function Drawer({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) { return <div className="fixed inset-0 z-40"><button onClick={onClose} className="absolute inset-0 bg-black/65" aria-label="Kapat" /><aside className="absolute inset-y-0 right-0 w-full max-w-lg overflow-y-auto border-l border-white/10 bg-[#111116] p-5 shadow-2xl sm:p-6"><div className="mb-7 flex items-center justify-between"><div><h2 className="text-lg font-semibold">{title}</h2><p className="mt-1 text-sm text-white/45">Bilgileri kaydettiğinde liste otomatik güncellenir.</p></div><Button variant="ghost" size="icon" onClick={onClose}><X /></Button></div>{children}</aside></div>; }
-function DjForm({ value, photoFile, onChange, onPhotoChange, onSubmit, busy, editing }: { value: typeof emptyDj; photoFile: File | null; onChange: (value: typeof emptyDj) => void; onPhotoChange: (value: File | null) => void; onSubmit: (event: FormEvent<HTMLFormElement>) => void; busy: boolean; editing: boolean }) { const set = (key: keyof typeof emptyDj, next: string) => onChange({ ...value, [key]: next }); const photoPreview = photoFile ? URL.createObjectURL(photoFile) : value.photoUrl; return <form onSubmit={onSubmit} className="space-y-4"><Field label="DJ adı"><input required className={inputClass} value={value.nickname} onChange={(event) => set("nickname", event.target.value)} /></Field><Field label="Ad soyad"><input required className={inputClass} value={value.fullName} onChange={(event) => set("fullName", event.target.value)} /></Field><Field label="Şehir"><input className={inputClass} value={value.city} onChange={(event) => set("city", event.target.value)} /></Field><div className="rounded-md border border-white/10 bg-black/20 p-3"><div className="flex items-center gap-3">{photoPreview ? <img src={photoPreview} alt="" className="h-14 w-14 rounded-md object-cover" /> : <div className="grid h-14 w-14 place-items-center rounded-md bg-white/10 text-xs text-white/35">Foto</div>}<div className="min-w-0 flex-1"><p className="text-sm font-medium text-white/80">DJ fotoğrafı</p><p className="mt-1 truncate text-xs text-white/40">{photoFile ? photoFile.name : value.photoUrl ? "Mevcut fotoğraf korunur." : "JPG, PNG veya WEBP yükle."}</p></div></div><input className="mt-3 block w-full text-sm text-white/70 file:mr-3 file:rounded-md file:border-0 file:bg-apex-accent file:px-3 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-apex-accent/90" type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => { const file = event.target.files?.[0] || null; if (file && file.size > 5 * 1024 * 1024) { event.currentTarget.value = ""; onPhotoChange(null); window.alert("Fotoğraf en fazla 5 MB olabilir."); return; } onPhotoChange(file); }} />{photoFile && <button type="button" className="mt-2 text-xs text-white/45 hover:text-white" onClick={() => onPhotoChange(null)}>Seçilen dosyayı kaldır</button>}</div><Field label="Fotoğraf URL"><input className={inputClass} type="url" value={value.photoUrl} placeholder="İstersen manuel link de kullanabilirsin" onChange={(event) => set("photoUrl", event.target.value)} /></Field><Field label="Açıklama"><textarea className="min-h-28 w-full rounded-md border border-white/10 bg-black/30 p-3 text-sm text-white outline-none focus:border-apex-accent" value={value.description} onChange={(event) => set("description", event.target.value)} /></Field><Button disabled={busy} className="mt-3 w-full bg-apex-accent hover:bg-apex-accent/90">{busy && <Loader2 className="animate-spin" />}{editing ? "Değişiklikleri kaydet" : "DJ ekle"}</Button></form>; }
+function DjForm({
+  value,
+  photoFile,
+  onChange,
+  onPhotoChange,
+  onSubmit,
+  busy,
+  editing
+}: {
+  value: typeof emptyDj;
+  photoFile: File | null;
+  onChange: (value: typeof emptyDj) => void;
+  onPhotoChange: (value: File | null) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  busy: boolean;
+  editing: boolean;
+}) {
+  const set = (key: keyof typeof emptyDj, next: any) => onChange({ ...value, [key]: next });
+  const photoPreview = photoFile ? URL.createObjectURL(photoFile) : value.photoUrl;
+
+  return (
+    <form onSubmit={onSubmit} className="space-y-4">
+      <label className="flex items-center justify-between rounded-lg border border-white/10 bg-white/[0.04] p-3 cursor-pointer select-none transition hover:bg-white/[0.07]">
+        <div>
+          <p className="text-sm font-medium text-white">Yayın Durumu</p>
+          <p className="text-xs text-white/45">Aktif olduğunda DJ listesinde ziyaretçilere gösterilir.</p>
+        </div>
+        <input
+          type="checkbox"
+          checked={value.isActive !== false}
+          onChange={(event) => set("isActive", event.target.checked)}
+          className="h-5 w-5 accent-[#FD1D35] cursor-pointer rounded"
+        />
+      </label>
+      <Field label="DJ adı">
+        <input required className={inputClass} value={value.nickname} onChange={(event) => set("nickname", event.target.value)} />
+      </Field>
+      <Field label="Ad soyad">
+        <input required className={inputClass} value={value.fullName} onChange={(event) => set("fullName", event.target.value)} />
+      </Field>
+      <Field label="Şehir">
+        <input className={inputClass} value={value.city} onChange={(event) => set("city", event.target.value)} />
+      </Field>
+      <div className="rounded-md border border-white/10 bg-black/20 p-3">
+        <div className="flex items-center gap-3">
+          {photoPreview ? (
+            <img src={photoPreview} alt="" className="h-14 w-14 rounded-md object-cover object-top" />
+          ) : (
+            <div className="grid h-14 w-14 place-items-center rounded-md bg-white/10 text-xs text-white/35">Foto</div>
+          )}
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium text-white/80">DJ fotoğrafı</p>
+            <p className="mt-1 truncate text-xs text-white/40">
+              {photoFile ? photoFile.name : value.photoUrl ? "Mevcut fotoğraf korunur." : "JPG, PNG veya WEBP yükle."}
+            </p>
+          </div>
+        </div>
+        <input
+          className="mt-3 block w-full text-sm text-white/70 file:mr-3 file:rounded-md file:border-0 file:bg-apex-accent file:px-3 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-apex-accent/90"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          onChange={(event) => {
+            const file = event.target.files?.[0] || null;
+            if (file && file.size > 5 * 1024 * 1024) {
+              event.currentTarget.value = "";
+              onPhotoChange(null);
+              window.alert("Fotoğraf en fazla 5 MB olabilir.");
+              return;
+            }
+            onPhotoChange(file);
+          }}
+        />
+        {photoFile && (
+          <button type="button" className="mt-2 text-xs text-white/45 hover:text-white" onClick={() => onPhotoChange(null)}>
+            Seçilen dosyayı kaldır
+          </button>
+        )}
+      </div>
+      <Field label="Fotoğraf URL">
+        <input className={inputClass} type="url" value={value.photoUrl} placeholder="İstersen manuel link de kullanabilirsin" onChange={(event) => set("photoUrl", event.target.value)} />
+      </Field>
+      <Field label="Açıklama">
+        <textarea className="min-h-28 w-full rounded-md border border-white/10 bg-black/30 p-3 text-sm text-white outline-none focus:border-apex-accent" value={value.description} onChange={(event) => set("description", event.target.value)} />
+      </Field>
+      <Button disabled={busy} className="mt-3 w-full bg-apex-accent hover:bg-apex-accent/90">
+        {busy && <Loader2 className="animate-spin" />}
+        {editing ? "Değişiklikleri kaydet" : "DJ ekle"}
+      </Button>
+    </form>
+  );
+}
 function LineupForm({ value, djs, onChange, onSubmit, busy, editing }: { value: typeof emptyLineup; djs: DJProfile[]; onChange: (value: typeof emptyLineup) => void; onSubmit: (event: FormEvent<HTMLFormElement>) => void; busy: boolean; editing: boolean }) { const set = (key: keyof typeof emptyLineup, next: string) => onChange({ ...value, [key]: next }); return <form onSubmit={onSubmit} className="space-y-4"><Field label="Program adı"><input required className={inputClass} value={value.title} onChange={(event) => set("title", event.target.value)} /></Field><Field label="DJ"><select className={inputClass} value={value.djId} onChange={(event) => set("djId", event.target.value)}><option value="">DJ seç</option>{djs.map((dj) => <option key={dj.id} value={dj.id}>{dj.nickname}</option>)}</select></Field><div className="grid grid-cols-2 gap-3"><Field label="Gün"><select className={inputClass} value={value.day} onChange={(event) => set("day", event.target.value)}>{["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day) => <option key={day}>{day}</option>)}</select></Field><Field label="Tür"><input className={inputClass} value={value.genre} onChange={(event) => set("genre", event.target.value)} /></Field></div><div className="grid grid-cols-2 gap-3"><Field label="Başlangıç"><input required className={inputClass} type="time" value={value.startTime} onChange={(event) => set("startTime", event.target.value)} /></Field><Field label="Bitiş"><input required className={inputClass} type="time" value={value.endTime} onChange={(event) => set("endTime", event.target.value)} /></Field></div><Button disabled={busy} className="mt-3 w-full bg-apex-accent hover:bg-apex-accent/90">{busy && <Loader2 className="animate-spin" />}{editing ? "Değişiklikleri kaydet" : "Programı ekle"}</Button></form>; }
 function NotificationForm({ value, onChange, onSubmit, busy }: { value: { title: string; body: string; screen: string }; onChange: (value: { title: string; body: string; screen: string }) => void; onSubmit: (event: FormEvent<HTMLFormElement>) => void; busy: boolean }) { return <Panel className="max-w-2xl p-5 sm:p-6"><div className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-md bg-apex-accent/15 text-apex-accent"><Bell size={19} /></span><div><h2 className="font-semibold">Mobil bildirim gönder</h2><p className="text-sm text-white/45">Tüm izinli Radio Apex kullanıcılarına ulaşır.</p></div></div><form onSubmit={onSubmit} className="mt-7 space-y-4"><Field label="Başlık"><input required maxLength={80} className={inputClass} value={value.title} onChange={(event) => onChange({ ...value, title: event.target.value })} /></Field><Field label="Mesaj"><textarea required maxLength={240} className="min-h-28 w-full rounded-md border border-white/10 bg-black/30 p-3 text-sm text-white outline-none focus:border-apex-accent" value={value.body} onChange={(event) => onChange({ ...value, body: event.target.value })} /></Field><Field label="Açılacak ekran"><select className={inputClass} value={value.screen} onChange={(event) => onChange({ ...value, screen: event.target.value })}><option value="home">Ana sayfa</option><option value="djs">DJ listesi</option><option value="lineup">Yayın akışı</option></select></Field><Button disabled={busy} className="w-full bg-apex-accent hover:bg-apex-accent/90">{busy ? <Loader2 className="animate-spin" /> : <Send />}Bildirimi gönder</Button></form></Panel>; }

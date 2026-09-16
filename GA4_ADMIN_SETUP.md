@@ -1,6 +1,6 @@
 # Admin panel GA4 reporting setup
 
-The site already sends tracking events to GA4 using `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID`. To display reports in `/admin-v2`, add the following server-only variables locally and in the production host:
+The site already sends tracking events to GA4 using `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID`. To display reports in `/admin`, add the following server-only variables locally and in the production host:
 
 ```env
 GOOGLE_ANALYTICS_PROPERTY_ID=123456789
