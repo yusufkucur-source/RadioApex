@@ -77,21 +77,22 @@ const jsonLd = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://radioapex.com.tr"),
   title: {
-    default: "Radio Apex | Online Canlı Radyo & Curated DJ Sets",
+    default: "Radio Apex | 24/7 Electronic Music & Curated DJ Sets",
     template: "%s | Radio Apex"
   },
   description:
-    "Radio Apex — Modern online radio experience with curated DJ sets, deep house, techno, and live electronic music lineup.",
+    "Radio Apex — Modern online radio station broadcasting curated DJ sets, deep house, techno, and live electronic music 24/7.",
   keywords: [
     "Radio Apex",
-    "online radyo",
-    "canlı radyo dinle",
     "electronic music radio",
     "deep house",
     "techno radio",
+    "online radio station",
     "curated dj sets",
-    "istanbul radio",
-    "kesintisiz radyo"
+    "live stream radio",
+    "dance music station",
+    "minimal techno",
+    "ambient electronic"
   ],
   alternates: {
     canonical: "https://radioapex.com.tr"
@@ -108,9 +109,9 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.json",
   openGraph: {
-    title: "Radio Apex | Online Canlı Radyo & Curated DJ Sets",
+    title: "Radio Apex | 24/7 Electronic Music & Curated DJ Sets",
     description:
-      "Modern online radio experience with curated DJ sets, deep house, techno, and live electronic music lineup.",
+      "Modern online radio station broadcasting curated DJ sets, deep house, techno, and live electronic music 24/7.",
     url: "https://radioapex.com.tr",
     siteName: "Radio Apex",
     images: [
@@ -121,15 +122,14 @@ export const metadata: Metadata = {
         alt: "Radio Apex"
       }
     ],
-    locale: "tr_TR",
-    alternateLocale: ["en_US"],
+    locale: "en_US",
     type: "website"
   },
   twitter: {
     card: "summary_large_image",
-    title: "Radio Apex | Online Canlı Radyo & Curated DJ Sets",
+    title: "Radio Apex | 24/7 Electronic Music & Curated DJ Sets",
     description:
-      "Modern online radio experience with curated DJ sets, deep house, techno, and live electronic music lineup.",
+      "Modern online radio station broadcasting curated DJ sets, deep house, techno, and live electronic music 24/7.",
     images: [
       {
         url: "/twittercard.png?v=2",
@@ -164,6 +164,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <link rel="manifest" href="/manifest.json" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

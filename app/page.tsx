@@ -167,9 +167,9 @@ function HomeContent() {
 
       {/* SCROLL YAPAN İÇERİK - Background üzerinde kayar */}
       <main className="relative z-10 w-full">
-        {/* SEO H1 - Arama motorları ve ekran okuyucular için semantik ana başlık (Görünümü etkilemez) */}
+        {/* SEO H1 - Search engine and screen reader semantic heading (Invisible in UI) */}
         <h1 className="sr-only">
-          Radio Apex — Online Canlı Elektronik Müzik Radyosu, DJ Setleri ve Canlı Yayın
+          Radio Apex — 24/7 Electronic Music Radio, Curated DJ Sets & Live Broadcasts
         </h1>
 
         {/* HOME SECTION - İlk içerik */}
