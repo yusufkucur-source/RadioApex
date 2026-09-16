@@ -219,7 +219,6 @@ export default function CenteredPlayer() {
               <EqualizerVisualizer
                 isPlaying={isPlaying}
                 onTogglePlay={handlePlayPause}
-                size={300}
               />
             </m.div>
           )}
@@ -230,10 +229,10 @@ export default function CenteredPlayer() {
           Player sahnesinin altına 'absolute' bağlandığı için player'ın ekran merkezindeki
           konumunu milimetrik olarak bile DEĞİŞTİRMEZ.
         */}
-        <div className="absolute top-[calc(100%+22px)] sm:top-[calc(100%+26px)] left-1/2 -translate-x-1/2 pointer-events-auto">
+        <div className="absolute top-[calc(100%+14px)] xs:top-[calc(100%+18px)] md:top-[calc(100%+24px)] left-1/2 -translate-x-1/2 pointer-events-auto">
           <div
             onMouseLeave={() => setHoveredQuality(null)}
-            className="relative flex items-center rounded-full bg-black/30 border border-white/10 p-1 backdrop-blur-xl shadow-[0_4px_16px_rgba(0,0,0,0.25)]"
+            className="relative flex items-center rounded-full bg-black/30 border border-white/10 p-0.5 sm:p-1 backdrop-blur-xl shadow-[0_4px_16px_rgba(0,0,0,0.25)]"
           >
             {/* 128 KBPS Sekmesi */}
             <m.button
@@ -241,7 +240,7 @@ export default function CenteredPlayer() {
               onClick={() => handleQualityChange("128")}
               onMouseEnter={() => setHoveredQuality("128")}
               whileTap={{ scale: 0.96 }}
-              className={`relative z-10 flex items-center justify-center w-[105px] sm:w-[115px] h-[34px] rounded-full text-[11px] sm:text-[12px] font-antonio tracking-widest uppercase transition-colors duration-200 select-none ${
+              className={`relative z-10 flex items-center justify-center w-[90px] xs:w-[100px] sm:w-[115px] h-[28px] xs:h-[30px] sm:h-[34px] rounded-full text-[10px] xs:text-[11px] sm:text-[12px] font-antonio tracking-widest uppercase transition-colors duration-200 select-none ${
                 quality === "128"
                   ? "text-white font-bold"
                   : "text-white/45 hover:text-white/80"
@@ -283,7 +282,7 @@ export default function CenteredPlayer() {
               onClick={() => handleQualityChange("320")}
               onMouseEnter={() => setHoveredQuality("320")}
               whileTap={{ scale: 0.96 }}
-              className={`relative z-10 flex items-center justify-center gap-1.5 w-[105px] sm:w-[115px] h-[34px] rounded-full text-[11px] sm:text-[12px] font-antonio tracking-widest uppercase transition-colors duration-200 select-none ${
+              className={`relative z-10 flex items-center justify-center gap-1 sm:gap-1.5 w-[90px] xs:w-[100px] sm:w-[115px] h-[28px] xs:h-[30px] sm:h-[34px] rounded-full text-[10px] xs:text-[11px] sm:text-[12px] font-antonio tracking-widest uppercase transition-colors duration-200 select-none ${
                 quality === "320"
                   ? "text-white font-bold"
                   : "text-white/45 hover:text-white/80"
@@ -316,7 +315,7 @@ export default function CenteredPlayer() {
                   }}
                 />
               )}
-              <span className="relative z-20 flex items-center gap-1.5">
+              <span className="relative z-20 flex items-center gap-1 sm:gap-1.5">
                 <span>320 KBPS</span>
                 <span
                   className={`text-[8px] font-extrabold px-1.5 py-[2px] rounded-sm leading-none transition-colors ${
@@ -345,22 +344,10 @@ export default function CenteredPlayer() {
 
       <style jsx>{`
         .player-stage {
-          width: 300px;
-          height: 300px;
-        }
-
-        @media (max-width: 768px) {
-          .player-stage {
-            width: 240px;
-            height: 240px;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .player-stage {
-            width: 200px;
-            height: 200px;
-          }
+          width: var(--player-stage-size, 300px);
+          height: var(--player-stage-size, 300px);
+          max-width: 90vw;
+          max-height: 90vw;
         }
       `}</style>
     </div>

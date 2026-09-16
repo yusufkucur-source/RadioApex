@@ -47,8 +47,8 @@ export default function EqualizerVisualizer({
       onMouseLeave={() => setIsHovered(false)}
       className={`group relative flex items-center justify-center cursor-pointer select-none outline-none w-full h-full ${className}`}
       style={{
-        maxWidth: `${size}px`,
-        maxHeight: `${size}px`,
+        maxWidth: "100%",
+        maxHeight: "100%",
       }}
     >
       {/* 1. Dış Arka Plan Parlama Efekti */}
@@ -72,7 +72,7 @@ export default function EqualizerVisualizer({
             boxShadow: "0 0 12px rgba(253, 29, 53, 0.6)",
           }}
           animate={{
-            inset: ["0px", "-65px"],
+            inset: ["0px", "-20%"],
             opacity: [0.8, 0],
             borderWidth: ["2px", "0.5px"],
           }}
@@ -97,7 +97,7 @@ export default function EqualizerVisualizer({
 
       {/* 4. FINE BARS (30 Adet İnce, Sık, Modern Spektrum Barı) */}
       <div
-        className="relative z-10 flex items-center justify-center gap-[3px] sm:gap-[4px] px-4"
+        className="relative z-10 flex items-center justify-center gap-[2px] xs:gap-[2.5px] sm:gap-[3.5px] md:gap-[4px] px-2 sm:px-4"
         style={{ width: "90%", height: "65%" }}
       >
         {FINE_BARS.map((bar) => (
@@ -106,7 +106,7 @@ export default function EqualizerVisualizer({
             className="flex flex-col items-center justify-center h-full flex-1 relative"
           >
             <m.div
-              className="w-[2.4px] sm:w-[2.8px] md:w-[3.2px] rounded-full"
+              className="w-[1.8px] xs:w-[2.2px] sm:w-[2.8px] md:w-[3.2px] rounded-full"
               style={{
                 background:
                   "linear-gradient(180deg, #FFFFFF 0%, #FF8DA1 20%, #FD1D35 65%, rgba(253, 29, 53, 0.45) 100%)",
@@ -156,10 +156,8 @@ export default function EqualizerVisualizer({
             <>
               {/* Duraklat İkonu */}
               <div
-                className="relative flex items-center justify-center"
+                className="relative flex items-center justify-center w-[40%] h-[40%] max-w-[110px] max-h-[110px]"
                 style={{
-                  width: "110px",
-                  height: "110px",
                   filter:
                     "drop-shadow(0 0 20px rgba(253, 29, 53, 0.9)) drop-shadow(0 0 40px rgba(253, 29, 53, 0.5))",
                 }}
@@ -195,7 +193,7 @@ export default function EqualizerVisualizer({
                   />
                 </svg>
               </div>
-              <span className="font-antonio text-[12px] tracking-[0.35em] uppercase font-bold text-white drop-shadow-[0_0_10px_#FD1D35]">
+              <span className="font-antonio text-[10px] sm:text-[12px] tracking-[0.35em] uppercase font-bold text-white drop-shadow-[0_0_10px_#FD1D35]">
                 PAUSE
               </span>
             </>
@@ -203,10 +201,8 @@ export default function EqualizerVisualizer({
             <>
               {/* Oynat İkonu */}
               <div
-                className="relative flex items-center justify-center"
+                className="relative flex items-center justify-center w-[40%] h-[40%] max-w-[110px] max-h-[110px]"
                 style={{
-                  width: "110px",
-                  height: "110px",
                   filter:
                     "drop-shadow(0 0 20px rgba(253, 29, 53, 0.9)) drop-shadow(0 0 40px rgba(253, 29, 53, 0.5))",
                 }}
@@ -233,7 +229,7 @@ export default function EqualizerVisualizer({
                   />
                 </svg>
               </div>
-              <span className="font-antonio text-[12px] tracking-[0.35em] uppercase font-bold text-white drop-shadow-[0_0_10px_#FD1D35]">
+              <span className="font-antonio text-[10px] sm:text-[12px] tracking-[0.35em] uppercase font-bold text-white drop-shadow-[0_0_10px_#FD1D35]">
                 PLAY
               </span>
             </>

@@ -114,16 +114,16 @@ export default function DjSection() {
                   }}
                   variants={cardVariants}
                   whileHover={{ translateY: -12 }}
-                  className="group relative flex h-full flex-col overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.05] p-6 shadow-[0_40px_80px_rgba(5,5,9,0.55)] backdrop-blur-2xl transition-colors duration-500"
+                  className="group relative flex h-full flex-col overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.05] p-6 shadow-[0_40px_80px_rgba(5,5,9,0.55)] backdrop-blur-2xl transition-all duration-500 hover:border-[#FD1D35]/30 hover:shadow-[0_40px_80px_rgba(253,29,53,0.12)]"
                 >
                   <div
                     className="pointer-events-none absolute -inset-px -z-10 rounded-[30px] opacity-0 transition duration-500 group-hover:opacity-100"
                     style={{
                       background:
-                        "linear-gradient(135deg, rgba(253,29,53,0.45), rgba(14,165,233,0.35))"
+                        "linear-gradient(135deg, rgba(253,29,53,0.6), rgba(185,28,28,0.4), rgba(127,29,29,0.25))"
                     }}
                   />
-                  <div className="pointer-events-none absolute inset-0 -z-20 rounded-[36px] bg-black/50 blur-3xl" />
+                  <div className="pointer-events-none absolute inset-0 -z-20 rounded-[36px] bg-black/50 blur-3xl transition-colors duration-500 group-hover:bg-[#FD1D35]/15" />
 
                   <div className="relative overflow-hidden rounded-2xl border border-white/10">
                     {dj.photoUrl ? (
@@ -136,7 +136,7 @@ export default function DjSection() {
                         sizes="(min-width: 1280px) 18vw, (min-width: 768px) 34vw, 90vw"
                       />
                     ) : (
-                      <div className="flex h-56 w-full items-center justify-center bg-[radial-gradient(circle_at_top,rgba(253,29,53,0.25),rgba(14,165,233,0.2))] text-4xl font-semibold text-white/40">
+                      <div className="flex h-56 w-full items-center justify-center bg-[radial-gradient(circle_at_top,rgba(253,29,53,0.35),rgba(185,28,28,0.2))] text-4xl font-semibold text-white/40">
                         {toInitials(dj.nickname || dj.fullName)}
                       </div>
                     )}

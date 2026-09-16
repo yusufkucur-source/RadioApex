@@ -92,10 +92,10 @@ export default function LikedTracks({ title, artist }: Pick<Track, "title" | "ar
   };
 
   return (
-    <div className="relative z-40 flex flex-col items-center gap-2">
+    <div className="relative z-40 flex flex-col items-center gap-1.5">
       <div
-        className={`flex items-center gap-2 will-change-transform transition-transform ${
-          likedTracks.length > 0 ? "translate-x-0" : "translate-x-[21px] sm:translate-x-6"
+        className={`flex items-center gap-1.5 sm:gap-2 will-change-transform transition-transform ${
+          likedTracks.length > 0 ? "translate-x-0" : "translate-x-[15px] sm:translate-x-[17px]"
         }`}
         style={{
           transitionDuration: shouldReduceMotion ? "0ms" : "360ms",
@@ -109,7 +109,7 @@ export default function LikedTracks({ title, artist }: Pick<Track, "title" | "ar
           disabled={!isReady || !title.trim()}
           aria-label={isLiked ? "Remove from liked tracks" : "Like this track"}
           aria-pressed={isLiked}
-          className="inline-flex h-[34px] w-[104px] items-center justify-center gap-1.5 rounded-full border border-white/15 bg-black/40 px-3 text-[10px] font-medium uppercase tracking-[0.14em] text-white/80 transition-colors hover:border-[#FD1D35]/70 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 sm:h-10 sm:w-[122px] sm:gap-2 sm:px-4 sm:text-[11px] sm:tracking-[0.16em]"
+          className="inline-flex h-[28px] xs:h-[30px] sm:h-[32px] w-[80px] xs:w-[86px] sm:w-[94px] items-center justify-center gap-1.5 rounded-full border border-white/15 bg-black/40 px-2.5 sm:px-3 text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.14em] text-white/80 transition-all hover:border-[#FD1D35]/70 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
         >
           <m.span
             initial={false}
@@ -121,9 +121,9 @@ export default function LikedTracks({ title, artist }: Pick<Track, "title" | "ar
                   : { scale: [1, 0.96, 1], rotate: 0 }
             }
             transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
-            className="flex items-center gap-2"
+            className="flex items-center gap-1.5"
           >
-            <Heart className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${isLiked ? "fill-[#FD1D35] text-[#FD1D35]" : "text-white"}`} />
+            <Heart className={`h-3 w-3 sm:h-3.5 sm:w-3.5 ${isLiked ? "fill-[#FD1D35] text-[#FD1D35]" : "text-white"}`} />
             {isLiked ? "Liked" : "Like"}
           </m.span>
         </button>
@@ -137,8 +137,8 @@ export default function LikedTracks({ title, artist }: Pick<Track, "title" | "ar
                   initial={{ opacity: 1, x: 0, y: 0, scale: 0.55 }}
                   animate={{
                     opacity: 0,
-                    x: Math.cos(angle) * 28,
-                    y: Math.sin(angle) * 28,
+                    x: Math.cos(angle) * 24,
+                    y: Math.sin(angle) * 24,
                     scale: 0,
                   }}
                   transition={{ duration: 0.48, ease: [0.16, 1, 0.3, 1] }}
@@ -149,7 +149,7 @@ export default function LikedTracks({ title, artist }: Pick<Track, "title" | "ar
           </span>
         )}
       </div>
-      <div className="relative h-[34px] w-[34px] shrink-0 sm:h-10 sm:w-10">
+      <div className="relative h-[28px] w-[28px] xs:h-[30px] xs:w-[30px] sm:h-[32px] sm:w-[32px] shrink-0">
       <AnimatePresence initial={false}>
         {likedTracks.length > 0 && (
         <m.button
@@ -164,8 +164,8 @@ export default function LikedTracks({ title, artist }: Pick<Track, "title" | "ar
           aria-expanded={isOpen}
           title="Liked tracks"
         >
-          <Music className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-          <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#FD1D35] px-1 text-[9px] font-bold text-white">
+          <Music className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+          <span className="absolute -right-1 -top-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-[#FD1D35] px-1 text-[8px] font-bold text-white leading-none">
             {likedTracks.length}
           </span>
         </m.button>

@@ -57,6 +57,33 @@
   --debug-font-antonio: var(--font-antonio);
   --debug-font-anton: var(--font-anton);
   --debug-font-space-grotesk: var(--font-space-grotesk);
+
+  /* Player Stage Responsive Sizing (Height & Width aware) */
+  --player-stage-size: clamp(210px, min(36vh, 72vw), 300px);
+}
+
+@media (max-height: 850px) {
+  :root {
+    --player-stage-size: clamp(190px, min(34vh, 70vw), 260px);
+  }
+}
+
+@media (max-height: 720px) {
+  :root {
+    --player-stage-size: clamp(170px, min(32vh, 65vw), 220px);
+  }
+}
+
+@media (max-height: 600px) {
+  :root {
+    --player-stage-size: clamp(150px, min(30vh, 60vw), 185px);
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --player-stage-size: clamp(180px, 60vw, 240px);
+  }
 }
 
 html,

@@ -174,10 +174,13 @@ function HomeContent() {
                opacity: 0.7
              }}
            />
-           {/* Üst kısım - Yazılar (Yukarıda) - Parallax */}
+           {/* Üst kısım - Yazılar (Yukarıda) - Parallax & Player'a Dikey Kilitli */}
            <m.div 
-             className="absolute top-[calc(15%-30px+30px)] md:top-[calc(20%+30px)] left-0 right-0 z-30 flex flex-col items-center px-4 parallax-element"
-             style={{ y: contentY }}
+             className="absolute left-0 right-0 z-30 flex flex-col items-center px-4 parallax-element pointer-events-none"
+             style={{ 
+               y: contentY,
+               bottom: "calc(50% + (var(--player-stage-size, 300px) * 0.5) + clamp(14px, 2.5vh, 24px))"
+             }}
            >
              {/* LIVE Eyebrow */}
              <m.span
@@ -185,7 +188,7 @@ function HomeContent() {
                whileInView={{ opacity: 1, y: 0 }}
                viewport={{ once: true, margin: "-20%" }}
                transition={{ duration: 0.6 }}
-               className="font-antonio inline-flex items-center gap-2 xs:gap-3 rounded-full border border-white/10 bg-white/5 px-2 xs:px-3 py-1 text-[9px] xs:text-[11px] uppercase tracking-[0.45em] text-white/60 mb-4"
+               className="font-antonio inline-flex items-center gap-1.5 xs:gap-2 sm:gap-3 rounded-full border border-white/10 bg-white/5 px-2 xs:px-2.5 sm:px-3 py-0.5 sm:py-1 text-[8px] xs:text-[9px] sm:text-[11px] uppercase tracking-[0.45em] text-white/60 mb-2 xs:mb-2.5 sm:mb-3 md:mb-3.5"
              >
                <span className="h-1 w-1 rounded-full bg-[#FD1D35]" />
                LIVE
@@ -193,7 +196,7 @@ function HomeContent() {
 
              {/* Şarkı Başlığı */}
              <m.div 
-               className="font-roboto text-[14px] xs:text-[16px] sm:text-[21px] md:text-[28px] mb-2 motion-element text-center max-w-[90vw] sm:whitespace-nowrap"
+               className="font-roboto text-[13px] xs:text-[15px] sm:text-[19px] md:text-[24px] lg:text-[28px] mb-1 xs:mb-1.5 sm:mb-2 motion-element text-center max-w-[90vw] sm:whitespace-nowrap pointer-events-auto"
                style={{
                  fontStyle: "normal",
                  fontWeight: 500,
@@ -216,7 +219,7 @@ function HomeContent() {
 
              {/* Sanatçı Adı */}
              <m.div 
-               className="font-roboto text-[10px] xs:text-[12px] sm:text-[14px] md:text-[16px] mb-8 motion-element text-center max-w-[90vw] sm:whitespace-nowrap"
+               className="font-roboto text-[9px] xs:text-[11px] sm:text-[13px] md:text-[15px] lg:text-[16px] mb-2.5 xs:mb-3 sm:mb-3.5 motion-element text-center max-w-[90vw] sm:whitespace-nowrap pointer-events-auto"
                style={{
                  fontStyle: "normal",
                  fontWeight: 400,
@@ -232,10 +235,12 @@ function HomeContent() {
 {(nowPlaying.artist?.trim() || "RADIO APEX").toLocaleUpperCase('en-US')}
              </m.div>
 
-             <LikedTracks
-               title={nowPlaying.title?.trim() || ""}
-               artist={nowPlaying.artist?.trim() || "RADIO APEX"}
-             />
+             <div className="pointer-events-auto">
+               <LikedTracks
+                 title={nowPlaying.title?.trim() || ""}
+                 artist={nowPlaying.artist?.trim() || "RADIO APEX"}
+               />
+             </div>
 
            </m.div>
 
@@ -289,10 +294,10 @@ function HomeContent() {
         </m.div>
         
          {/* SABİT FOOTER VE SOSYAL MEDYA */}
-         <div className="fixed bottom-0 left-0 right-0 z-40">
+         <div className="fixed bottom-0 left-0 right-0 z-40 pointer-events-none">
            {/* Sosyal Medya İkonları */}
            <m.div 
-             className="flex items-center justify-center gap-4 pb-20 sm:pb-18 md:pb-24 lg:pb-28"
+             className="flex items-center justify-center gap-2.5 xs:gap-3 sm:gap-4 pb-14 xs:pb-16 md:pb-20 lg:pb-24 pointer-events-auto"
              initial={{ opacity: 0, y: 20 }}
              animate={{ opacity: 1, y: 0 }}
              transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
@@ -310,7 +315,7 @@ function HomeContent() {
                      variant="ghost"
                      size="icon"
                      asChild
-                     className="h-11 w-11 rounded-full border border-white/10 bg-white/5 text-white/60 backdrop-blur-sm transition-all hover:border-[#FD1D35]/50 hover:bg-[#FD1D35]/10 hover:text-[#FD1D35] hover:scale-110"
+                     className="h-9 w-9 xs:h-10 xs:w-10 md:h-11 md:w-11 rounded-full border border-white/10 bg-white/5 text-white/60 backdrop-blur-sm transition-all hover:border-[#FD1D35]/50 hover:bg-[#FD1D35]/10 hover:text-[#FD1D35] hover:scale-110"
                    >
                      <a
                        href={social.href}
@@ -318,7 +323,7 @@ function HomeContent() {
                        rel="noopener noreferrer"
                        aria-label={social.label}
                      >
-                       <Icon className="h-5 w-5" />
+                       <Icon className="h-4 w-4 xs:h-4.5 xs:w-4.5 md:h-5 md:w-5" />
                      </a>
                    </Button>
                  </m.div>
