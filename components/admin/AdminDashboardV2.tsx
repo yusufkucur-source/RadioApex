@@ -31,6 +31,8 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } f
 import { getFirebaseApp, getFirebaseAuthInstance, getFirebaseStorageInstance, getFirestoreInstance } from "@/lib/firebase/client";
 import { useDJs, useLineup, type DJProfile, type LineupSlot } from "@/lib/firebase/hooks";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import { WorldMapVisualizer } from "@/components/admin/WorldMapVisualizer";
+import type { ListenersApiResponse } from "@/app/api/admin/listeners/route";
 
 type Section = "overview" | "djs" | "lineup" | "notifications";
 type Drawer = "dj" | "lineup" | null;
@@ -97,6 +99,8 @@ export default function AdminDashboardV2() {
   const [analyticsError, setAnalyticsError] = useState<string | null>(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
   const [nowPlaying, setNowPlaying] = useState<NowPlayingData | null>(null);
+  const [liveListeners, setLiveListeners] = useState<ListenersApiResponse | null>(null);
+  const [liveListenersLoading, setLiveListenersLoading] = useState(false);
   const [editingDj, setEditingDj] = useState<string | null>(null);
   const [editingLineup, setEditingLineup] = useState<string | null>(null);
   const [djForm, setDjForm] = useState(emptyDj);
@@ -145,11 +149,38 @@ export default function AdminDashboardV2() {
     }
   };
 
+  const loadLiveListeners = async () => {
+    if (!user) return;
+    setLiveListenersLoading(true);
+    try {
+      const token = await user.getIdToken();
+      const response = await fetch("/api/admin/listeners", {
+        headers: { Authorization: `Bearer ${token}` },
+        cache: "no-store"
+      });
+      if (response.ok) {
+        const payload = (await response.json()) as ListenersApiResponse;
+        setLiveListeners(payload);
+        if (typeof payload.total === "number") {
+          setNowPlaying({ listeners: payload.total });
+        }
+      }
+    } catch (err) {
+      console.error("Live listeners fetch error", err);
+    } finally {
+      setLiveListenersLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (user) {
       void loadAnalytics();
       void loadNowPlaying();
-      const interval = window.setInterval(() => void loadNowPlaying(), 30000);
+      void loadLiveListeners();
+      const interval = window.setInterval(() => {
+        void loadNowPlaying();
+        void loadLiveListeners();
+      }, 15000);
       return () => window.clearInterval(interval);
     }
   }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -303,7 +334,23 @@ export default function AdminDashboardV2() {
     {mobileMenu && <button onClick={() => setMobileMenu(false)} className="fixed inset-0 z-20 bg-black/60 lg:hidden" aria-label="Menüyü kapat" />}
     <main className="min-h-screen lg:pl-64"><header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-white/10 bg-[#09090b]/95 px-4 backdrop-blur lg:px-8"><div className="flex items-center gap-3"><button className="lg:hidden" onClick={() => setMobileMenu(true)}><Menu size={22} /></button><div><h1 className="text-base font-semibold">{navItems.find((item) => item.id === section)?.label}</h1><p className="hidden text-xs text-white/45 sm:block">Radio Apex yönetim alanı</p></div></div>{section !== "notifications" && <Button onClick={() => { setDrawer(section === "lineup" ? "lineup" : "dj"); }} className="bg-apex-accent hover:bg-apex-accent/90"><Plus />{section === "lineup" ? "Program ekle" : "DJ ekle"}</Button>}</header>
       <div className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">{error && <div className="mb-5 rounded-md border border-red-400/20 bg-red-400/10 px-4 py-3 text-sm text-red-200">{error}</div>}{notice && <div className="mb-5 flex items-center justify-between rounded-md border border-emerald-400/20 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-200">{notice}<button onClick={() => setNotice(null)}><X size={16} /></button></div>}
-        {section === "overview" && <Overview analytics={analytics} nowPlaying={nowPlaying} analyticsError={analyticsError} analyticsLoading={analyticsLoading} onReload={() => { void loadAnalytics(); void loadNowPlaying(); }} djs={djs.length} lineup={lineup.length} />}
+        {section === "overview" && (
+          <Overview
+            analytics={analytics}
+            nowPlaying={nowPlaying}
+            analyticsError={analyticsError}
+            analyticsLoading={analyticsLoading}
+            liveListeners={liveListeners}
+            liveListenersLoading={liveListenersLoading}
+            onReload={() => {
+              void loadAnalytics();
+              void loadNowPlaying();
+              void loadLiveListeners();
+            }}
+            djs={djs.length}
+            lineup={lineup.length}
+          />
+        )}
         {section === "djs" && <DjsTable djs={djs} busy={busy} onAdd={() => setDrawer("dj")} onMigratePhotos={() => void migrateDjPhotos()} onToggleActive={toggleDjActive} onEdit={(dj) => { setDjForm({ nickname: dj.nickname, fullName: dj.fullName, city: dj.city, photoUrl: dj.photoUrl, description: dj.description || "", isActive: dj.isActive !== false }); setDjPhotoFile(null); setEditingDj(dj.id); setDrawer("dj"); }} onDelete={(id) => void remove("djs", id)} />}
         {section === "lineup" && <LineupTable lineup={lineup} djs={djMap} onAdd={() => setDrawer("lineup")} onEdit={(slot) => { setLineupForm({ day: slot.day, startTime: slot.startTime, endTime: slot.endTime, title: slot.title, genre: slot.genre, djId: slot.djId || "" }); setEditingLineup(slot.id); setDrawer("lineup"); }} onDelete={(id) => void remove("lineup", id)} />}
         {section === "notifications" && <NotificationForm value={notification} busy={busy} onChange={setNotification} onSubmit={sendNotification} />}
@@ -313,7 +360,27 @@ export default function AdminDashboardV2() {
   </div>;
 }
 
-function Overview({ analytics, nowPlaying, analyticsError, analyticsLoading, onReload, djs, lineup }: { analytics: AnalyticsData | null; nowPlaying: NowPlayingData | null; analyticsError: string | null; analyticsLoading: boolean; onReload: () => void; djs: number; lineup: number }) {
+function Overview({
+  analytics,
+  nowPlaying,
+  analyticsError,
+  analyticsLoading,
+  liveListeners,
+  liveListenersLoading,
+  onReload,
+  djs,
+  lineup
+}: {
+  analytics: AnalyticsData | null;
+  nowPlaying: NowPlayingData | null;
+  analyticsError: string | null;
+  analyticsLoading: boolean;
+  liveListeners: ListenersApiResponse | null;
+  liveListenersLoading: boolean;
+  onReload: () => void;
+  djs: number;
+  lineup: number;
+}) {
   const metrics = [
     { label: "Şu an dinleyen", value: nowPlaying?.listeners, icon: Headphones, period: "Canlı: AzuraCast", description: "Site, mobil app ve aynı stream'i kullanan platformlardaki toplam canlı dinleyici." },
     { label: "Şu an sitede", value: analytics?.realtimeActiveUsers, icon: Radio, period: "Canlı: son 30 dk", description: "GA4 realtime verisi. Yaklaşık olarak şu anda sitede aktif olan kişi sayısı." },
@@ -322,7 +389,40 @@ function Overview({ analytics, nowPlaying, analyticsError, analyticsLoading, onR
     { label: "Oturum", value: analytics?.sessions, icon: BarChart3, period: "Dönem: son 7 gün", description: "Toplam ziyaret sayısı. Aynı kişi siteye birkaç kez girerse birden fazla oturum sayılır." },
     { label: "Sayfa görüntüleme", value: analytics?.pageViews, icon: Disc3, period: "Dönem: son 7 gün", description: "Açılan toplam sayfa sayısı. Aynı sayfanın tekrar açılması da dahildir." },
   ];
-  return <div className="space-y-6"><div><p className="text-sm text-white/50">Canlı dinleyici, canlı site durumu ve bugün dahil son 7 günün GA4 özeti.</p></div><div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">{metrics.map(({ label, value, icon: Icon, period, description }) => <Panel key={label} className="p-5"><div className="flex items-start justify-between gap-3"><div><p className="text-sm text-white/65">{label}</p><p className="mt-1 text-[11px] font-medium uppercase tracking-wide text-apex-accent/80">{period}</p></div><Icon className="shrink-0 text-apex-accent" size={18} /></div><p className="mt-4 text-3xl font-semibold">{analyticsLoading && label !== "Şu an dinleyen" ? "—" : value === undefined ? "—" : formatNumber(value)}</p><p className="mt-3 min-h-14 text-xs leading-5 text-white/42">{description}</p></Panel>)}</div><div className="grid gap-6 xl:grid-cols-[1.7fr_1fr]"><Panel className="p-5 sm:p-6"><div className="flex items-center justify-between"><div><h2 className="font-semibold">Son 7 gün kullanıcı aktivitesi</h2><p className="mt-1 text-sm text-white/45">Her gün için aktif kullanıcı sayısı, bugün dahil</p></div><Button variant="outline" size="sm" onClick={onReload} disabled={analyticsLoading} className="border-white/15 bg-transparent text-white hover:bg-white/10 hover:text-white">{analyticsLoading ? <Loader2 className="animate-spin" /> : "Yenile"}</Button></div>{analyticsError ? <div className="mt-6 rounded-md border border-amber-400/20 bg-amber-400/10 p-4 text-sm text-amber-100"><p className="font-medium">GA4 raporu henüz hazır değil</p><p className="mt-1 text-amber-100/70">{analyticsError} Kurulum için <code className="text-xs">GA4_ADMIN_SETUP.md</code> dosyasına bak.</p></div> : analytics?.timeline.length ? <ActivityLineChart data={analytics.timeline} /> : <p className="py-16 text-center text-sm text-white/40">Rapor yükleniyor…</p>}</Panel><Panel className="p-5 sm:p-6"><h2 className="font-semibold">Hızlı görünüm</h2><div className="mt-5 space-y-4"><div className="flex items-center justify-between border-b border-white/10 pb-4"><span className="text-sm text-white/55">Kayıtlı DJ</span><strong>{djs}</strong></div><div className="flex items-center justify-between border-b border-white/10 pb-4"><span className="text-sm text-white/55">Planlı program</span><strong>{lineup}</strong></div><div className="flex items-center justify-between"><span className="text-sm text-white/55">Rapor durumu</span><span className={clsx("rounded-full px-2 py-1 text-xs", analytics ? "bg-emerald-400/10 text-emerald-300" : "bg-white/10 text-white/50")}>{analytics ? "Bağlı" : "Kurulum gerekli"}</span></div></div></Panel></div>{analytics && <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-5"><Distribution title="Ülke dağılımı" subtitle="Aktif kullanıcı" data={analytics.countries} /><Distribution title="Cihazlar" subtitle="Aktif kullanıcı" data={analytics.devices} /><Distribution title="Trafik kaynağı" subtitle="Oturum" data={analytics.channels} /><Distribution title="En çok açılan sayfalar" subtitle="Görüntüleme" data={analytics.pages} /><Distribution title="En çok görüntülenen bölümler" subtitle="Görüntüleme" data={analytics.sections} /></div>}</div>;
+  return (
+    <div className="space-y-8">
+      <div>
+        <p className="text-sm text-white/50">
+          AzuraCast canlı dinleyici coğrafi haritası ve bugün dahil son 7 günün GA4 özeti.
+        </p>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
+        {metrics.map(({ label, value, icon: Icon, period, description }) => (
+          <Panel key={label} className="p-5">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-sm text-white/65">{label}</p>
+                <p className="mt-1 text-[11px] font-medium uppercase tracking-wide text-apex-accent/80">{period}</p>
+              </div>
+              <Icon className="shrink-0 text-apex-accent" size={18} />
+            </div>
+            <p className="mt-4 text-3xl font-semibold">
+              {analyticsLoading && label !== "Şu an dinleyen" ? "—" : value === undefined ? "—" : formatNumber(value)}
+            </p>
+            <p className="mt-3 min-h-14 text-xs leading-5 text-white/42">{description}</p>
+          </Panel>
+        ))}
+      </div>
+
+      {/* AzuraCast Canlı Dinleyiciler ve Dünya Haritası */}
+      <WorldMapVisualizer
+        data={liveListeners}
+        loading={liveListenersLoading}
+        onRefresh={onReload}
+      />
+<div className="grid gap-6 xl:grid-cols-[1.7fr_1fr]"><Panel className="p-5 sm:p-6"><div className="flex items-center justify-between"><div><h2 className="font-semibold">Son 7 gün kullanıcı aktivitesi</h2><p className="mt-1 text-sm text-white/45">Her gün için aktif kullanıcı sayısı, bugün dahil</p></div><Button variant="outline" size="sm" onClick={onReload} disabled={analyticsLoading} className="border-white/15 bg-transparent text-white hover:bg-white/10 hover:text-white">{analyticsLoading ? <Loader2 className="animate-spin" /> : "Yenile"}</Button></div>{analyticsError ? <div className="mt-6 rounded-md border border-amber-400/20 bg-amber-400/10 p-4 text-sm text-amber-100"><p className="font-medium">GA4 raporu henüz hazır değil</p><p className="mt-1 text-amber-100/70">{analyticsError} Kurulum için <code className="text-xs">GA4_ADMIN_SETUP.md</code> dosyasına bak.</p></div> : analytics?.timeline.length ? <ActivityLineChart data={analytics.timeline} /> : <p className="py-16 text-center text-sm text-white/40">Rapor yükleniyor…</p>}</Panel><Panel className="p-5 sm:p-6"><h2 className="font-semibold">Hızlı görünüm</h2><div className="mt-5 space-y-4"><div className="flex items-center justify-between border-b border-white/10 pb-4"><span className="text-sm text-white/55">Kayıtlı DJ</span><strong>{djs}</strong></div><div className="flex items-center justify-between border-b border-white/10 pb-4"><span className="text-sm text-white/55">Planlı program</span><strong>{lineup}</strong></div><div className="flex items-center justify-between"><span className="text-sm text-white/55">Rapor durumu</span><span className={clsx("rounded-full px-2 py-1 text-xs", analytics ? "bg-emerald-400/10 text-emerald-300" : "bg-white/10 text-white/50")}>{analytics ? "Bağlı" : "Kurulum gerekli"}</span></div></div></Panel></div>{analytics && <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-5"><Distribution title="Ülke dağılımı" subtitle="Aktif kullanıcı" data={analytics.countries} /><Distribution title="Cihazlar" subtitle="Aktif kullanıcı" data={analytics.devices} /><Distribution title="Trafik kaynağı" subtitle="Oturum" data={analytics.channels} /><Distribution title="En çok açılan sayfalar" subtitle="Görüntüleme" data={analytics.pages} /><Distribution title="En çok görüntülenen bölümler" subtitle="Görüntüleme" data={analytics.sections} /></div>}</div>
+  );
 }
 
 function ActivityLineChart({ data }: { data: Array<{ date: string; activeUsers: number; sessions: number }> }) {
