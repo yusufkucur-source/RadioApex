@@ -90,6 +90,7 @@
 @media (max-width: 767px), (max-height: 700px) {
   :root {
     --player-stage-size: clamp(155px, min(50vw, 25vh), 210px);
+    --recently-played-gap: clamp(52px, 9vh, 76px);
   }
 }
 
