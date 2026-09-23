@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 
 const STORAGE_KEY = "radioapex-liked-tracks";
+const LIKED_TRACKS_EVENT = "radioapex-liked-tracks-updated";
 
 type Track = {
   id: string;
@@ -41,6 +42,7 @@ function readLikedTracks(): Track[] {
 
 function saveLikedTracks(tracks: Track[]) {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(tracks));
+  window.dispatchEvent(new Event(LIKED_TRACKS_EVENT));
 }
 
 export default function LikedTracks({ title, artist }: Pick<Track, "title" | "artist">) {
@@ -55,6 +57,12 @@ export default function LikedTracks({ title, artist }: Pick<Track, "title" | "ar
   useEffect(() => {
     setLikedTracks(readLikedTracks());
     setIsReady(true);
+  }, []);
+
+  useEffect(() => {
+    const refresh = () => setLikedTracks(readLikedTracks());
+    window.addEventListener(LIKED_TRACKS_EVENT, refresh);
+    return () => window.removeEventListener(LIKED_TRACKS_EVENT, refresh);
   }, []);
 
   useEffect(() => {

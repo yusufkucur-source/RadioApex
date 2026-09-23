@@ -9,6 +9,7 @@ import { NowPlayingProvider, useNowPlaying } from "@/components/now-playing/NowP
 import { Button } from "@/components/ui/button";
 import { Instagram, Twitter, Music } from "lucide-react";
 import LikedTracks from "@/components/now-playing/LikedTracks";
+import RecentlyPlayed from "@/components/now-playing/RecentlyPlayed";
 import { isUnknownTrackText } from "@/lib/utils";
 import DjSection from "@/components/sections/DjSection";
 import LineupSection from "@/components/sections/LineupSection";
@@ -266,6 +267,8 @@ function HomeContent() {
 
            {/* Orta kısım - Player (PLAY BUTONU TAM ORTADA - SCROLL İLE KAYAR) */}
            <CenteredPlayer />
+
+           <RecentlyPlayed tracks={nowPlaying.songHistory} />
 
            {/* Açıklama metni geçici olarak gizlendi */}
 

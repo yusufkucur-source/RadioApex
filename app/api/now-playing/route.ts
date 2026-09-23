@@ -1,11 +1,7 @@
 import { NextResponse } from "next/server";
 import { createHash } from "crypto";
 import { cert, getApps, initializeApp, type App } from "firebase-admin/app";
-import {
-  getFirestore,
-  Timestamp,
-  type Firestore
-} from "firebase-admin/firestore";
+import { getFirestore, type Firestore } from "firebase-admin/firestore";
 import { cleanTrackText, isUnknownTrackText } from "@/lib/utils";
 
 export const runtime = "nodejs";
@@ -13,11 +9,12 @@ export const dynamic = "force-dynamic";
 
 // AzuraCast API endpoint - eski HTML'den
 const AZURACAST_API = "https://radio.cast.click/api/nowplaying/radioapex";
-const HISTORY_COLLECTION = "trackHistory";
-const HISTORY_STATE_COLLECTION = "trackHistoryState";
-const HISTORY_STATE_DOC = "radioapex";
+// This is the same shared history that the mobile app reads.
+const HISTORY_COLLECTION = "recentTracks";
+const HISTORY_STATE_COLLECTION = "metadata";
+const HISTORY_STATE_DOCUMENT = "recentTracksState";
 const HISTORY_LIMIT = 5;
-const HISTORY_PRUNE_LIMIT = 50;
+const MEMORY_HISTORY_LIMIT = 50;
 const API_RESPONSE_CACHE_MS = 12000;
 const HISTORY_RESOLUTION_TIMEOUT_MS = 2500;
 
@@ -25,8 +22,6 @@ let firebaseApp: App | null = null;
 let firestoreDb: Firestore | null = null;
 let cachedPayload: NowPlayingPayload | null = null;
 let cachedPayloadAt = 0;
-let lastHistorySyncKey = "";
-let lastHistorySyncAttemptAt = 0;
 let memoryHistory: CurrentTrack[] = [];
 
 type AzuraCastSong = {
@@ -39,6 +34,7 @@ type AzuraCastSong = {
 type AzuraCastResponse = {
   now_playing?: {
     song?: AzuraCastSong;
+    played_at?: number;
     elapsed?: number;
     duration?: number;
   };
@@ -58,6 +54,7 @@ type SongHistoryItem = {
 
 type CurrentTrack = SongHistoryItem & {
   coverArt: string | null;
+  playedAt: number;
   trackKey: string;
 };
 
@@ -171,41 +168,25 @@ async function pruneTrackHistory(db: Firestore) {
     .orderBy("playedAt", "desc")
     .limit(75)
     .get();
-  const staleDocs = snapshot.docs.slice(HISTORY_PRUNE_LIMIT);
 
-  await Promise.all(staleDocs.map((item) => item.ref.delete()));
+  await Promise.all(snapshot.docs.slice(50).map((item) => item.ref.delete()));
 }
 
 async function syncTrackHistory(db: Firestore, currentTrack: CurrentTrack) {
-  const now = Date.now();
-
-  if (
-    lastHistorySyncKey === currentTrack.trackKey &&
-    now - lastHistorySyncAttemptAt < 60000
-  ) {
-    return;
-  }
-
-  lastHistorySyncAttemptAt = now;
-  const stateRef = db.collection(HISTORY_STATE_COLLECTION).doc(HISTORY_STATE_DOC);
-  const entryRef = db.collection(HISTORY_COLLECTION).doc();
-  const playedAt = Timestamp.fromMillis(now);
+  const stateRef = db.collection(HISTORY_STATE_COLLECTION).doc(HISTORY_STATE_DOCUMENT);
+  const entryRef = db
+    .collection(HISTORY_COLLECTION)
+    .doc(`${currentTrack.playedAt}-${currentTrack.trackKey.slice(0, 12)}`);
 
   await db.runTransaction(async (transaction) => {
     const stateSnapshot = await transaction.get(stateRef);
-    const lastTrackKey = stateSnapshot.exists
-      ? stateSnapshot.data()?.lastTrackKey
-      : null;
-
-    if (lastTrackKey === currentTrack.trackKey) {
-      return;
-    }
+    if (stateSnapshot.data()?.lastSignature === currentTrack.trackKey) return;
 
     transaction.set(entryRef, {
       artist: currentTrack.artist,
       coverArt: currentTrack.coverArt,
-      playedAt,
-      source: "radio.cast.click",
+      playedAt: currentTrack.playedAt,
+      signature: currentTrack.trackKey,
       text: `${currentTrack.artist} - ${currentTrack.title}`,
       title: currentTrack.title,
       trackKey: currentTrack.trackKey
@@ -213,16 +194,19 @@ async function syncTrackHistory(db: Firestore, currentTrack: CurrentTrack) {
     transaction.set(
       stateRef,
       {
-        lastArtist: currentTrack.artist,
-        lastTitle: currentTrack.title,
-        lastTrackKey: currentTrack.trackKey,
-        updatedAt: playedAt
+        lastSignature: currentTrack.trackKey,
+        lastTrack: {
+          artist: currentTrack.artist,
+          coverArt: currentTrack.coverArt,
+          playedAt: currentTrack.playedAt,
+          title: currentTrack.title
+        },
+        updatedAt: Date.now()
       },
       { merge: true }
     );
   });
 
-  lastHistorySyncKey = currentTrack.trackKey;
   await pruneTrackHistory(db);
 }
 
@@ -244,7 +228,13 @@ async function getStoredSongHistory(
           typeof data.artist === "string" ? data.artist : ""
         ),
         title: normalizeTrackText(typeof data.title === "string" ? data.title : ""),
-        trackKey: typeof data.trackKey === "string" ? data.trackKey : ""
+        trackKey:
+          typeof data.trackKey === "string"
+            ? data.trackKey
+            : getTrackKey({
+                artist: normalizeTrackText(typeof data.artist === "string" ? data.artist : ""),
+                title: normalizeTrackText(typeof data.title === "string" ? data.title : "")
+              })
       };
     })
     .filter(
@@ -268,7 +258,7 @@ function syncMemoryTrackHistory(currentTrack: CurrentTrack) {
   memoryHistory = [
     currentTrack,
     ...memoryHistory.filter((item) => item.trackKey !== currentTrack.trackKey)
-  ].slice(0, HISTORY_PRUNE_LIMIT);
+  ].slice(0, MEMORY_HISTORY_LIMIT);
 }
 
 function getMemorySongHistory(currentTrackKey: string): SongHistoryItem[] {
@@ -347,6 +337,10 @@ export async function GET() {
     const currentTrack: CurrentTrack = {
       artist,
       coverArt: song.art || null,
+      playedAt:
+        typeof data.now_playing?.played_at === "number"
+          ? data.now_playing.played_at
+          : Math.floor(Date.now() / 1000),
       title,
       trackKey: getTrackKey({ artist, title })
     };

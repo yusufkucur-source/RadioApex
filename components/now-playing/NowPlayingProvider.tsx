@@ -8,6 +8,8 @@ import {
   useMemo,
   useState
 } from "react";
+import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
+import { getFirestoreInstance } from "@/lib/firebase/client";
 import { isUnknownTrackText } from "@/lib/utils";
 
 export type SongHistoryItem = {
@@ -176,6 +178,34 @@ async function fetchNowPlaying(): Promise<NowPlayingPayload> {
   }
 }
 
+// Matches the mobile app: recent tracks are read directly from the shared
+// Firestore collection rather than relying on AzuraCast's often-empty history.
+async function fetchRecentTracks(): Promise<SongHistoryItem[]> {
+  const db = getFirestoreInstance();
+  if (!db) return [];
+
+  try {
+    const snapshot = await getDocs(
+      query(collection(db, "recentTracks"), orderBy("playedAt", "desc"), limit(5))
+    );
+
+    return snapshot.docs
+      .map((item) => {
+        const data = item.data();
+        const title = typeof data.title === "string" ? data.title : "";
+        const artist = typeof data.artist === "string" ? data.artist : "";
+        return {
+          title: isUnknownTrackText(title) ? "" : normalizeTrackText(title),
+          artist: isUnknownTrackText(artist) ? "" : normalizeTrackText(artist)
+        };
+      })
+      .filter((track) => Boolean(track.title));
+  } catch (error) {
+    console.warn("Failed to load recent tracks from Firestore", error);
+    return [];
+  }
+}
+
 export const NowPlayingProvider = ({
   children,
   intervalMs = 15000
@@ -194,8 +224,14 @@ export const NowPlayingProvider = ({
       setIsLoading(true);
     }
     
-    const payload = await fetchNowPlaying();
-    setNowPlaying(payload);
+    const [payload, recentTracks] = await Promise.all([
+      fetchNowPlaying(),
+      fetchRecentTracks()
+    ]);
+    setNowPlaying({
+      ...payload,
+      songHistory: recentTracks.length > 0 ? recentTracks : payload.songHistory
+    });
     
     // Sadece ilk yüklemede loading'i kapat
     if (isInitialLoad) {
