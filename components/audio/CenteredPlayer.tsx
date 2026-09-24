@@ -229,7 +229,7 @@ export default function CenteredPlayer() {
           Player sahnesinin altına 'absolute' bağlandığı için player'ın ekran merkezindeki
           konumunu milimetrik olarak bile DEĞİŞTİRMEZ.
         */}
-        <div className="absolute top-[calc(100%+14px)] xs:top-[calc(100%+18px)] md:top-[calc(100%+24px)] left-1/2 -translate-x-1/2 pointer-events-auto">
+        <div className="player-quality-selector absolute top-[calc(100%+14px)] xs:top-[calc(100%+18px)] md:top-[calc(100%+24px)] left-1/2 -translate-x-1/2 pointer-events-auto">
           <div
             onMouseLeave={() => setHoveredQuality(null)}
             className="relative flex items-center rounded-full bg-black/30 border border-white/10 p-0.5 sm:p-1 backdrop-blur-xl shadow-[0_4px_16px_rgba(0,0,0,0.25)]"

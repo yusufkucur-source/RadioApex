@@ -320,7 +320,7 @@ function HomeContent() {
          <div className="fixed bottom-0 left-0 right-0 z-40 pointer-events-none">
            {/* Sosyal Medya İkonları - Footer üstünde net ve temiz boşluk */}
            <m.div 
-             className="flex items-center justify-center gap-2.5 xs:gap-3 sm:gap-4 pb-[82px] xs:pb-[88px] sm:pb-[94px] md:pb-[102px] lg:pb-[110px] pointer-events-auto"
+             className="hero-socials flex items-center justify-center gap-2.5 xs:gap-3 sm:gap-4 pb-[82px] xs:pb-[88px] sm:pb-[94px] md:pb-[102px] lg:pb-[110px] pointer-events-auto"
              initial={{ opacity: 0, y: 20 }}
              animate={{ opacity: 1, y: 0 }}
              transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
