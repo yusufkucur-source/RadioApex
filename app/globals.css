@@ -99,10 +99,6 @@
     --recently-played-gap: clamp(48px, 7vh, 60px);
   }
 
-  .player-quality-selector {
-    top: calc(100% + 8px) !important;
-  }
-
   .hero-socials {
     padding-bottom: 82px !important;
   }

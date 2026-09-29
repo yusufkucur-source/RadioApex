@@ -5,21 +5,11 @@ import { m, AnimatePresence } from "framer-motion";
 import EqualizerVisualizer from "./EqualizerVisualizer";
 import { trackAnalyticsEvent } from "@/lib/analytics";
 
-export type AudioQuality = "128" | "320";
-
-const STREAM_URLS: Record<AudioQuality, string> = {
-  // 128 kbps Standart Kalite (MP3)
-  "128": "https://radio.cast.click/radio/8000/radio.mp3",
-  // 320 kbps Stüdyo / Yüksek Kalite (AAC/HQ - Varsayılan)
-  "320": "https://radio.cast.click/radio/8000/radioapex.flac",
-};
+const STREAM_URL = "https://radio.cast.click/radio/8000/radioapex.flac";
 
 export default function CenteredPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isBuffering, setIsBuffering] = useState(false);
-  // Varsayılan kalite: 320 kbps
-  const [quality, setQuality] = useState<AudioQuality>("320");
-  const [hoveredQuality, setHoveredQuality] = useState<AudioQuality | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const handlePlayPause = async () => {
@@ -31,50 +21,22 @@ export default function CenteredPlayer() {
         audio.pause();
         setIsPlaying(false);
         setIsBuffering(false);
-        trackAnalyticsEvent("stream_stop", { source: "website", quality });
+        trackAnalyticsEvent("stream_stop", { source: "website", quality: "320" });
       } else {
         setIsBuffering(true);
-        const targetUrl = STREAM_URLS[quality];
+        const targetUrl = STREAM_URL;
         if (audio.src !== targetUrl) {
           audio.src = targetUrl;
         }
         await audio.play();
         setIsPlaying(true);
         setIsBuffering(false);
-        trackAnalyticsEvent("stream_start", { source: "website", quality });
+        trackAnalyticsEvent("stream_start", { source: "website", quality: "320" });
       }
     } catch (error) {
       console.error("Audio play error:", error);
       setIsPlaying(false);
       setIsBuffering(false);
-    }
-  };
-
-  // Kalite Değiştirme (128 KBPS <-> 320 KBPS HQ)
-  const handleQualityChange = async (newQuality: AudioQuality) => {
-    if (newQuality === quality) return;
-
-    setQuality(newQuality);
-    trackAnalyticsEvent("quality_change", { quality: newQuality });
-
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    // Eğer o anda çalıyorsa, yayını kesintisiz olarak yeni kaliteye aktar
-    if (isPlaying) {
-      setIsBuffering(true);
-      const targetUrl = STREAM_URLS[newQuality];
-      audio.pause();
-      audio.src = targetUrl;
-      try {
-        await audio.play();
-        setIsPlaying(true);
-        setIsBuffering(false);
-      } catch (err) {
-        console.error("Kalite geçiş hatası:", err);
-        setIsPlaying(false);
-        setIsBuffering(false);
-      }
     }
   };
 
@@ -157,7 +119,7 @@ export default function CenteredPlayer() {
                   filter:
                     "drop-shadow(0 0 35px rgba(253, 29, 53, 0.65)) drop-shadow(0 0 70px rgba(253, 29, 53, 0.45))",
                 }}
-                aria-label={`Yayını Başlat (${quality} kbps)`}
+                aria-label="Yayını Başlat"
               >
                 {/* Glow Background Layer */}
                 <div
@@ -224,120 +186,12 @@ export default function CenteredPlayer() {
           )}
         </AnimatePresence>
 
-        {/* 
-          2. KALİTE SEÇİCİ SWITCH (Tam Merkezin Altında - Absolute Anchored)
-          Player sahnesinin altına 'absolute' bağlandığı için player'ın ekran merkezindeki
-          konumunu milimetrik olarak bile DEĞİŞTİRMEZ.
-        */}
-        <div className="player-quality-selector absolute top-[calc(100%+14px)] xs:top-[calc(100%+18px)] md:top-[calc(100%+24px)] left-1/2 -translate-x-1/2 pointer-events-auto">
-          <div
-            onMouseLeave={() => setHoveredQuality(null)}
-            className="relative flex items-center rounded-full bg-black/30 border border-white/10 p-0.5 sm:p-1 backdrop-blur-xl shadow-[0_4px_16px_rgba(0,0,0,0.25)]"
-          >
-            {/* 128 KBPS Sekmesi */}
-            <m.button
-              type="button"
-              onClick={() => handleQualityChange("128")}
-              onMouseEnter={() => setHoveredQuality("128")}
-              whileTap={{ scale: 0.96 }}
-              className={`relative z-10 flex items-center justify-center w-[90px] xs:w-[100px] sm:w-[115px] h-[28px] xs:h-[30px] sm:h-[34px] rounded-full text-[10px] xs:text-[11px] sm:text-[12px] font-antonio tracking-widest uppercase transition-colors duration-200 select-none ${
-                quality === "128"
-                  ? "text-white font-bold"
-                  : "text-white/45 hover:text-white/80"
-              }`}
-              aria-label="128 kbps Standart Ses Kalitesi"
-            >
-              {/* Kayarak gelen hover arka planı */}
-              {hoveredQuality === "128" && quality !== "128" && (
-                <m.div
-                  layoutId="hover-quality-pill"
-                  className="absolute inset-0 rounded-full bg-white/[0.06]"
-                  transition={{
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 28,
-                  }}
-                />
-              )}
-
-              {/* Aktif Kayar Kapsül (Active Spring Pill) */}
-              {quality === "128" && (
-                <m.div
-                  layoutId="active-quality-switch"
-                  className="absolute inset-0 rounded-full bg-white/15 border border-white/20 shadow-[0_0_8px_rgba(255,255,255,0.08)]"
-                  transition={{
-                    type: "spring",
-                    stiffness: 380,
-                    damping: 30,
-                    mass: 0.7,
-                  }}
-                />
-              )}
-              <span className="relative z-20">128 KBPS</span>
-            </m.button>
-
-            {/* 320 KBPS HQ Sekmesi (Varsayılan) */}
-            <m.button
-              type="button"
-              onClick={() => handleQualityChange("320")}
-              onMouseEnter={() => setHoveredQuality("320")}
-              whileTap={{ scale: 0.96 }}
-              className={`relative z-10 flex items-center justify-center gap-1 sm:gap-1.5 w-[90px] xs:w-[100px] sm:w-[115px] h-[28px] xs:h-[30px] sm:h-[34px] rounded-full text-[10px] xs:text-[11px] sm:text-[12px] font-antonio tracking-widest uppercase transition-colors duration-200 select-none ${
-                quality === "320"
-                  ? "text-white font-bold"
-                  : "text-white/45 hover:text-white/80"
-              }`}
-              aria-label="320 kbps Stüdyo HQ Ses Kalitesi"
-            >
-              {/* Kayarak gelen hover arka planı */}
-              {hoveredQuality === "320" && quality !== "320" && (
-                <m.div
-                  layoutId="hover-quality-pill"
-                  className="absolute inset-0 rounded-full bg-white/[0.06]"
-                  transition={{
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 28,
-                  }}
-                />
-              )}
-
-              {/* Aktif Kayar Kapsül (Active Spring Pill) */}
-              {quality === "320" && (
-                <m.div
-                  layoutId="active-quality-switch"
-                  className="absolute inset-0 rounded-full bg-gradient-to-r from-[#FD1D35] to-[#FF2D47] shadow-[0_0_10px_rgba(253,29,53,0.45),inset_0_1px_1px_rgba(255,255,255,0.25)]"
-                  transition={{
-                    type: "spring",
-                    stiffness: 380,
-                    damping: 30,
-                    mass: 0.7,
-                  }}
-                />
-              )}
-              <span className="relative z-20 flex items-center gap-1 sm:gap-1.5">
-                <span>320 KBPS</span>
-                <span
-                  className={`text-[8px] font-extrabold px-1.5 py-[2px] rounded-sm leading-none transition-colors ${
-                    quality === "320"
-                      ? "bg-white text-[#FD1D35] shadow-[0_0_6px_rgba(255,255,255,0.8)]"
-                      : "bg-white/10 text-white/50"
-                  }`}
-                >
-                  HQ
-                </span>
-              </span>
-            </m.button>
-
-          </div>
-        </div>
-
       </div>
 
       {/* Hidden Audio Element */}
       <audio
         ref={audioRef}
-        src={STREAM_URLS[quality]}
+        src={STREAM_URL}
         preload="none"
         className="hidden"
       />
