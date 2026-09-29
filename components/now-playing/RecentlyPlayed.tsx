@@ -87,7 +87,7 @@ export default function RecentlyPlayed({ tracks }: { tracks: SongHistoryItem[] }
     <div
       className="pointer-events-auto absolute left-1/2 z-30 w-[min(92vw,360px)] -translate-x-1/2"
       style={{
-        top: "calc(50% + (var(--player-stage-size, 300px) * 0.5) + var(--recently-played-gap, clamp(68px, 11vh, 96px)))"
+        top: "calc(50% + (var(--player-stage-size, 300px) * 0.5) + var(--recently-played-gap, clamp(68px, 11vh, 96px)) - 40px)"
       }}
     >
       <button
