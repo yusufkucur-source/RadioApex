@@ -25,10 +25,9 @@ import {
 import clsx from "clsx";
 import { addDoc, collection, deleteDoc, doc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { onAuthStateChanged, signInWithEmailAndPassword, signOut, type User } from "firebase/auth";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { Button } from "@/components/ui/button";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
-import { getFirebaseApp, getFirebaseAuthInstance, getFirebaseStorageInstance, getFirestoreInstance } from "@/lib/firebase/client";
+import { getFirebaseApp, getFirebaseAuthInstance, getFirestoreInstance } from "@/lib/firebase/client";
 import { useDJs, useLineup, type DJProfile, type LineupSlot } from "@/lib/firebase/hooks";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import { WorldMapVisualizer } from "@/components/admin/WorldMapVisualizer";
@@ -54,7 +53,7 @@ type NowPlayingData = {
   listeners: number;
 };
 
-const emptyDj = { nickname: "", fullName: "", city: "", photoUrl: "", description: "", isActive: true };
+const emptyDj = { nickname: "", fullName: "", city: "", photoUrl: "", photoCardUrl: "", photoAvatarUrl: "", description: "", isActive: true };
 const emptyLineup = { day: "Monday", startTime: "", endTime: "", title: "", genre: "", djId: "" };
 const navItems: Array<{ id: Section; label: string; icon: typeof LayoutDashboard }> = [
   { id: "overview", label: "Genel Bakış", icon: LayoutDashboard },
@@ -215,16 +214,22 @@ export default function AdminDashboardV2() {
   };
 
   const uploadDjPhoto = async (file: File, djId: string) => {
-    const storage = getFirebaseStorageInstance();
-    if (!user || !storage) throw new Error("Fotoğraf depolama bağlantısı hazır değil.");
+    if (!user) throw new Error("Yönetici oturumu açık değil.");
     if (!file.type.startsWith("image/")) throw new Error("Sadece resim dosyası yüklenebilir.");
     if (file.size > 5 * 1024 * 1024) throw new Error("Fotoğraf en fazla 5 MB olabilir.");
-
-    const extension = file.type.includes("png") ? "png" : file.type.includes("webp") ? "webp" : "jpg";
-    const name = file.name.replace(/\.[a-z0-9]{3,4}$/i, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "") || "photo";
-    const storageRef = ref(storage, `djs/${djId}/uploaded-${Date.now()}-${name}.${extension}`);
-    await uploadBytes(storageRef, file, { contentType: file.type });
-    return getDownloadURL(storageRef);
+    const form = new FormData();
+    form.append("file", file);
+    form.append("djId", djId);
+    const response = await fetch("/api/admin/upload-dj-photo", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${await user.getIdToken()}` },
+      body: form
+    });
+    const result = await response.json() as { photoUrl?: string; photoCardUrl?: string; photoAvatarUrl?: string; error?: string };
+    if (!response.ok || !result.photoUrl || !result.photoCardUrl || !result.photoAvatarUrl) {
+      throw new Error(result.error || "DJ fotoğrafı yüklenemedi.");
+    }
+    return { photoUrl: result.photoUrl, photoCardUrl: result.photoCardUrl, photoAvatarUrl: result.photoAvatarUrl };
   };
 
   const handleDjSave = async (event: FormEvent<HTMLFormElement>) => {
@@ -235,14 +240,16 @@ export default function AdminDashboardV2() {
       let nextDjForm = { ...djForm };
       if (editingDj) {
         if (djPhotoFile) {
-          nextDjForm = { ...nextDjForm, photoUrl: await uploadDjPhoto(djPhotoFile, editingDj) };
+          nextDjForm = { ...nextDjForm, ...await uploadDjPhoto(djPhotoFile, editingDj) };
+        } else if (nextDjForm.photoUrl !== djs.find((dj) => dj.id === editingDj)?.photoUrl) {
+          nextDjForm = { ...nextDjForm, photoCardUrl: "", photoAvatarUrl: "" };
         }
         await updateDoc(doc(db, "djs", editingDj), { ...nextDjForm, updatedAt: serverTimestamp() });
         setNotice("DJ güncellendi.");
       } else {
         const nextDoc = doc(collection(db, "djs"));
         if (djPhotoFile) {
-          nextDjForm = { ...nextDjForm, photoUrl: await uploadDjPhoto(djPhotoFile, nextDoc.id) };
+          nextDjForm = { ...nextDjForm, ...await uploadDjPhoto(djPhotoFile, nextDoc.id) };
         }
         await setDoc(nextDoc, { ...nextDjForm, createdAt: serverTimestamp() });
         setNotice("Yeni DJ eklendi.");
@@ -268,16 +275,16 @@ export default function AdminDashboardV2() {
   };
 
   const migrateDjPhotos = async () => {
-    if (!user || !window.confirm("Mevcut DJ fotoğraf linkleri Firebase Storage'a taşınsın mı?")) return;
+    if (!user || !window.confirm("Mevcut DJ fotoğrafları kart ve avatar için optimize edilsin mi?")) return;
     setBusy(true); setError(null); setNotice(null);
     try {
       const token = await user.getIdToken();
       const response = await fetch("/api/admin/migrate-dj-photos", { method: "POST", headers: { Authorization: `Bearer ${token}` } });
       const payload = await response.json();
-      if (!response.ok) throw new Error(payload.error || "Fotoğraflar taşınamadı.");
-      setNotice(`${payload.migrated || 0} fotoğraf Storage'a taşındı. ${payload.skipped || 0} kayıt atlandı.`);
+      if (!response.ok) throw new Error(payload.error || "Fotoğraflar optimize edilemedi.");
+      setNotice(`${payload.migrated || 0} fotoğraf optimize edildi. ${payload.skipped || 0} kayıt atlandı. ${payload.failedCount || 0} hata.`);
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : "Fotoğraflar taşınamadı.");
+      setError(reason instanceof Error ? reason.message : "Fotoğraflar optimize edilemedi.");
     } finally {
       setBusy(false);
     }
@@ -351,7 +358,7 @@ export default function AdminDashboardV2() {
             lineup={lineup.length}
           />
         )}
-        {section === "djs" && <DjsTable djs={djs} busy={busy} onAdd={() => setDrawer("dj")} onMigratePhotos={() => void migrateDjPhotos()} onToggleActive={toggleDjActive} onEdit={(dj) => { setDjForm({ nickname: dj.nickname, fullName: dj.fullName, city: dj.city, photoUrl: dj.photoUrl, description: dj.description || "", isActive: dj.isActive !== false }); setDjPhotoFile(null); setEditingDj(dj.id); setDrawer("dj"); }} onDelete={(id) => void remove("djs", id)} />}
+        {section === "djs" && <DjsTable djs={djs} busy={busy} onAdd={() => setDrawer("dj")} onMigratePhotos={() => void migrateDjPhotos()} onToggleActive={toggleDjActive} onEdit={(dj) => { setDjForm({ nickname: dj.nickname, fullName: dj.fullName, city: dj.city, photoUrl: dj.photoUrl, photoCardUrl: dj.photoCardUrl || "", photoAvatarUrl: dj.photoAvatarUrl || "", description: dj.description || "", isActive: dj.isActive !== false }); setDjPhotoFile(null); setEditingDj(dj.id); setDrawer("dj"); }} onDelete={(id) => void remove("djs", id)} />}
         {section === "lineup" && <LineupTable lineup={lineup} djs={djMap} onAdd={() => setDrawer("lineup")} onEdit={(slot) => { setLineupForm({ day: slot.day, startTime: slot.startTime, endTime: slot.endTime, title: slot.title, genre: slot.genre, djId: slot.djId || "" }); setEditingLineup(slot.id); setDrawer("lineup"); }} onDelete={(id) => void remove("lineup", id)} />}
         {section === "notifications" && <NotificationForm value={notification} busy={busy} onChange={setNotification} onSubmit={sendNotification} />}
       </div>
@@ -485,7 +492,7 @@ function DjsTable({
             onClick={onMigratePhotos}
             className="border-white/15 bg-transparent text-white hover:bg-white/10 hover:text-white"
           >
-            {busy ? <Loader2 className="animate-spin" /> : null}Fotoğrafları Storage&apos;a taşı
+            {busy ? <Loader2 className="animate-spin" /> : null}Fotoğrafları optimize et
           </Button>
           <Button size="sm" onClick={onAdd} className="bg-apex-accent hover:bg-apex-accent/90">
             <Plus />DJ ekle

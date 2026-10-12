@@ -4,6 +4,7 @@ import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { getStorage } from "firebase-admin/storage";
+import sharp from "sharp";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -16,6 +17,8 @@ type ServiceAccount = {
 
 type DjDoc = {
   photoUrl?: string;
+  photoCardUrl?: string;
+  photoAvatarUrl?: string;
 };
 
 function getServiceAccount(): ServiceAccount | null {
@@ -118,7 +121,7 @@ export async function POST(request: NextRequest) {
   for (const dj of snapshot.docs) {
     const data = dj.data() as DjDoc;
     const photoUrl = data.photoUrl?.trim();
-    if (!photoUrl || isStorageUrl(photoUrl, bucketName)) {
+    if (!photoUrl || (data.photoCardUrl && data.photoAvatarUrl)) {
       skipped += 1;
       continue;
     }
@@ -135,22 +138,33 @@ export async function POST(request: NextRequest) {
         throw new Error("Source image is larger than 8 MB.");
       }
 
-      const token = randomUUID();
-      const extension = extensionFrom(contentType, photoUrl);
-      const path = `djs/${dj.id}/migrated-${Date.now()}.${extension}`;
-      const file = bucket.file(path);
-      await file.save(buffer, {
-        contentType,
-        metadata: {
+      const basePath = `djs/${dj.id}/optimized-${Date.now()}`;
+      const saveImage = async (path: string, bytes: Buffer, type: string) => {
+        const token = randomUUID();
+        await bucket.file(path).save(bytes, {
+          contentType: type,
           metadata: {
-            firebaseStorageDownloadTokens: token,
-            originalPhotoUrl: photoUrl
+            cacheControl: "public, max-age=31536000, immutable",
+            metadata: { firebaseStorageDownloadTokens: token }
           }
-        }
-      });
-
-      const nextUrl = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodeURIComponent(path)}?alt=media&token=${token}`;
-      await dj.ref.update({ photoUrl: nextUrl, photoMigratedAt: new Date() });
+        });
+        return `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodeURIComponent(path)}?alt=media&token=${token}`;
+      };
+      const [card, avatar] = await Promise.all([
+        sharp(buffer).rotate().resize({ width: 960, withoutEnlargement: true }).webp({ quality: 78, effort: 5 }).toBuffer(),
+        sharp(buffer).rotate().resize({ width: 256, withoutEnlargement: true }).webp({ quality: 76, effort: 5 }).toBuffer()
+      ]);
+      const [photoCardUrl, photoAvatarUrl] = await Promise.all([
+        saveImage(`${basePath}-card.webp`, card, "image/webp"),
+        saveImage(`${basePath}-avatar.webp`, avatar, "image/webp")
+      ]);
+      const update: Record<string, unknown> = { photoCardUrl, photoAvatarUrl, photoOptimizedAt: new Date() };
+      if (!isStorageUrl(photoUrl, bucketName)) {
+        const extension = extensionFrom(contentType, photoUrl);
+        update.photoUrl = await saveImage(`${basePath}-original.${extension}`, buffer, contentType);
+        update.photoMigratedAt = new Date();
+      }
+      await dj.ref.update(update);
       migrated += 1;
     } catch {
       failed.push(dj.id);

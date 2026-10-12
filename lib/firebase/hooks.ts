@@ -13,6 +13,8 @@ export type DJProfile = {
   fullName: string;
   city: string;
   photoUrl: string;
+  photoCardUrl?: string;
+  photoAvatarUrl?: string;
   isActive?: boolean;
   description?: string;
   socials?: {
@@ -293,6 +295,8 @@ const transformDjDoc: Transformer<DJProfile> = doc => ({
     fullName: doc.fullName ?? "",
     city: doc.city ?? "",
     photoUrl: doc.photoUrl ?? "",
+    photoCardUrl: doc.photoCardUrl ?? "",
+    photoAvatarUrl: doc.photoAvatarUrl ?? "",
     description: doc.description ?? "",
     isActive: doc.isActive !== false,
     socials: doc.socials ?? {}

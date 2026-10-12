@@ -127,9 +127,9 @@ export default function DjSection() {
                   <div className="pointer-events-none absolute inset-0 -z-20 rounded-[36px] bg-black/50 blur-3xl transition-colors duration-500 group-hover:bg-[#FD1D35]/15" />
 
                   <div className="relative h-56 w-full overflow-hidden rounded-2xl border border-white/10">
-                    {dj.photoUrl ? (
+                    {dj.photoCardUrl || dj.photoUrl ? (
                       <Image
-                        src={dj.photoUrl}
+                        src={dj.photoCardUrl || dj.photoUrl}
                         alt={dj.nickname}
                         width={480}
                         height={480}

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getStorage } from "firebase-admin/storage";
+import sharp from "sharp";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -120,23 +121,30 @@ export async function POST(request: NextRequest) {
 
     const bucketName = await resolveBucketName(storageBucket, account.project_id);
     const buffer = Buffer.from(await file.arrayBuffer());
-    const token = randomUUID();
     const extension = extensionFrom(file.type, file.name);
-    const path = `djs/${djId}/uploaded-${Date.now()}-${safeFileName(file.name).replace(/\.[a-z0-9]{3,4}$/i, "")}.${extension}`;
-    const bucketFile = getStorage().bucket(bucketName).file(path);
-
-    await bucketFile.save(buffer, {
-      contentType: file.type,
-      metadata: {
+    const basePath = `djs/${djId}/uploaded-${Date.now()}-${safeFileName(file.name).replace(/\.[a-z0-9]{3,4}$/i, "")}`;
+    const [card, avatar] = await Promise.all([
+      sharp(buffer).rotate().resize({ width: 960, withoutEnlargement: true }).webp({ quality: 78, effort: 5 }).toBuffer(),
+      sharp(buffer).rotate().resize({ width: 256, withoutEnlargement: true }).webp({ quality: 76, effort: 5 }).toBuffer()
+    ]);
+    const bucket = getStorage().bucket(bucketName);
+    const saveImage = async (path: string, bytes: Buffer, contentType: string) => {
+      const token = randomUUID();
+      await bucket.file(path).save(bytes, {
+        contentType,
         metadata: {
-          firebaseStorageDownloadTokens: token,
-          originalFileName: file.name
+          cacheControl: "public, max-age=31536000, immutable",
+          metadata: { firebaseStorageDownloadTokens: token, originalFileName: file.name }
         }
-      }
-    });
-
-    const photoUrl = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodeURIComponent(path)}?alt=media&token=${token}`;
-    return NextResponse.json({ photoUrl, path });
+      });
+      return `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodeURIComponent(path)}?alt=media&token=${token}`;
+    };
+    const [photoUrl, photoCardUrl, photoAvatarUrl] = await Promise.all([
+      saveImage(`${basePath}.${extension}`, buffer, file.type),
+      saveImage(`${basePath}-card.webp`, card, "image/webp"),
+      saveImage(`${basePath}-avatar.webp`, avatar, "image/webp")
+    ]);
+    return NextResponse.json({ photoUrl, photoCardUrl, photoAvatarUrl });
   } catch (error) {
     console.error("DJ photo upload error", error);
     return NextResponse.json(
